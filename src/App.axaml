@@ -44,6 +44,30 @@
     <DataTemplate DataType="{x:Type vm:CronExpressionViewModel}">
       <views:CronExpressionView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:IpQueryViewModel}">
+      <views:IpQueryView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HttpRequestViewModel}">
+      <views:HttpRequestView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ParquetViewerViewModel}">
+      <views:ParquetViewerView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UnitConverterViewModel}">
+      <views:UnitConverterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BaseConverterViewModel}">
+      <views:BaseConverterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:RegexTesterViewModel}">
+      <views:RegexTesterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UuidGeneratorViewModel}">
+      <views:UuidGeneratorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ColorPickerViewModel}">
+      <views:ColorPickerView/>
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Styles>
