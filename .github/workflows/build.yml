@@ -1,0 +1,63 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore src/DevUtilities.csproj
+      
+    - name: Build
+      run: dotnet build src/DevUtilities.csproj --no-restore --configuration Release
+      
+    - name: Test
+      run: dotnet test --no-build --configuration Release --verbosity normal
+      
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    strategy:
+      matrix:
+        runtime: [win-x64, linux-x64, osx-x64]
+        
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Publish ${{ matrix.runtime }}
+      run: |
+        dotnet publish src/DevUtilities.csproj \
+          -c Release \
+          -r ${{ matrix.runtime }} \
+          --self-contained false \
+          -o ./publish/${{ matrix.runtime }}
+          
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: DevUtilities-${{ matrix.runtime }}
+        path: ./publish/${{ matrix.runtime }}/

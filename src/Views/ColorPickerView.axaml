@@ -1,0 +1,421 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.ColorPickerView"
+             x:DataType="vm:ColorPickerViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      <!-- 标题 -->
+      <TextBlock Text="颜色选择器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"/>
+
+      <!-- 错误信息 -->
+      <Border Background="#FFEBEE" 
+              CornerRadius="5" 
+              Padding="10"
+              IsVisible="{Binding HasError}">
+        <TextBlock Text="{Binding ErrorMessage}" 
+                   Foreground="Red" 
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 颜色预览 -->
+      <Border Background="#F5F5F5" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="15">
+          <TextBlock Text="颜色预览" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,Auto">
+            <Border Grid.Column="0" 
+                    Height="100" 
+                    CornerRadius="8"
+                    BorderBrush="Gray"
+                    BorderThickness="1">
+              <Border.Background>
+                <SolidColorBrush>
+                  <SolidColorBrush.Color>
+                    <MultiBinding Converter="{x:Static vm:RgbToColorConverter.Instance}">
+                      <Binding Path="Red"/>
+                      <Binding Path="Green"/>
+                      <Binding Path="Blue"/>
+                    </MultiBinding>
+                  </SolidColorBrush.Color>
+                </SolidColorBrush>
+              </Border.Background>
+            </Border>
+            
+            <StackPanel Grid.Column="1" 
+                        Margin="15,0,0,0" 
+                        Spacing="5">
+              <TextBlock Text="{Binding ColorName}" 
+                         FontWeight="SemiBold"/>
+              <Button Content="随机颜色" 
+                      Command="{Binding RandomColorCommand}"/>
+              <Button Content="添加到历史" 
+                      Command="{Binding AddToHistoryCommand}"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- RGB 控制 -->
+      <Border Background="#FFF0F0" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="RGB 颜色" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid RowDefinitions="Auto,Auto,Auto" 
+                ColumnDefinitions="50,*,80,Auto">
+            <!-- Red -->
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Text="R:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="0" Grid.Column="1" 
+                    Value="{Binding Red}" 
+                    Minimum="0" 
+                    Maximum="255"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="0" Grid.Column="2" 
+                           Value="{Binding Red}" 
+                           Minimum="0" 
+                           Maximum="255"
+                           Margin="5,0"/>
+            <Button Grid.Row="0" Grid.Column="3" 
+                    Content="复制" 
+                    Command="{Binding CopyColorCommand}"
+                    CommandParameter="RGB"
+                    FontSize="10"
+                    Padding="5,2"/>
+
+            <!-- Green -->
+            <TextBlock Grid.Row="1" Grid.Column="0" 
+                       Text="G:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="1" Grid.Column="1" 
+                    Value="{Binding Green}" 
+                    Minimum="0" 
+                    Maximum="255"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="1" Grid.Column="2" 
+                           Value="{Binding Green}" 
+                           Minimum="0" 
+                           Maximum="255"
+                           Margin="5,0"/>
+
+            <!-- Blue -->
+            <TextBlock Grid.Row="2" Grid.Column="0" 
+                       Text="B:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="2" Grid.Column="1" 
+                    Value="{Binding Blue}" 
+                    Minimum="0" 
+                    Maximum="255"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="2" Grid.Column="2" 
+                           Value="{Binding Blue}" 
+                           Minimum="0" 
+                           Maximum="255"
+                           Margin="5,0"/>
+          </Grid>
+
+          <TextBox Text="{Binding RgbString}" 
+                   IsReadOnly="True" 
+                   FontFamily="Consolas"/>
+        </StackPanel>
+      </Border>
+
+      <!-- HSL 控制 -->
+      <Border Background="#F0F8FF" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="HSL 颜色" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid RowDefinitions="Auto,Auto,Auto" 
+                ColumnDefinitions="50,*,80,Auto">
+            <!-- Hue -->
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Text="H:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="0" Grid.Column="1" 
+                    Value="{Binding Hue}" 
+                    Minimum="0" 
+                    Maximum="360"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="0" Grid.Column="2" 
+                           Value="{Binding Hue}" 
+                           Minimum="0" 
+                           Maximum="360"
+                           Margin="5,0"/>
+            <Button Grid.Row="0" Grid.Column="3" 
+                    Content="复制" 
+                    Command="{Binding CopyColorCommand}"
+                    CommandParameter="HSL"
+                    FontSize="10"
+                    Padding="5,2"/>
+
+            <!-- Saturation -->
+            <TextBlock Grid.Row="1" Grid.Column="0" 
+                       Text="S:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="1" Grid.Column="1" 
+                    Value="{Binding Saturation}" 
+                    Minimum="0" 
+                    Maximum="100"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="1" Grid.Column="2" 
+                           Value="{Binding Saturation}" 
+                           Minimum="0" 
+                           Maximum="100"
+                           Margin="5,0"/>
+
+            <!-- Lightness -->
+            <TextBlock Grid.Row="2" Grid.Column="0" 
+                       Text="L:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="2" Grid.Column="1" 
+                    Value="{Binding Lightness}" 
+                    Minimum="0" 
+                    Maximum="100"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="2" Grid.Column="2" 
+                           Value="{Binding Lightness}" 
+                           Minimum="0" 
+                           Maximum="100"
+                           Margin="5,0"/>
+          </Grid>
+
+          <TextBox Text="{Binding HslString}" 
+                   IsReadOnly="True" 
+                   FontFamily="Consolas"/>
+        </StackPanel>
+      </Border>
+
+      <!-- HSV 控制 -->
+      <Border Background="#F0FFF0" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="HSV 颜色" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid RowDefinitions="Auto,Auto,Auto" 
+                ColumnDefinitions="50,*,80,Auto">
+            <!-- Hue (共享) -->
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Text="H:" 
+                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" 
+                       Text="{Binding Hue, StringFormat='{}{0:F0}°'}" 
+                       VerticalAlignment="Center"
+                       Margin="5,0"/>
+            <Button Grid.Row="0" Grid.Column="3" 
+                    Content="复制" 
+                    Command="{Binding CopyColorCommand}"
+                    CommandParameter="HSV"
+                    FontSize="10"
+                    Padding="5,2"/>
+
+            <!-- HSV Saturation -->
+            <TextBlock Grid.Row="1" Grid.Column="0" 
+                       Text="S:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="1" Grid.Column="1" 
+                    Value="{Binding HsvSaturation}" 
+                    Minimum="0" 
+                    Maximum="100"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="1" Grid.Column="2" 
+                           Value="{Binding HsvSaturation}" 
+                           Minimum="0" 
+                           Maximum="100"
+                           Margin="5,0"/>
+
+            <!-- Value -->
+            <TextBlock Grid.Row="2" Grid.Column="0" 
+                       Text="V:" 
+                       VerticalAlignment="Center"/>
+            <Slider Grid.Row="2" Grid.Column="1" 
+                    Value="{Binding Value}" 
+                    Minimum="0" 
+                    Maximum="100"
+                    Margin="5,0"/>
+            <NumericUpDown Grid.Row="2" Grid.Column="2" 
+                           Value="{Binding Value}" 
+                           Minimum="0" 
+                           Maximum="100"
+                           Margin="5,0"/>
+          </Grid>
+
+          <TextBox Text="{Binding HsvString}" 
+                   IsReadOnly="True" 
+                   FontFamily="Consolas"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 十六进制和其他格式 -->
+      <Border Background="#FFF8DC" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="颜色格式" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid RowDefinitions="Auto,Auto,Auto" 
+                ColumnDefinitions="80,*,Auto">
+            <!-- HEX -->
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Text="HEX:" 
+                       VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="1" 
+                     Text="{Binding HexColor}" 
+                     FontFamily="Consolas"
+                     Margin="5,0"/>
+            <Button Grid.Row="0" Grid.Column="2" 
+                    Content="复制" 
+                    Command="{Binding CopyColorCommand}"
+                    CommandParameter="HEX"
+                    FontSize="10"
+                    Padding="5,2"/>
+
+            <!-- CMYK -->
+            <TextBlock Grid.Row="1" Grid.Column="0" 
+                       Text="CMYK:" 
+                       VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" 
+                     Text="{Binding CmykString}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Margin="5,0"/>
+            <Button Grid.Row="1" Grid.Column="2" 
+                    Content="复制" 
+                    Command="{Binding CopyColorCommand}"
+                    CommandParameter="CMYK"
+                    FontSize="10"
+                    Padding="5,2"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 预设颜色 -->
+      <Expander Header="预设颜色" IsExpanded="True">
+        <StackPanel Spacing="10" Margin="10">
+          <ItemsControl ItemsSource="{Binding PresetColors}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Width="40" 
+                        Height="40" 
+                        Margin="2"
+                        Command="{Binding $parent[UserControl].((vm:ColorPickerViewModel)DataContext).UsePresetColorCommand}"
+                        CommandParameter="{Binding}"
+                        ToolTip.Tip="{Binding Name}">
+                  <Button.Background>
+                    <SolidColorBrush>
+                      <SolidColorBrush.Color>
+                        <MultiBinding Converter="{x:Static vm:RgbToColorConverter.Instance}">
+                          <Binding Path="Red"/>
+                          <Binding Path="Green"/>
+                          <Binding Path="Blue"/>
+                        </MultiBinding>
+                      </SolidColorBrush.Color>
+                    </SolidColorBrush>
+                  </Button.Background>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Expander>
+
+      <!-- 颜色历史 -->
+      <Expander Header="颜色历史" IsExpanded="False">
+        <StackPanel Spacing="10" Margin="10">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="最近使用的颜色" 
+                       VerticalAlignment="Center"/>
+            <Button Grid.Column="1" 
+                    Content="清除历史" 
+                    Command="{Binding ClearHistoryCommand}"/>
+          </Grid>
+          
+          <ItemsControl ItemsSource="{Binding ColorHistory}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Width="40" 
+                        Height="40" 
+                        Margin="2"
+                        Command="{Binding $parent[UserControl].((vm:ColorPickerViewModel)DataContext).UsePresetColorCommand}"
+                        CommandParameter="{Binding}"
+                        ToolTip.Tip="{Binding Name}">
+                  <Button.Background>
+                    <SolidColorBrush>
+                      <SolidColorBrush.Color>
+                        <MultiBinding Converter="{x:Static vm:RgbToColorConverter.Instance}">
+                          <Binding Path="Red"/>
+                          <Binding Path="Green"/>
+                          <Binding Path="Blue"/>
+                        </MultiBinding>
+                      </SolidColorBrush.Color>
+                    </SolidColorBrush>
+                  </Button.Background>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Expander>
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="8" Margin="10">
+          <TextBlock Text="颜色模式说明：" FontWeight="SemiBold"/>
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
+                ColumnDefinitions="80,*" 
+                Margin="10,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="RGB" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="红绿蓝三原色模式，每个分量范围 0-255"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="HSL" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="色相、饱和度、亮度模式，更符合人眼感知"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="HSV" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="色相、饱和度、明度模式，常用于颜色选择器"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="HEX" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="十六进制颜色代码，网页开发常用格式"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="CMYK" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="青品黄黑四色模式，印刷行业标准"/>
+          </Grid>
+
+          <TextBlock Text="操作提示：" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <TextBlock Text="• 拖动滑块或输入数值来调整颜色" Margin="10,0"/>
+          <TextBlock Text="• 点击预设颜色快速选择常用颜色" Margin="10,0"/>
+          <TextBlock Text="• 使用随机颜色按钮获取灵感" Margin="10,0"/>
+          <TextBlock Text="• 复制按钮可将颜色值复制到剪贴板" Margin="10,0"/>
+          <TextBlock Text="• 添加到历史记录保存喜欢的颜色" Margin="10,0"/>
+        </StackPanel>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,180 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             x:Class="DevUtilities.Views.QrCodeView"
+             x:DataType="vm:QrCodeViewModel">
+
+  <UserControl.Resources>
+    <converters:BooleanToColorConverter x:Key="BoolToColorConverter" />
+    <converters:StringIsNotNullOrEmptyConverter x:Key="StringToBoolConverter" />
+  </UserControl.Resources>
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="二维码工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
+      
+      <!-- 二维码生成区域 -->
+      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="二维码生成" FontSize="18" FontWeight="SemiBold" />
+          
+          <!-- 类型和设置 -->
+          <Grid ColumnDefinitions="*,*,*,*" Margin="0,8">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="内容类型:" FontWeight="Medium" />
+              <ComboBox ItemsSource="{Binding AvailableQrTypes}" 
+                       SelectedItem="{Binding SelectedQrType}" 
+                       Width="120" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="4">
+              <TextBlock Text="纠错级别:" FontWeight="Medium" />
+              <ComboBox ItemsSource="{Binding AvailableErrorCorrections}" 
+                       SelectedItem="{Binding SelectedErrorCorrection}" 
+                       Width="120" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Spacing="4">
+              <TextBlock Text="编码格式:" FontWeight="Medium" />
+              <ComboBox ItemsSource="{Binding AvailableEncodings}" 
+                       SelectedItem="{Binding SelectedEncoding}" 
+                       Width="120" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="3" Spacing="4">
+              <TextBlock Text="图片尺寸:" FontWeight="Medium" />
+              <NumericUpDown Value="{Binding QrCodeSize}" 
+                            Minimum="100" 
+                            Maximum="800" 
+                            Increment="50" 
+                            Width="120" />
+            </StackPanel>
+          </Grid>
+          
+          <!-- 颜色设置 -->
+          <Grid ColumnDefinitions="*,*,*" Margin="0,8">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="前景色:" FontWeight="Medium" />
+              <TextBox Text="{Binding ForegroundColor}" 
+                      Watermark="#000000" 
+                      Width="120" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="4">
+              <TextBlock Text="背景色:" FontWeight="Medium" />
+              <TextBox Text="{Binding BackgroundColor}" 
+                      Watermark="#FFFFFF" 
+                      Width="120" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Bottom">
+              <CheckBox Content="包含静默区" IsChecked="{Binding IncludeQuietZone}" />
+            </StackPanel>
+          </Grid>
+          
+          <!-- 输入和生成区域 -->
+          <Grid ColumnDefinitions="2*,Auto,*" Margin="0,8">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="输入内容:" FontWeight="Medium" />
+              <TextBox Text="{Binding InputText}" 
+                      AcceptsReturn="True" 
+                      TextWrapping="Wrap" 
+                      Height="120" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      Watermark="输入要生成二维码的内容" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="8" Margin="16,20,16,0" VerticalAlignment="Top">
+              <Button Content="生成二维码" Command="{Binding GenerateQrCodeCommand}" Width="100" />
+              <Button Content="使用示例" Command="{Binding UseExampleCommand}" Width="100" />
+              <Button Content="保存图片" Command="{Binding SaveImageCommand}" Width="100" 
+                     IsEnabled="{Binding QrCodeImage, Converter={StaticResource StringToBoolConverter}}" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Spacing="4">
+              <TextBlock Text="生成的二维码:" FontWeight="Medium" />
+              <Border BorderBrush="#E0E0E0" 
+                     BorderThickness="1" 
+                     CornerRadius="4" 
+                     Background="White" 
+                     Height="120" 
+                     Width="120">
+                <Image Source="{Binding QrCodeImage}" 
+                      Stretch="Uniform" 
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center" />
+              </Border>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+      
+      <!-- 二维码解码区域 -->
+      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="二维码解码" FontSize="18" FontWeight="SemiBold" />
+          
+          <Grid ColumnDefinitions="*,Auto,*" Margin="0,8">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="选择图片文件:" FontWeight="Medium" />
+              <Button Content="选择图片" Command="{Binding LoadImageCommand}" Width="120" HorizontalAlignment="Left" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Spacing="4">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="解码结果:" FontWeight="Medium" />
+                <Button Content="复制" Command="{Binding CopyDecodedTextCommand}" 
+                       IsEnabled="{Binding DecodedText, Converter={StaticResource StringToBoolConverter}}" />
+              </StackPanel>
+              <TextBox Text="{Binding DecodedText}" 
+                      AcceptsReturn="True" 
+                      TextWrapping="Wrap" 
+                      Height="120" 
+                      IsReadOnly="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      Watermark="解码结果将显示在这里" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+      
+      <!-- 控制按钮 -->
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+        <Button Content="清空所有" Command="{Binding ClearAllCommand}" />
+      </StackPanel>
+      
+      <!-- 验证消息 -->
+      <TextBlock Text="{Binding ValidationMessage}" 
+                HorizontalAlignment="Center" 
+                FontWeight="Medium"
+                Foreground="{Binding IsValidInput, Converter={StaticResource BoolToColorConverter}}" />
+      
+      <!-- 使用说明 -->
+      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16" Background="#F9F9F9">
+        <StackPanel Spacing="8">
+          <TextBlock Text="使用说明:" FontWeight="SemiBold" />
+          <TextBlock TextWrapping="Wrap">
+            <Run Text="• 内容类型：支持文本、URL、邮件、电话、短信、WiFi、电子名片等格式" />
+            <LineBreak />
+            <Run Text="• 纠错级别：L(低)、M(中)、Q(高)、H(最高)，级别越高容错性越强但密度越大" />
+            <LineBreak />
+            <Run Text="• 图片尺寸：建议100-800像素，过小可能影响扫描，过大文件较大" />
+            <LineBreak />
+            <Run Text="• 颜色设置：使用十六进制颜色代码，如#000000(黑色)、#FFFFFF(白色)" />
+            <LineBreak />
+            <Run Text="• 静默区：二维码周围的空白区域，建议保留以提高识别率" />
+            <LineBreak />
+            <Run Text="• 解码功能：支持PNG、JPG、JPEG、BMP、GIF格式的图片文件" />
+            <LineBreak />
+            <Run Text="• 点击'使用示例'可快速生成对应类型的示例二维码" />
+          </TextBlock>
+        </StackPanel>
+      </Border>
+      
+    </StackPanel>
+  </ScrollViewer>
+  
+</UserControl>

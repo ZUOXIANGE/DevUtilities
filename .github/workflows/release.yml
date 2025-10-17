@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+  build-and-upload:
+    needs: create-release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          runtime: linux-x64
+          artifact_name: DevUtilities-linux-x64
+        - os: windows-latest
+          runtime: win-x64
+          artifact_name: DevUtilities-win-x64
+        - os: macos-latest
+          runtime: osx-x64
+          artifact_name: DevUtilities-osx-x64
+          
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Publish
+      run: |
+        dotnet publish src/DevUtilities.csproj \
+          -c Release \
+          -r ${{ matrix.runtime }} \
+          --self-contained false \
+          -o ./publish
+          
+    - name: Create Archive (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        cd publish
+        tar -czf ../${{ matrix.artifact_name }}.tar.gz *
+        
+    - name: Create Archive (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd publish
+        Compress-Archive -Path * -DestinationPath ../${{ matrix.artifact_name }}.zip
+        
+    - name: Upload Release Asset (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ matrix.artifact_name }}.tar.gz
+        asset_name: ${{ matrix.artifact_name }}.tar.gz
+        asset_content_type: application/gzip
+        
+    - name: Upload Release Asset (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ matrix.artifact_name }}.zip
+        asset_name: ${{ matrix.artifact_name }}.zip
+        asset_content_type: application/zip

@@ -1,0 +1,215 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             x:Class="DevUtilities.Views.HexConverterView"
+             x:DataType="vm:HexConverterViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="十六进制转换器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 Foreground="{DynamicResource SystemAccentColor}"/>
+      
+      <!-- 控制面板 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="15">
+          <TextBlock Text="转换设置" FontWeight="SemiBold" FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,*,*">
+            <!-- 编码选择 -->
+            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,10,0">
+              <TextBlock Text="字符编码" FontWeight="SemiBold"/>
+              <ComboBox ItemsSource="{Binding AvailableEncodings}"
+                        SelectedItem="{Binding SelectedEncoding}"
+                        HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- 格式选项 -->
+            <StackPanel Grid.Column="1" Spacing="8" Margin="10,0">
+              <TextBlock Text="格式选项" FontWeight="SemiBold"/>
+              <CheckBox Content="大写字母" IsChecked="{Binding UseUppercase}"/>
+              <CheckBox Content="添加空格" IsChecked="{Binding AddSpaces}"/>
+              <CheckBox Content="0x前缀" IsChecked="{Binding AddPrefix}"/>
+            </StackPanel>
+
+            <!-- 操作按钮 -->
+            <StackPanel Grid.Column="2" Spacing="8" Margin="10,0,0,0">
+              <TextBlock Text="操作" FontWeight="SemiBold"/>
+              <Button Content="交换输入输出" 
+                      Command="{Binding SwapInputOutputCommand}"
+                      HorizontalAlignment="Stretch"/>
+              <Button Content="清空所有" 
+                      Command="{Binding ClearAllCommand}"
+                      HorizontalAlignment="Stretch"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 输入区域 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="15">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="输入内容" 
+                       FontWeight="SemiBold" 
+                       FontSize="16"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+              <Button Content="转为十六进制" 
+                      Command="{Binding ConvertToHexCommand}"
+                      Classes="accent"/>
+              <Button Content="从十六进制转换" 
+                      Command="{Binding ConvertFromHexCommand}"/>
+            </StackPanel>
+          </Grid>
+
+          <TextBox Text="{Binding InputText}" 
+                   Watermark="输入文本或十六进制字符串..."
+                   MinHeight="100"
+                   TextWrapping="Wrap"
+                   AcceptsReturn="True"/>
+
+          <!-- 验证状态 -->
+          <TextBlock Text="{Binding ValidationMessage}" 
+                     Foreground="{Binding IsValidInput, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+                     FontWeight="SemiBold"
+                     IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 示例数据 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="15">
+          <TextBlock Text="示例数据" FontWeight="SemiBold" FontSize="16"/>
+          <WrapPanel>
+            <Button Content="Hello World" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="Hello World"
+                    Margin="0,0,10,5"/>
+            <Button Content="中文测试" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="中文测试"
+                    Margin="0,0,10,5"/>
+            <Button Content="特殊字符" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="!@#$%^&amp;*()"
+                    Margin="0,0,10,5"/>
+            <Button Content="数字" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="1234567890"
+                    Margin="0,0,10,5"/>
+            <Button Content="十六进制示例" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="48656C6C6F20576F726C64"
+                    Margin="0,0,10,5"/>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 输出结果 -->
+      <Grid ColumnDefinitions="*,20,*">
+        
+        <!-- 十六进制输出 -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="20">
+          <StackPanel Spacing="15">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" 
+                         Text="十六进制输出" 
+                         FontWeight="SemiBold" 
+                         FontSize="16"/>
+              <Button Grid.Column="1" 
+                      Content="复制" 
+                      Command="{Binding CopyHexCommand}"/>
+            </Grid>
+
+            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="4"
+                    Padding="12"
+                    MinHeight="120">
+              <ScrollViewer>
+                <SelectableTextBlock Text="{Binding HexOutput}" 
+                                     FontFamily="Consolas,Monaco,monospace"
+                                     FontSize="12"
+                                     TextWrapping="Wrap"/>
+              </ScrollViewer>
+            </Border>
+
+            <!-- 十六进制统计信息 -->
+            <TextBlock Text="{Binding HexOutput.Length, StringFormat='字符数: {0}'}" 
+                       FontSize="11"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       IsVisible="{Binding HexOutput, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+          </StackPanel>
+        </Border>
+
+        <!-- 文本输出 -->
+        <Border Grid.Column="2"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="20">
+          <StackPanel Spacing="15">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" 
+                         Text="文本输出" 
+                         FontWeight="SemiBold" 
+                         FontSize="16"/>
+              <Button Grid.Column="1" 
+                      Content="复制" 
+                      Command="{Binding CopyTextCommand}"/>
+            </Grid>
+
+            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="4"
+                    Padding="12"
+                    MinHeight="120">
+              <ScrollViewer>
+                <SelectableTextBlock Text="{Binding TextOutput}" 
+                                     FontSize="14"
+                                     TextWrapping="Wrap"/>
+              </ScrollViewer>
+            </Border>
+
+            <!-- 文本统计信息 -->
+            <TextBlock Text="{Binding TextOutput.Length, StringFormat='字符数: {0}'}" 
+                       FontSize="11"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       IsVisible="{Binding TextOutput, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+          </StackPanel>
+        </Border>
+
+      </Grid>
+
+      <!-- 使用说明 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="10">
+          <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="16"/>
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+            • 文本转十六进制：输入普通文本，点击"转为十六进制"按钮
+            • 十六进制转文本：输入十六进制字符串，点击"从十六进制转换"按钮
+            • 支持多种字符编码：UTF-8、ASCII、Unicode、UTF-32、GB2312
+            • 格式化选项：可选择大小写、空格分隔、0x前缀
+            • 自动识别十六进制格式：支持带空格、0x前缀、冒号分隔等格式
+            • 实时验证输入有效性，显示转换状态和字节数信息
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

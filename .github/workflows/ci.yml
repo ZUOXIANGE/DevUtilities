@@ -1,0 +1,247 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+jobs:
+  # Build and Test Job
+  build-and-test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+    - name: Upload coverage reports
+      if: matrix.os == 'ubuntu-latest'
+      uses: codecov/codecov-action@v4
+      with:
+        directory: ./coverage
+        fail_ci_if_error: false
+
+  # Code Quality Job
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Run code analysis
+      run: dotnet build --configuration Release --verbosity normal /p:TreatWarningsAsErrors=true
+
+    - name: Install dotnet format
+      run: dotnet tool install -g dotnet-format
+
+    - name: Check code formatting
+      run: dotnet format --verify-no-changes --verbosity diagnostic
+
+  # Security Scan Job
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Install security scan tool
+      run: dotnet tool install --global security-scan
+
+    - name: Run security scan
+      run: security-scan --project DevUtilities.csproj
+
+  # Build Release Artifacts
+  build-release:
+    name: Build Release Artifacts
+    runs-on: ${{ matrix.os }}
+    needs: [build-and-test, code-quality]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            runtime: win-x64
+            artifact-name: DevUtilities-win-x64
+          - os: ubuntu-latest
+            runtime: linux-x64
+            artifact-name: DevUtilities-linux-x64
+          - os: macos-latest
+            runtime: osx-x64
+            artifact-name: DevUtilities-osx-x64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Publish application
+      run: |
+        dotnet publish \
+          --configuration Release \
+          --runtime ${{ matrix.runtime }} \
+          --self-contained true \
+          --output ./publish/${{ matrix.runtime }} \
+          -p:PublishSingleFile=true \
+          -p:PublishTrimmed=true \
+          -p:TrimMode=link
+
+    - name: Create archive (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        Compress-Archive -Path ./publish/${{ matrix.runtime }}/* -DestinationPath ${{ matrix.artifact-name }}.zip
+
+    - name: Create archive (Unix)
+      if: matrix.os != 'windows-latest'
+      run: |
+        cd ./publish/${{ matrix.runtime }}
+        tar -czf ../../${{ matrix.artifact-name }}.tar.gz *
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact-name }}
+        path: |
+          ${{ matrix.artifact-name }}.zip
+          ${{ matrix.artifact-name }}.tar.gz
+        retention-days: 30
+
+  # Create Release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build-release]
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/**/*
+        draft: false
+        prerelease: ${{ contains(github.ref, '-') }}
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Deploy Documentation
+  deploy-docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Build documentation
+      run: |
+        # Add documentation build steps here if using a static site generator
+        echo "Documentation build placeholder"
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        cname: devutilities.example.com  # Optional: custom domain
+
+  # Notify on Success/Failure
+  notify:
+    name: Notify Build Status
+    runs-on: ubuntu-latest
+    needs: [build-and-test, code-quality, security-scan]
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: needs.build-and-test.result == 'success' && needs.code-quality.result == 'success' && needs.security-scan.result == 'success'
+      run: |
+        echo "✅ All checks passed successfully!"
+        # Add notification logic here (Slack, Discord, etc.)
+
+    - name: Notify Failure
+      if: needs.build-and-test.result == 'failure' || needs.code-quality.result == 'failure' || needs.security-scan.result == 'failure'
+      run: |
+        echo "❌ Some checks failed!"
+        # Add notification logic here (Slack, Discord, etc.)

@@ -1,0 +1,219 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             x:Class="DevUtilities.Views.UrlToolsView"
+             x:DataType="vm:UrlToolsViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="URL工具" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 Foreground="{DynamicResource SystemAccentColor}"/>
+      
+      <!-- 输入区域 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="15">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="输入URL" 
+                       FontWeight="SemiBold" 
+                       FontSize="16"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+              <Button Content="处理" 
+                      Command="{Binding ProcessUrlCommand}"
+                      Classes="accent"/>
+              <Button Content="清空" 
+                      Command="{Binding ClearAllCommand}"/>
+            </StackPanel>
+          </Grid>
+
+          <TextBox Text="{Binding InputUrl}" 
+                   Watermark="输入要处理的URL..."
+                   MinHeight="60"
+                   TextWrapping="Wrap"
+                   AcceptsReturn="True"/>
+
+          <!-- 验证状态 -->
+          <TextBlock Text="{Binding ValidationMessage}" 
+                     Foreground="{Binding IsValidUrl, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+                     FontWeight="SemiBold"
+                     IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 示例URL -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="15">
+          <TextBlock Text="示例URL" FontWeight="SemiBold" FontSize="16"/>
+          <WrapPanel>
+            <Button Content="基本URL" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="https://www.example.com"
+                    Margin="0,0,10,5"/>
+            <Button Content="带参数" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="https://api.example.com/users?page=1&amp;limit=10&amp;sort=name"
+                    Margin="0,0,10,5"/>
+            <Button Content="带端口" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="https://localhost:8080/api/v1/data"
+                    Margin="0,0,10,5"/>
+            <Button Content="带片段" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="https://docs.example.com/guide#installation"
+                    Margin="0,0,10,5"/>
+            <Button Content="中文URL" 
+                    Command="{Binding UseExampleCommand}" 
+                    CommandParameter="https://测试.com/路径?参数=值"
+                    Margin="0,0,10,5"/>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 编码解码结果 -->
+      <Grid ColumnDefinitions="*,20,*">
+        
+        <!-- URL编码 -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="20">
+          <StackPanel Spacing="15">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" 
+                         Text="URL编码" 
+                         FontWeight="SemiBold" 
+                         FontSize="16"/>
+              <Button Grid.Column="1" 
+                      Content="编码" 
+                      Command="{Binding EncodeUrlCommand}"/>
+            </Grid>
+
+            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="4"
+                    Padding="12"
+                    MinHeight="100">
+              <SelectableTextBlock Text="{Binding EncodedUrl}" 
+                                   FontFamily="Consolas,Monaco,monospace"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"/>
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- URL解码 -->
+        <Border Grid.Column="2"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="20">
+          <StackPanel Spacing="15">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" 
+                         Text="URL解码" 
+                         FontWeight="SemiBold" 
+                         FontSize="16"/>
+              <Button Grid.Column="1" 
+                      Content="解码" 
+                      Command="{Binding DecodeUrlCommand}"/>
+            </Grid>
+
+            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="4"
+                    Padding="12"
+                    MinHeight="100">
+              <SelectableTextBlock Text="{Binding DecodedUrl}" 
+                                   FontFamily="Consolas,Monaco,monospace"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"/>
+            </Border>
+          </StackPanel>
+        </Border>
+
+      </Grid>
+
+      <!-- URL解析结果 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20"
+              IsVisible="{Binding UrlComponents.Count}">
+        <StackPanel Spacing="15">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="URL解析" 
+                       FontWeight="SemiBold" 
+                       FontSize="16"/>
+            <Button Grid.Column="1" 
+                    Content="解析" 
+                    Command="{Binding ParseUrlCommand}"/>
+          </Grid>
+
+          <!-- 组件列表 -->
+          <ScrollViewer MaxHeight="300">
+            <ItemsControl ItemsSource="{Binding UrlComponents}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                          CornerRadius="4"
+                          Padding="12"
+                          Margin="0,2">
+                    <Grid ColumnDefinitions="150,*">
+                      <TextBlock Grid.Column="0" 
+                                 Text="{Binding Name}" 
+                                 FontWeight="SemiBold"
+                                 VerticalAlignment="Top"/>
+                      <SelectableTextBlock Grid.Column="1" 
+                                           Text="{Binding Value}" 
+                                           FontFamily="Consolas,Monaco,monospace"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"/>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+
+          <!-- 详细解析结果 -->
+          <Expander Header="详细解析结果" IsExpanded="False">
+            <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,10,0,0">
+              <SelectableTextBlock Text="{Binding ParseResult}" 
+                                   FontFamily="Consolas,Monaco,monospace"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"/>
+            </Border>
+          </Expander>
+        </StackPanel>
+      </Border>
+
+      <!-- 使用说明 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="10">
+          <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="16"/>
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+            • URL编码：将特殊字符转换为百分号编码格式，用于URL传输
+            • URL解码：将百分号编码还原为原始字符
+            • URL解析：分析URL的各个组成部分（协议、主机、路径、参数等）
+            • 支持中文URL和各种特殊字符的处理
+            • 自动验证URL格式的有效性
+            • 提供常用URL示例供快速测试
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

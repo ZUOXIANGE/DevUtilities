@@ -1,0 +1,215 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             x:Class="DevUtilities.Views.HtmlFormatterView"
+             x:DataType="vm:HtmlFormatterViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="HTML格式化器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 Foreground="{DynamicResource SystemAccentColor}"/>
+      
+      <!-- 控制面板 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="15">
+          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
+            <!-- 第一行选项 -->
+            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,10,0">
+              <TextBlock Text="文档类型" FontWeight="SemiBold"/>
+              <ComboBox ItemsSource="{Binding AvailableDoctypes}"
+                        SelectedItem="{Binding SelectedDoctype}"
+                        HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Spacing="8" Margin="10,0">
+              <TextBlock Text="缩进大小" FontWeight="SemiBold"/>
+              <NumericUpDown Value="{Binding IndentSize}" 
+                             Minimum="1" 
+                             Maximum="8" 
+                             HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="8" Margin="10,0,0,0">
+              <TextBlock Text="基本选项" FontWeight="SemiBold"/>
+              <CheckBox Content="添加换行符" IsChecked="{Binding AddLineBreaks}"/>
+            </StackPanel>
+
+            <!-- 第二行选项 -->
+            <CheckBox Grid.Row="1" Grid.Column="0" 
+                      Content="格式化属性" 
+                      IsChecked="{Binding FormatAttributes}"
+                      Margin="0,10,0,0"/>
+            
+            <CheckBox Grid.Row="1" Grid.Column="1" 
+                      Content="排序属性" 
+                      IsChecked="{Binding SortAttributes}"
+                      Margin="10,10,0,0"/>
+
+            <CheckBox Grid.Row="1" Grid.Column="2" 
+                      Content="保留空白" 
+                      IsChecked="{Binding PreserveWhitespace}"
+                      Margin="10,10,0,0"/>
+
+            <!-- 第三行选项 -->
+            <CheckBox Grid.Row="2" Grid.Column="0" 
+                      Content="移除注释" 
+                      IsChecked="{Binding RemoveComments}"
+                      Margin="0,10,0,0"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 操作按钮 -->
+      <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+        <Button Content="格式化" 
+                Command="{Binding FormatHtmlCommand}"
+                Classes="accent"
+                Padding="20,8"/>
+        <Button Content="压缩" 
+                Command="{Binding MinifyHtmlCommand}"
+                Padding="20,8"/>
+        <Button Content="验证" 
+                Command="{Binding ValidateHtmlCommand}"
+                Padding="20,8"/>
+        <Button Content="交换" 
+                Command="{Binding SwapInputOutputCommand}"
+                Padding="20,8"/>
+        <Button Content="示例" 
+                Command="{Binding UseExampleCommand}"
+                Padding="20,8"/>
+        <Button Content="清空" 
+                Command="{Binding ClearAllCommand}"
+                Padding="20,8"/>
+      </StackPanel>
+
+      <!-- 验证消息 -->
+      <Border Background="{Binding IsValidHtml, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+              CornerRadius="5"
+              Padding="10"
+              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringIsNotNullOrEmptyConverter.Instance}}">
+        <TextBlock Text="{Binding ValidationMessage}"
+                   Foreground="{Binding IsValidHtml, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 输入输出区域 -->
+      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,*">
+        
+        <!-- 输入区域标题 -->
+        <TextBlock Grid.Column="0" Grid.Row="0" 
+                   Text="输入HTML" 
+                   FontWeight="SemiBold" 
+                   FontSize="16" 
+                   Margin="0,0,0,10"/>
+        
+        <!-- 输出区域标题和复制按钮 -->
+        <Grid Grid.Column="2" Grid.Row="0" Margin="0,0,0,10">
+          <TextBlock Text="格式化结果" 
+                     FontWeight="SemiBold" 
+                     FontSize="16" 
+                     HorizontalAlignment="Left"/>
+          <Button Content="复制" 
+                  Command="{Binding CopyOutputCommand}"
+                  HorizontalAlignment="Right"
+                  Classes="accent"
+                  Padding="12,4"/>
+        </Grid>
+
+        <!-- 输入区域 -->
+        <Border Grid.Column="0" Grid.Row="1" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="15"
+                MinHeight="300">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <TextBox Text="{Binding InputHtml}" 
+                     AcceptsReturn="True"
+                     TextWrapping="NoWrap"
+                     FontFamily="Consolas,Monaco,monospace"
+                     FontSize="13"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Watermark="在此输入HTML代码..."/>
+          </ScrollViewer>
+        </Border>
+
+        <!-- 输出区域 -->
+        <Border Grid.Column="2" Grid.Row="1" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="15"
+                MinHeight="300">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <SelectableTextBlock Text="{Binding OutputHtml}" 
+                                 FontFamily="Consolas,Monaco,monospace"
+                                 FontSize="13"
+                                 TextWrapping="NoWrap"/>
+          </ScrollViewer>
+        </Border>
+
+      </Grid>
+
+      <!-- 使用说明 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="10">
+          <TextBlock Text="💡 使用说明" FontWeight="SemiBold" FontSize="16"/>
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+            • 格式化：美化HTML代码，添加适当的缩进和换行
+            • 压缩：移除不必要的空白字符，减小文件大小
+            • 验证：检查HTML语法错误和结构问题
+            • 支持多种文档类型：HTML5、XHTML、HTML 4.01等
+            • 可配置缩进大小、属性格式化、注释处理等选项
+            • 自动检测常见的HTML结构问题和标签配对错误
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+      <!-- 示例HTML -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="10">
+          <TextBlock Text="📝 示例HTML结构" FontWeight="SemiBold" FontSize="16"/>
+          <ScrollViewer MaxHeight="200" HorizontalScrollBarVisibility="Auto">
+            <SelectableTextBlock FontFamily="Consolas,Monaco,monospace" FontSize="11" TextWrapping="NoWrap">
+              <Run Text="&lt;!DOCTYPE html&gt;"/>
+              <LineBreak/>
+              <Run Text="&lt;html lang=&quot;zh-CN&quot;&gt;"/>
+              <LineBreak/>
+              <Run Text="  &lt;head&gt;"/>
+              <LineBreak/>
+              <Run Text="    &lt;meta charset=&quot;UTF-8&quot;&gt;"/>
+              <LineBreak/>
+              <Run Text="    &lt;title&gt;页面标题&lt;/title&gt;"/>
+              <LineBreak/>
+              <Run Text="  &lt;/head&gt;"/>
+              <LineBreak/>
+              <Run Text="  &lt;body&gt;"/>
+              <LineBreak/>
+              <Run Text="    &lt;h1&gt;主标题&lt;/h1&gt;"/>
+              <LineBreak/>
+              <Run Text="    &lt;p&gt;段落内容&lt;/p&gt;"/>
+              <LineBreak/>
+              <Run Text="  &lt;/body&gt;"/>
+              <LineBreak/>
+              <Run Text="&lt;/html&gt;"/>
+            </SelectableTextBlock>
+          </ScrollViewer>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

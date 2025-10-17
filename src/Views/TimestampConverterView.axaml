@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DevUtilities.Views.TimestampConverterView"
+             x:DataType="vm:TimestampConverterViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24" Spacing="24">
+      
+      <!-- Current Time Display -->
+      <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
+        <StackPanel>
+          <TextBlock Text="当前时间" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Margin="0,0,12,0">
+              <TextBlock Text="当前时间戳" FontSize="12" Foreground="#666666" Margin="0,0,0,4"/>
+              <Border Background="LightGreen" Padding="10" Margin="0,0,0,10">
+                <TextBlock Text="{Binding CurrentTimestamp}" FontWeight="Bold" HorizontalAlignment="Center"/>
+              </Border>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+              <TextBlock Text="当前日期时间" FontSize="12" Foreground="#666666" Margin="0,0,0,4"/>
+              <Border Background="LightBlue" Padding="10" Margin="0,0,0,10">
+                <TextBlock Text="{Binding CurrentDateTime}" FontWeight="Bold" HorizontalAlignment="Center"/>
+              </Border>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Timestamp to DateTime -->
+      <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="时间戳转日期时间" FontSize="16" FontWeight="SemiBold"/>
+          
+          <StackPanel Spacing="8">
+            <TextBlock Text="时间戳 (支持秒和毫秒)" FontSize="12" Foreground="#666666"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              
+              <TextBox Grid.Column="0" 
+                       Text="{Binding TimestampInput}" 
+                       Classes="input-field"
+                       Watermark="请输入时间戳，如：1640995200"/>
+              
+              <Button Grid.Column="1" 
+                      Content="使用当前" 
+                      Classes="secondary-button" 
+                      Command="{Binding UseCurrentTimestampCommand}"
+                      Margin="8,0,0,0"/>
+            </Grid>
+          </StackPanel>
+          
+          <StackPanel Spacing="8">
+            <TextBlock Text="转换结果" FontSize="12" Foreground="#666666"/>
+            <TextBox Text="{Binding DateTimeResult}" 
+                     IsReadOnly="True" 
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MinHeight="80"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- DateTime to Timestamp -->
+      <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="日期时间转时间戳" FontSize="16" FontWeight="SemiBold"/>
+          
+          <StackPanel Spacing="8">
+            <TextBlock Text="日期时间" FontSize="12" Foreground="#666666"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              
+              <TextBox Grid.Column="0" 
+                       Text="{Binding DateTimeInput}" 
+                       Classes="input-field"
+                       Watermark="请输入日期时间，如：2022-01-01 12:00:00"/>
+              
+              <Button Grid.Column="1" 
+                      Content="使用当前" 
+                      Classes="secondary-button" 
+                      Command="{Binding UseCurrentDateTimeCommand}"
+                      Margin="8,0,0,0"/>
+            </Grid>
+          </StackPanel>
+          
+          <StackPanel Spacing="8">
+            <TextBlock Text="转换结果" FontSize="12" Foreground="#666666"/>
+            <TextBox Text="{Binding TimestampResult}" 
+                     IsReadOnly="True" 
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MinHeight="60"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Usage Instructions -->
+      <Border Background="#FFF9E6" CornerRadius="8" Padding="16" BorderBrush="#FFE066" BorderThickness="1">
+        <StackPanel Spacing="8">
+          <TextBlock Text="💡 使用说明" FontSize="14" FontWeight="SemiBold"/>
+          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666666">
+            • 时间戳支持10位（秒）和13位（毫秒）格式
+            • 日期时间支持多种格式：2022-01-01 12:00:00、2022/01/01 12:00:00等
+            • 转换结果会自动显示本地时间和UTC时间
+            • 可以点击"使用当前"按钮快速填入当前时间
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

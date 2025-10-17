@@ -1,0 +1,136 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:DevUtilities.Converters"
+             xmlns:vm="clr-namespace:DevUtilities.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DevUtilities.Views.JwtEncoderView"
+             x:DataType="vm:JwtEncoderViewModel">
+  
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="JWT 编码器" FontSize="24" FontWeight="Bold" />
+      
+      <!-- 算法选择和选项 -->
+      <StackPanel Orientation="Horizontal" Spacing="20">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="算法:" VerticalAlignment="Center" />
+          <ComboBox ItemsSource="{Binding Algorithms}" 
+                    SelectedItem="{Binding SelectedAlgorithm}" 
+                    Width="100" />
+        </StackPanel>
+        
+        <CheckBox Content="自动更新时间戳" 
+                  IsChecked="{Binding IncludeTimestamps}" />
+        
+        <Button Content="使用示例" Command="{Binding UseExampleCommand}" />
+        <Button Content="清空" Command="{Binding ClearCommand}" />
+      </StackPanel>
+      
+      <!-- JWT 输入部分 -->
+      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,10,200">
+        
+        <!-- Header 输入 -->
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+          <TextBlock Text="Header (JSON)" FontWeight="SemiBold" Margin="0,0,0,5" />
+          <TextBox Text="{Binding HeaderInput}" 
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas"
+                   Height="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+        
+        <!-- Payload 输入 -->
+        <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="3">
+          <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,5">
+            <TextBlock Text="Payload (JSON)" FontWeight="SemiBold" />
+            <Button Content="更新时间戳" 
+                    Command="{Binding UpdateTimestampsCommand}"
+                    IsVisible="{Binding IncludeTimestamps}" />
+          </StackPanel>
+          <TextBox Text="{Binding PayloadInput}" 
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas"
+                   Height="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+        
+      </Grid>
+      
+      <!-- 密钥输入 -->
+      <StackPanel>
+        <TextBlock Text="密钥 (Secret Key)" FontWeight="SemiBold" Margin="0,0,0,5" />
+        <TextBox Text="{Binding SecretKey}" 
+                 Watermark="请输入用于签名的密钥"
+                 FontFamily="Consolas" />
+      </StackPanel>
+      
+      <!-- 操作按钮 -->
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Content="编码 JWT" Command="{Binding EncodeJwtCommand}" />
+        <Button Content="解码 JWT" Command="{Binding DecodeJwtCommand}" />
+        <Button Content="验证签名" Command="{Binding VerifyJwtCommand}" />
+      </StackPanel>
+      
+      <!-- JWT 令牌输出 -->
+      <StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,5">
+          <TextBlock Text="JWT 令牌" FontWeight="SemiBold" />
+          <Button Content="复制" 
+                  Command="{Binding CopyTokenCommand}"
+                  IsVisible="{Binding JwtToken, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </StackPanel>
+        <TextBox Text="{Binding JwtToken}" 
+                 AcceptsReturn="True" 
+                 TextWrapping="Wrap"
+                 FontFamily="Consolas"
+                 Height="100"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Watermark="生成的JWT令牌将显示在这里" />
+      </StackPanel>
+      
+      <!-- 解码结果 -->
+      <Grid ColumnDefinitions="*,20,*" 
+            IsVisible="{Binding DecodedHeader, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        
+        <!-- 解码的 Header -->
+        <StackPanel Grid.Column="0">
+          <TextBlock Text="解码的 Header" FontWeight="SemiBold" Margin="0,0,0,5" />
+          <TextBox Text="{Binding DecodedHeader}" 
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas"
+                   Height="150"
+                   IsReadOnly="True"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+        
+        <!-- 解码的 Payload -->
+        <StackPanel Grid.Column="2">
+          <TextBlock Text="解码的 Payload" FontWeight="SemiBold" Margin="0,0,0,5" />
+          <TextBox Text="{Binding DecodedPayload}" 
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas"
+                   Height="150"
+                   IsReadOnly="True"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+        
+      </Grid>
+      
+      <!-- 验证消息 -->
+      <TextBlock Text="{Binding ValidationMessage}" 
+                 Foreground="{Binding IsValidJwt, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+                 FontWeight="SemiBold"
+                 IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      
+    </StackPanel>
+  </ScrollViewer>
+  
+</UserControl>

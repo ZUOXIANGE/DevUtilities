@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#357ABD;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="url(#grad1)" stroke="#2C5F8A" stroke-width="1"/>
+  
+  <!-- Tool icon -->
+  <g transform="translate(8, 8)">
+    <!-- Wrench -->
+    <path d="M2 2 L14 14 L12 16 L0 4 Z" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="3" cy="3" r="2" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="13" cy="13" r="2" fill="#FFFFFF" opacity="0.7"/>
+    
+    <!-- Screwdriver -->
+    <path d="M6 0 L8 0 L8 6 L10 8 L6 8 L4 6 L4 0 Z" fill="#FFFFFF" opacity="0.8"/>
+    <rect x="5" y="8" width="4" height="8" fill="#FFFFFF" opacity="0.6"/>
+  </g>
+  
+  <!-- Highlight -->
+  <ellipse cx="12" cy="8" rx="3" ry="2" fill="#FFFFFF" opacity="0.3"/>
+</svg>

@@ -1,0 +1,97 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    
+    <!-- Cross-platform Runtime Configuration -->
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <AssemblyName>DevUtilities</AssemblyName>
+    <RootNamespace>DevUtilities</RootNamespace>
+    
+    <!-- Assembly Information -->
+    <AssemblyTitle>DevUtilities</AssemblyTitle>
+    <AssemblyDescription>A comprehensive cross-platform developer utilities application with 19+ essential tools including QR code generation/scanning, encryption/decryption, and various formatters.</AssemblyDescription>
+    <AssemblyCompany>DevUtilities Team</AssemblyCompany>
+    <AssemblyProduct>DevUtilities</AssemblyProduct>
+    <AssemblyCopyright>Copyright © 2025 DevUtilities Team</AssemblyCopyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <InformationalVersion>1.0.0</InformationalVersion>
+    
+    <!-- Package Information -->
+    <PackageId>DevUtilities</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Title>DevUtilities - Developer Tools Collection</Title>
+    <Description>A modern, cross-platform developer utilities application built with Avalonia UI. Features 19+ essential tools including QR code generation and scanning, encryption and decryption tools, JSON/XML formatters, base64 encoding, hash generators, and more. Perfect for developers who need quick access to common development tasks.</Description>
+    <Summary>Cross-platform developer utilities with QR codes, encryption, formatters and more</Summary>
+    <Authors>DevUtilities Team</Authors>
+    <Owners>DevUtilities Team</Owners>
+    <PackageProjectUrl>https://github.com/yourusername/DevUtilities</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yourusername/DevUtilities</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.svg</PackageIcon>
+    <PackageTags>developer-tools;utilities;qr-code;encryption;formatter;cross-platform;avalonia;dotnet</PackageTags>
+    <PackageReleaseNotes>Initial release with 19+ developer tools including QR code generation/scanning and encryption utilities.</PackageReleaseNotes>
+    
+    <!-- Build Configuration -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    
+    <!-- Application Configuration -->
+    <UseWPF>false</UseWPF>
+    <UseWindowsForms>false</UseWindowsForms>
+    <StartupObject>DevUtilities.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="../assets/images/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="\" />
+    <None Include="../LICENSE" Pack="true" PackagePath="\" />
+    <None Include="../CHANGELOG.md" Pack="true" PackagePath="\" />
+    <None Include="../assets/images/icon.svg" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.3" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.3" />
+    <PackageReference Include="AvaloniaEdit" Version="0.10.12" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="ZXing.Net" Version="0.16.10" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Apache.Arrow" Version="17.0.0" />
+    <PackageReference Include="Parquet.Net" Version="4.25.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="**\*.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

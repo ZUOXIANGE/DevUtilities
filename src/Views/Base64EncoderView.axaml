@@ -1,0 +1,108 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DevUtilities.Views.Base64EncoderView"
+             x:DataType="vm:Base64EncoderViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24" Spacing="20">
+      
+      <!-- Control Panel -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Mode Selection -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
+              <RadioButton Content="编码" IsChecked="{Binding IsEncodeMode}" GroupName="Mode"/>
+              <RadioButton Content="解码" IsChecked="{Binding !IsEncodeMode}" GroupName="Mode"/>
+            </StackPanel>
+            
+            <!-- Encoding Selection -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+              <TextBlock Text="字符编码:" VerticalAlignment="Center"/>
+              <ComboBox ItemsSource="{Binding AvailableEncodings}" 
+                        SelectedItem="{Binding SelectedEncoding}"
+                        Width="120"/>
+            </StackPanel>
+            
+            <!-- Action Buttons -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+              <Button Content="交换" Classes="secondary-button" Command="{Binding SwapInputOutputCommand}"/>
+              <Button Content="清空" Classes="secondary-button" Command="{Binding ClearCommand}"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Input/Output Layout -->
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="16"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Input Section -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='原始文本|Base64编码'}" 
+                       FontSize="14" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding InputText}" 
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap"
+                     MinHeight="200"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     Watermark="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='请输入要编码的文本...|请输入要解码的Base64字符串...'}"/>
+          </StackPanel>
+        </Border>
+
+        <!-- Arrow Indicator -->
+        <TextBlock Grid.Row="1" Text="↓" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#4A90E2"/>
+
+        <!-- Output Section -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|解码结果'}" 
+                       FontSize="14" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding OutputText}" 
+                     IsReadOnly="True"
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap"
+                     MinHeight="200"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     Background="#F8F9FA"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Usage Instructions -->
+      <Border Background="#FFF9E6" CornerRadius="8" Padding="16" BorderBrush="#FFE066" BorderThickness="1">
+        <StackPanel Spacing="8">
+          <TextBlock Text="💡 使用说明" FontSize="14" FontWeight="SemiBold"/>
+          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666666">
+            • 选择"编码"模式将普通文本转换为Base64格式
+            • 选择"解码"模式将Base64字符串还原为原始文本
+            • 支持多种字符编码：UTF-8、UTF-16、ASCII、GBK
+            • 输入内容会自动进行转换
+            • 点击"交换"按钮可以快速切换输入输出内容
+            • Base64编码常用于数据传输和存储
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

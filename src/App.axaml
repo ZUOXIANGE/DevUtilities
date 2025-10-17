@@ -1,0 +1,134 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:views="using:DevUtilities.Views"
+             xmlns:converters="using:DevUtilities.Converters"
+             x:Class="DevUtilities.App"
+             RequestedThemeVariant="Default">
+
+  <Application.DataTemplates>
+    <!-- Tool View Templates -->
+    <DataTemplate DataType="{x:Type vm:TimestampConverterViewModel}">
+      <views:TimestampConverterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:JsonFormatterViewModel}">
+      <views:JsonFormatterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:Base64EncoderViewModel}">
+      <views:Base64EncoderView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PasswordGeneratorViewModel}">
+      <views:PasswordGeneratorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UrlToolsViewModel}">
+      <views:UrlToolsView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HexConverterViewModel}">
+      <views:HexConverterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:JwtEncoderViewModel}">
+      <views:JwtEncoderView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SqlFormatterViewModel}">
+      <views:SqlFormatterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HtmlFormatterViewModel}">
+      <views:HtmlFormatterView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CryptoToolsViewModel}">
+      <views:CryptoToolsView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:QrCodeViewModel}">
+      <views:QrCodeView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CronExpressionViewModel}">
+      <views:CronExpressionView/>
+    </DataTemplate>
+  </Application.DataTemplates>
+
+  <Application.Styles>
+    <FluentTheme />
+    
+    <!-- Custom Styles -->
+    <Style Selector="Window">
+      <Setter Property="Background" Value="#F5F5F5"/>
+    </Style>
+    
+    <Style Selector="Button.tool-button">
+      <Setter Property="Background" Value="White"/>
+      <Setter Property="BorderBrush" Value="#E0E0E0"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="Margin" Value="8"/>
+      <Setter Property="MinHeight" Value="80"/>
+      <Setter Property="MinWidth" Value="120"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    
+    <Style Selector="Button.tool-button:pointerover">
+      <Setter Property="Background" Value="#F0F8FF"/>
+      <Setter Property="BorderBrush" Value="#4A90E2"/>
+    </Style>
+    
+    <Style Selector="Button.tool-button:pressed">
+      <Setter Property="Background" Value="#E6F3FF"/>
+    </Style>
+    
+    <Style Selector="TextBlock.tool-title">
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="#333333"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+    
+    <Style Selector="TextBlock.tool-description">
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="Foreground" Value="#666666"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="Margin" Value="0,4,0,0"/>
+    </Style>
+    
+    <Style Selector="Panel.tool-content">
+      <Setter Property="Background" Value="White"/>
+      <Setter Property="Margin" Value="16"/>
+    </Style>
+    
+    <Style Selector="TextBox.input-field">
+      <Setter Property="Padding" Value="12"/>
+      <Setter Property="BorderBrush" Value="#E0E0E0"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Background" Value="White"/>
+    </Style>
+    
+    <Style Selector="Button.primary-button">
+      <Setter Property="Background" Value="#4A90E2"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Padding" Value="16,8"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    
+    <Style Selector="Button.primary-button:pointerover">
+      <Setter Property="Background" Value="#357ABD"/>
+    </Style>
+    
+    <Style Selector="Button.secondary-button">
+      <Setter Property="Background" Value="White"/>
+      <Setter Property="Foreground" Value="#4A90E2"/>
+      <Setter Property="BorderBrush" Value="#4A90E2"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Padding" Value="16,8"/>
+    </Style>
+    
+    <Style Selector="Button.secondary-button:pointerover">
+      <Setter Property="Background" Value="#F0F8FF"/>
+    </Style>
+  </Application.Styles>
+
+</Application>

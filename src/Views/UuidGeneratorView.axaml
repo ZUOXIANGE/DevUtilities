@@ -1,0 +1,192 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.UuidGeneratorView"
+             x:DataType="vm:UuidGeneratorViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      <!-- 标题 -->
+      <TextBlock Text="UUID生成器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"/>
+
+      <!-- 格式选择和选项 -->
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,10">
+        <TextBlock Grid.Column="0" 
+                   Text="格式:" 
+                   VerticalAlignment="Center" 
+                   FontWeight="SemiBold"/>
+        <ComboBox Grid.Column="1" 
+                  ItemsSource="{Binding UuidFormats}"
+                  SelectedItem="{Binding SelectedFormat}"
+                  Margin="10,0"/>
+        <CheckBox Grid.Column="2" 
+                  Content="大写" 
+                  IsChecked="{Binding UpperCase}"
+                  Margin="10,0"/>
+      </Grid>
+
+      <!-- 单个UUID生成 -->
+      <Border Background="#F5F5F5" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="单个UUID生成" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,Auto,Auto">
+            <TextBox Grid.Column="0" 
+                     Text="{Binding GeneratedUuid}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     FontSize="14"/>
+            <Button Grid.Column="1" 
+                    Content="生成" 
+                    Command="{Binding GenerateNewUuidCommand}"
+                    Margin="5,0"/>
+            <Button Grid.Column="2" 
+                    Content="复制" 
+                    Command="{Binding CopyUuidCommand}"
+                    Margin="5,0"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 批量生成 -->
+      <Border Background="#F0F8FF" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="批量生成" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid ColumnDefinitions="Auto,100,Auto,Auto" Margin="0,5">
+            <TextBlock Grid.Column="0" 
+                       Text="数量:" 
+                       VerticalAlignment="Center"/>
+            <NumericUpDown Grid.Column="1" 
+                           Value="{Binding GenerateCount}"
+                           Minimum="1"
+                           Maximum="1000"
+                           Margin="10,0"/>
+            <Button Grid.Column="2" 
+                    Content="批量生成" 
+                    Command="{Binding GenerateBatchCommand}"
+                    Margin="10,0"/>
+            <Button Grid.Column="3" 
+                    Content="复制结果" 
+                    Command="{Binding CopyBatchCommand}"
+                    Margin="5,0"/>
+          </Grid>
+
+          <TextBox Text="{Binding BatchResults}" 
+                   Height="150"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   IsReadOnly="True"
+                   FontFamily="Consolas"
+                   FontSize="12"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </StackPanel>
+      </Border>
+
+      <!-- UUID验证 -->
+      <Border Background="#FFF8DC" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="UUID验证与解析" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Grid.Column="0" 
+                     x:Name="ValidateInput"
+                     Watermark="输入要验证的UUID..."
+                     FontFamily="Consolas"/>
+            <Button Grid.Column="1" 
+                    Content="验证" 
+                    Command="{Binding ValidateUuidCommand}"
+                    CommandParameter="{Binding #ValidateInput.Text}"
+                    Margin="5,0"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 历史记录 -->
+      <Border Background="#F0FFF0" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="生成历史" 
+                       FontWeight="SemiBold" 
+                       FontSize="16"/>
+            <Button Grid.Column="1" 
+                    Content="清除历史" 
+                    Command="{Binding ClearHistoryCommand}"/>
+          </Grid>
+
+          <ListBox ItemsSource="{Binding GeneratedHistory}" 
+                   Height="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Grid.Column="0" 
+                             Text="{Binding}" 
+                             FontFamily="Consolas"
+                             FontSize="12"
+                             VerticalAlignment="Center"/>
+                  <Button Grid.Column="1" 
+                          Content="复制" 
+                          Command="{Binding $parent[ListBox].((vm:UuidGeneratorViewModel)DataContext).CopyHistoryCommand}"
+                          CommandParameter="{Binding}"
+                          FontSize="10"
+                          Padding="5,2"/>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </Border>
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="10" Margin="10">
+          <TextBlock Text="• 标准格式：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" TextWrapping="Wrap" FontFamily="Consolas"/>
+          <TextBlock Text="• 无连字符：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" TextWrapping="Wrap" FontFamily="Consolas"/>
+          <TextBlock Text="• 大括号格式：{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}" TextWrapping="Wrap" FontFamily="Consolas"/>
+          <TextBlock Text="• 圆括号格式：(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)" TextWrapping="Wrap" FontFamily="Consolas"/>
+          <TextBlock Text="• Base64格式：22字符的Base64编码" TextWrapping="Wrap"/>
+          <TextBlock Text="• 短UUID：22字符的URL安全Base64编码" TextWrapping="Wrap"/>
+          <TextBlock Text="• 支持单个生成和批量生成（最多1000个）" TextWrapping="Wrap"/>
+          <TextBlock Text="• 可以验证和解析现有UUID的详细信息" TextWrapping="Wrap"/>
+          <TextBlock Text="• 自动保存最近50个生成的UUID到历史记录" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Expander>
+
+      <!-- UUID格式参考 -->
+      <Expander Header="UUID格式参考" IsExpanded="False">
+        <StackPanel Spacing="8" Margin="10">
+          <TextBlock Text="UUID版本说明：" FontWeight="SemiBold"/>
+          <TextBlock Text="• 版本1：基于时间戳和MAC地址" TextWrapping="Wrap"/>
+          <TextBlock Text="• 版本2：DCE安全UUID" TextWrapping="Wrap"/>
+          <TextBlock Text="• 版本3：基于名称的MD5哈希" TextWrapping="Wrap"/>
+          <TextBlock Text="• 版本4：随机或伪随机生成（最常用）" TextWrapping="Wrap"/>
+          <TextBlock Text="• 版本5：基于名称的SHA-1哈希" TextWrapping="Wrap"/>
+          
+          <TextBlock Text="示例UUID：" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <TextBlock Text="550e8400-e29b-41d4-a716-446655440000" FontFamily="Consolas" FontSize="12"/>
+          <TextBlock Text="6ba7b810-9dad-11d1-80b4-00c04fd430c8" FontFamily="Consolas" FontSize="12"/>
+          <TextBlock Text="6ba7b811-9dad-11d1-80b4-00c04fd430c8" FontFamily="Consolas" FontSize="12"/>
+        </StackPanel>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DevUtilities.Views.JsonFormatterView"
+             x:DataType="vm:JsonFormatterViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24" Spacing="20">
+      
+      <!-- Control Panel -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Orientation="Horizontal" Spacing="16">
+          <Button Content="格式化" Classes="primary-button" Command="{Binding FormatJsonCommand}"/>
+          <Button Content="压缩" Classes="secondary-button" Command="{Binding MinifyJsonCommand}"/>
+          <Button Content="验证" Classes="secondary-button" Command="{Binding ValidateJsonCommand}"/>
+          <Button Content="清空" Classes="secondary-button" Command="{Binding ClearAllCommand}"/>
+          
+          <StackPanel Orientation="Horizontal" Spacing="8" Margin="16,0,0,0">
+            <TextBlock Text="缩进:" VerticalAlignment="Center"/>
+            <NumericUpDown Value="{Binding IndentSize}" Minimum="1" Maximum="8" Width="80"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Validation Status -->
+      <Border Background="{Binding IsValidJson, Converter={x:Static converters:BooleanToColorConverter.Instance}}" 
+              CornerRadius="4" Padding="12" 
+              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringIsNotNullOrEmptyConverter.Instance}}">
+        <TextBlock Text="{Binding ValidationMessage}" FontWeight="SemiBold"/>
+      </Border>
+
+      <!-- Input/Output Layout -->
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="16"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Input Section -->
+        <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="输入JSON" FontSize="14" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding InputJson}" 
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap"
+                     MinHeight="400"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     Watermark="请输入JSON数据..."/>
+          </StackPanel>
+        </Border>
+
+        <!-- Output Section -->
+        <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <Grid>
+              <TextBlock Text="输出结果" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"/>
+              <Button Content="复制" Classes="secondary-button" Command="{Binding CopyOutputCommand}" HorizontalAlignment="Right"/>
+            </Grid>
+            <TextBox Text="{Binding OutputJson}" 
+                     IsReadOnly="True"
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap"
+                     MinHeight="400"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     Background="#F8F9FA"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Usage Instructions -->
+      <Border Background="#FFF9E6" CornerRadius="8" Padding="16" BorderBrush="#FFE066" BorderThickness="1">
+        <StackPanel Spacing="8">
+          <TextBlock Text="💡 使用说明" FontSize="14" FontWeight="SemiBold"/>
+          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666666">
+            • 在左侧输入框中粘贴或输入JSON数据
+            • 点击"格式化"按钮美化JSON格式
+            • 点击"压缩"按钮移除所有空白字符
+            • 点击"验证"按钮检查JSON格式是否正确
+            • 可以调整缩进大小（1-8个空格）
+            • 输入内容会自动进行格式验证
+          </TextBlock>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</UserControl>

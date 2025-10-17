@@ -1,0 +1,273 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.RegexTesterView"
+             x:DataType="vm:RegexTesterViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      <!-- 标题 -->
+      <TextBlock Text="正则表达式测试器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"/>
+
+      <!-- 错误信息 -->
+      <Border Background="#FFEBEE" 
+              CornerRadius="5" 
+              Padding="10"
+              IsVisible="{Binding HasError}">
+        <TextBlock Text="{Binding ErrorMessage}" 
+                   Foreground="Red" 
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 正则表达式输入 -->
+      <Border Background="#F5F5F5" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="正则表达式" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <TextBox Text="{Binding Pattern}" 
+                   Watermark="输入正则表达式 (例如: \d+)"
+                   FontFamily="Consolas"
+                   FontSize="14"/>
+
+          <!-- 选项 -->
+          <WrapPanel Orientation="Horizontal" Margin="0,10">
+            <CheckBox Content="忽略大小写 (i)" 
+                      IsChecked="{Binding IgnoreCase}" 
+                      Margin="0,0,15,0"/>
+            <CheckBox Content="多行模式 (m)" 
+                      IsChecked="{Binding Multiline}" 
+                      Margin="0,0,15,0"/>
+            <CheckBox Content="单行模式 (s)" 
+                      IsChecked="{Binding Singleline}" 
+                      Margin="0,0,15,0"/>
+            <CheckBox Content="显式捕获 (n)" 
+                      IsChecked="{Binding ExplicitCapture}" 
+                      Margin="0,0,15,0"/>
+            <CheckBox Content="忽略空白 (x)" 
+                      IsChecked="{Binding IgnoreWhitespace}"/>
+          </WrapPanel>
+
+          <!-- 操作按钮 -->
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="测试" 
+                    Command="{Binding TestRegexCommand}"
+                    Background="#4CAF50"
+                    Foreground="White"/>
+            <Button Content="清除所有" 
+                    Command="{Binding ClearAllCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 测试文本 -->
+      <Border Background="#F0F8FF" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="测试文本" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <TextBox Text="{Binding TestText}" 
+                   Height="120"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   Watermark="输入要测试的文本..."
+                   FontFamily="Consolas"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 匹配结果 -->
+      <Border Background="#F0FFF0" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="匹配结果" 
+                       FontWeight="SemiBold" 
+                       FontSize="16"/>
+            <TextBlock Grid.Column="1" 
+                       Text="{Binding MatchSummary}" 
+                       FontStyle="Italic"/>
+          </Grid>
+
+          <ListBox ItemsSource="{Binding Matches}" 
+                   Height="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Border Background="White" 
+                        CornerRadius="5" 
+                        Padding="10" 
+                        Margin="0,2">
+                  <StackPanel Spacing="5">
+                    <Grid ColumnDefinitions="*,Auto,Auto">
+                      <TextBlock Grid.Column="0" 
+                                 Text="{Binding Value}" 
+                                 FontFamily="Consolas"
+                                 FontWeight="Bold"
+                                 Foreground="#2196F3"/>
+                      <TextBlock Grid.Column="1" 
+                                 Text="{Binding Index, StringFormat='位置: {0}'}" 
+                                 FontSize="12"
+                                 Margin="10,0"/>
+                      <Button Grid.Column="2" 
+                              Content="复制" 
+                              Command="{Binding $parent[ListBox].((vm:RegexTesterViewModel)DataContext).CopyMatchCommand}"
+                              CommandParameter="{Binding}"
+                              FontSize="10"
+                              Padding="5,2"/>
+                    </Grid>
+                    
+                    <!-- 捕获组 -->
+                    <ItemsControl ItemsSource="{Binding Groups}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <Grid ColumnDefinitions="100,*" Margin="10,0,0,0">
+                            <TextBlock Grid.Column="0" 
+                                       Text="{Binding Name}" 
+                                       FontSize="11"
+                                       Foreground="Gray"/>
+                            <TextBlock Grid.Column="1" 
+                                       Text="{Binding Value}" 
+                                       FontFamily="Consolas"
+                                       FontSize="11"/>
+                          </Grid>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </Border>
+
+      <!-- 替换功能 -->
+      <Border Background="#FFF8DC" 
+              CornerRadius="8" 
+              Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="替换功能" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Grid.Column="0" 
+                     Text="{Binding ReplaceText}" 
+                     Watermark="输入替换文本 (支持 $1, $2 等捕获组引用)"
+                     FontFamily="Consolas"/>
+            <Button Grid.Column="1" 
+                    Content="替换" 
+                    Command="{Binding ReplaceTextContentCommand}"
+                    Margin="5,0"/>
+          </Grid>
+
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Grid.Column="0" 
+                     Text="{Binding ReplaceResult}" 
+                     Height="80"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            <Button Grid.Column="1" 
+                    Content="复制结果" 
+                    Command="{Binding CopyReplaceResultCommand}"
+                    VerticalAlignment="Top"
+                    Margin="5,0"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 常用模式 -->
+      <Expander Header="常用正则模式" IsExpanded="False">
+        <StackPanel Spacing="5" Margin="10">
+          <ItemsControl ItemsSource="{Binding CommonPatterns}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Content="{Binding}" 
+                        Command="{Binding $parent[UserControl].((vm:RegexTesterViewModel)DataContext).UseCommonPatternCommand}"
+                        CommandParameter="{Binding}"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        FontFamily="Consolas"
+                        FontSize="12"
+                        Margin="0,1"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Expander>
+
+      <!-- 历史记录 -->
+      <Expander Header="使用历史" IsExpanded="False">
+        <StackPanel Spacing="5" Margin="10">
+          <ListBox ItemsSource="{Binding PatternHistory}" 
+                   Height="150"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Button Content="{Binding}" 
+                        Command="{Binding $parent[ListBox].((vm:RegexTesterViewModel)DataContext).UseHistoryPatternCommand}"
+                        CommandParameter="{Binding}"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        FontFamily="Consolas"
+                        FontSize="12"/>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </Expander>
+
+      <!-- 使用说明 -->
+      <Expander Header="正则表达式语法说明" IsExpanded="False">
+        <StackPanel Spacing="8" Margin="10">
+          <TextBlock Text="基本语法：" FontWeight="SemiBold"/>
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" 
+                ColumnDefinitions="100,*" 
+                Margin="10,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="." FontFamily="Consolas"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="匹配任意单个字符"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="*" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="匹配前面的字符0次或多次"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="+" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="匹配前面的字符1次或多次"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="?" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="匹配前面的字符0次或1次"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="^" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="匹配行的开始"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="$" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="匹配行的结束"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="\d" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="匹配数字字符"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="\w" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="匹配单词字符"/>
+          </Grid>
+
+          <TextBlock Text="字符类：" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <TextBlock Text="[abc] - 匹配a、b或c中的任意一个" FontFamily="Consolas" Margin="10,0"/>
+          <TextBlock Text="[a-z] - 匹配小写字母" FontFamily="Consolas" Margin="10,0"/>
+          <TextBlock Text="[^abc] - 匹配除a、b、c之外的任意字符" FontFamily="Consolas" Margin="10,0"/>
+
+          <TextBlock Text="量词：" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <TextBlock Text="{}{n} - 匹配n次" FontFamily="Consolas" Margin="10,0"/>
+          <TextBlock Text="{}{n,} - 匹配n次或更多" FontFamily="Consolas" Margin="10,0"/>
+          <TextBlock Text="{}{n,m} - 匹配n到m次" FontFamily="Consolas" Margin="10,0"/>
+        </StackPanel>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

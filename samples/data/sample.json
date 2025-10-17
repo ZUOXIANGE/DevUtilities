@@ -1,0 +1,42 @@
+{
+  "name": "DevUtilities Sample",
+  "version": "1.0.0",
+  "description": "Sample JSON file for testing the JSON formatter tool",
+  "features": [
+    "JSON Formatting",
+    "JSON Validation",
+    "Syntax Highlighting"
+  ],
+  "configuration": {
+    "theme": "dark",
+    "autoFormat": true,
+    "indentSize": 2
+  },
+  "tools": {
+    "formatters": {
+      "json": {
+        "enabled": true,
+        "prettyPrint": true
+      },
+      "xml": {
+        "enabled": true,
+        "validateSchema": false
+      }
+    },
+    "converters": {
+      "base64": {
+        "enabled": true,
+        "urlSafe": false
+      },
+      "timestamp": {
+        "enabled": true,
+        "format": "ISO8601"
+      }
+    }
+  },
+  "metadata": {
+    "created": "2024-01-01T00:00:00Z",
+    "lastModified": "2024-01-01T12:00:00Z",
+    "author": "DevUtilities Team"
+  }
+}

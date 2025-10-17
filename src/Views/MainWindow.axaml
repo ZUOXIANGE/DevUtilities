@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DevUtilities.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="DevUtilities.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding Title}"
+        Width="1200" Height="800"
+        MinWidth="800" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid>
+    <!-- Home View -->
+    <Grid IsVisible="{Binding !IsToolViewVisible}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      
+      <!-- Header -->
+      <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="24,16">
+        <StackPanel>
+          <TextBlock Text="DevUtilities" FontSize="28" FontWeight="Bold" Foreground="#333333"/>
+          <TextBlock Text="开发者工具集 - 19个实用工具" FontSize="14" Foreground="#666666" Margin="0,4,0,0"/>
+        </StackPanel>
+      </Border>
+      
+      <!-- Tools Grid -->
+      <ScrollViewer Grid.Row="1" Padding="16">
+        <ItemsControl ItemsSource="{Binding Tools}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Button Classes="tool-button" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectToolCommand}" CommandParameter="{Binding}">
+                <StackPanel>
+                  <TextBlock Text="{Binding Icon}" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                  <TextBlock Text="{Binding DisplayName}" Classes="tool-title"/>
+                  <TextBlock Text="{Binding Description}" Classes="tool-description" MaxWidth="100"/>
+                </StackPanel>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+    
+    <!-- Tool View -->
+    <Grid IsVisible="{Binding IsToolViewVisible}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      
+      <!-- Tool Header -->
+      <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="16">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          
+          <Button Grid.Column="0" Command="{Binding BackToHomeCommand}" Background="Transparent" BorderThickness="0" Padding="8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="←" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+              <TextBlock Text="返回" FontSize="14" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+          
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+            <TextBlock Text="{Binding SelectedTool.Icon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+            <StackPanel>
+              <TextBlock Text="{Binding SelectedTool.DisplayName}" FontSize="18" FontWeight="SemiBold" Foreground="#333333"/>
+              <TextBlock Text="{Binding SelectedTool.Description}" FontSize="12" Foreground="#666666"/>
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+      </Border>
+      
+      <!-- Tool Content -->
+      <ContentControl Grid.Row="1" Content="{Binding CurrentToolViewModel}" Classes="tool-content"/>
+    </Grid>
+  </Grid>
+
+</Window>
