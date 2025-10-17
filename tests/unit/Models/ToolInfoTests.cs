@@ -72,8 +72,6 @@ public class ToolInfoTests
         // Assert - 验证所有枚举值都存在
         var expectedValues = new[]
         {
-            ToolType.AiChat,
-            ToolType.AiTranslate,
             ToolType.TimestampConverter,
             ToolType.UnitConverter,
             ToolType.BaseConverter,
@@ -91,7 +89,8 @@ public class ToolInfoTests
             ToolType.IpQuery,
             ToolType.QrCode,
             ToolType.ParquetViewer,
-            ToolType.CryptoTools
+            ToolType.CryptoTools,
+            ToolType.CronExpression
         };
 
         foreach (var expectedValue in expectedValues)
@@ -107,12 +106,10 @@ public class ToolInfoTests
         var enumValues = System.Enum.GetValues<ToolType>();
 
         // Assert
-        enumValues.Length.Should().Be(20, "ToolType enum should have exactly 20 values");
+        enumValues.Length.Should().Be(19, "ToolType enum should have exactly 19 values");
     }
 
     [Theory]
-    [InlineData(ToolType.AiChat)]
-    [InlineData(ToolType.AiTranslate)]
     [InlineData(ToolType.TimestampConverter)]
     [InlineData(ToolType.UnitConverter)]
     [InlineData(ToolType.BaseConverter)]
@@ -131,6 +128,7 @@ public class ToolInfoTests
     [InlineData(ToolType.QrCode)]
     [InlineData(ToolType.ParquetViewer)]
     [InlineData(ToolType.CryptoTools)]
+    [InlineData(ToolType.CronExpression)]
     public void ToolType_AllValues_ShouldBeValid(ToolType toolType)
     {
         // Act & Assert

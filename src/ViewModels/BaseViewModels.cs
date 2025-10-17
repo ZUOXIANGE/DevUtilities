@@ -9,24 +9,6 @@ public partial class BaseToolViewModel : ObservableObject
     private string message = "此功能正在开发中，敬请期待...";
 }
 
-// AI聊天工具
-public partial class AiChatViewModel : BaseToolViewModel
-{
-    public AiChatViewModel()
-    {
-        Message = "AI聊天功能正在开发中，将支持智能对话和代码助手功能...";
-    }
-}
-
-// AI翻译工具
-public partial class AiTranslateViewModel : BaseToolViewModel
-{
-    public AiTranslateViewModel()
-    {
-        Message = "AI翻译功能正在开发中，将支持多语言智能翻译...";
-    }
-}
-
 // 单位转换器 - 现在有完整实现，移除基础实现
 // public partial class UnitConverterViewModel : BaseToolViewModel
 
@@ -34,6 +16,7 @@ public partial class AiTranslateViewModel : BaseToolViewModel
 // public partial class BaseConverterViewModel : BaseToolViewModel
 
 // SQL格式化器 - 现在有完整实现，移除基础实现
+// SqlFormatterViewModel 现在有完整实现，移除基础实现
 // public partial class SqlFormatterViewModel : BaseToolViewModel
 // {
 //     public SqlFormatterViewModel()
@@ -43,6 +26,7 @@ public partial class AiTranslateViewModel : BaseToolViewModel
 // }
 
 // HTML格式化器 - 现在有完整实现，移除基础实现
+// HtmlFormatterViewModel 现在有完整实现，移除基础实现
 // public partial class HtmlFormatterViewModel : BaseToolViewModel
 // {
 //     public HtmlFormatterViewModel()
@@ -90,25 +74,26 @@ public partial class AiTranslateViewModel : BaseToolViewModel
 //     }
 // }
 
-// HTTP请求工具
-public partial class HttpRequestViewModel : BaseToolViewModel
-{
-    public HttpRequestViewModel()
-    {
-        Message = "HTTP请求功能正在开发中，将支持REST API测试和调试...";
-    }
-}
+// HTTP请求工具 - 现在有完整实现，移除基础实现
+// public partial class HttpRequestViewModel : BaseToolViewModel
+// {
+//     public HttpRequestViewModel()
+//     {
+//         Message = "HTTP请求功能正在开发中，将支持REST API测试和调试...";
+//     }
+// }
 
-// IP查询工具
-public partial class IpQueryViewModel : BaseToolViewModel
-{
-    public IpQueryViewModel()
-    {
-        Message = "IP查询功能正在开发中，将支持IP地址查询和地理位置定位...";
-    }
-}
+// IP查询工具 - 现在有完整实现，移除基础实现
+// public partial class IpQueryViewModel : BaseToolViewModel
+// {
+//     public IpQueryViewModel()
+//     {
+//         Message = "IP查询功能正在开发中，将支持IP地址查询和地理位置定位...";
+//     }
+// }
 
 // 二维码工具
+// QrCodeViewModel 现在有完整实现，移除基础实现
 // public partial class QrCodeViewModel : BaseToolViewModel
 // {
 //     public QrCodeViewModel()
@@ -117,14 +102,14 @@ public partial class IpQueryViewModel : BaseToolViewModel
 //     }
 // }
 
-// Parquet查看器
-public partial class ParquetViewerViewModel : BaseToolViewModel
-{
-    public ParquetViewerViewModel()
-    {
-        Message = "Parquet查看器功能正在开发中，将支持Parquet文件数据预览...";
-    }
-}
+// Parquet查看器 - 现在有完整实现，移除基础实现
+// public partial class ParquetViewerViewModel : BaseToolViewModel
+// {
+//     public ParquetViewerViewModel()
+//     {
+//         Message = "Parquet查看器功能正在开发中，将支持Parquet文件数据预览...";
+//     }
+// }
 
 // 加密工具 - 现在有完整实现，移除基础实现
 // public partial class CryptoToolsViewModel : BaseToolViewModel

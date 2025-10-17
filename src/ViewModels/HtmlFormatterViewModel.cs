@@ -12,7 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace DevUtilities.ViewModels;
 
-public partial class HtmlFormatterViewModel : BaseToolViewModel
+public partial class HtmlFormatterViewModel : ObservableObject
 {
     [ObservableProperty]
     private string inputHtml = "";

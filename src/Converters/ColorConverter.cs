@@ -24,7 +24,12 @@ namespace DevUtilities.ViewModels
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value is SolidColorBrush brush)
+            {
+                var color = brush.Color;
+                return color.R; // 返回红色分量，这是一个简化实现
+            }
+            return 0;
         }
     }
 
@@ -50,7 +55,12 @@ namespace DevUtilities.ViewModels
 
         public object[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value is SolidColorBrush brush)
+            {
+                var color = brush.Color;
+                return new object[] { (int)color.R, (int)color.G, (int)color.B };
+            }
+            return new object[] { 0, 0, 0 };
         }
     }
 }

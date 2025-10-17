@@ -12,7 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace DevUtilities.ViewModels;
 
-public partial class SqlFormatterViewModel : BaseToolViewModel
+public partial class SqlFormatterViewModel : ObservableObject
 {
     [ObservableProperty]
     private string inputSql = "";

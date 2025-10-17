@@ -19,7 +19,7 @@ using SkiaSharp;
 
 namespace DevUtilities.ViewModels;
 
-public partial class QrCodeViewModel : BaseToolViewModel
+public partial class QrCodeViewModel : ObservableObject
 {
     [ObservableProperty]
     private string inputText = "";

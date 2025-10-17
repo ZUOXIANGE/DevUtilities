@@ -16,6 +16,7 @@
     <Grid IsVisible="{Binding !IsToolViewVisible}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
       
@@ -27,27 +28,71 @@
         </StackPanel>
       </Border>
       
-      <!-- Tools Grid -->
-      <ScrollViewer Grid.Row="1" Padding="16">
-        <ItemsControl ItemsSource="{Binding Tools}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
+      <!-- Search and Sort Controls -->
+      <Border Grid.Row="1" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="24,12">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
           
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Button Classes="tool-button" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectToolCommand}" CommandParameter="{Binding}">
-                <StackPanel>
-                  <TextBlock Text="{Binding Icon}" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-                  <TextBlock Text="{Binding DisplayName}" Classes="tool-title"/>
-                  <TextBlock Text="{Binding Description}" Classes="tool-description" MaxWidth="100"/>
-                </StackPanel>
-              </Button>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+          <!-- Search Box -->
+          <TextBox Grid.Column="0" 
+                   Text="{Binding SearchText}" 
+                   Watermark="搜索工具..." 
+                   FontSize="14"
+                   Padding="12,8"
+                   Margin="0,0,16,0"
+                   Background="White"
+                   BorderBrush="#D0D7DE"
+                   BorderThickness="1"
+                   CornerRadius="6">
+            <TextBox.InnerLeftContent>
+              <TextBlock Text="🔍" FontSize="14" Margin="8,0,4,0" Foreground="#656D76"/>
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          
+          <!-- Sort ComboBox -->
+          <ComboBox Grid.Column="1" 
+                    ItemsSource="{Binding SortOptions}"
+                    SelectedItem="{Binding SelectedSortOption}"
+                    FontSize="14"
+                    Padding="12,8"
+                    MinWidth="120"
+                    Background="White"
+                    BorderBrush="#D0D7DE"
+                    BorderThickness="1"
+                    CornerRadius="6"/>
+        </Grid>
+      </Border>
+      
+      <!-- Tools Grid -->
+      <ScrollViewer Grid.Row="2" Padding="24">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          
+          <ItemsControl ItemsSource="{Binding FilteredTools}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Columns="6" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Classes="tool-button" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectToolCommand}" CommandParameter="{Binding}">
+                  <StackPanel>
+                    <TextBlock Text="{Binding Icon}" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding DisplayName}" Classes="tool-title"/>
+                    <TextBlock Text="{Binding Description}" Classes="tool-description"/>
+                  </StackPanel>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Grid>
       </ScrollViewer>
     </Grid>
     

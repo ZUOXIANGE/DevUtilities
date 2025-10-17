@@ -1,0 +1,223 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.IpQueryView"
+             x:DataType="vm:IpQueryViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="16" Margin="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="IP 地址查询" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 Margin="0,0,0,10"/>
+      
+      <!-- 输入区域 -->
+      <Border Background="#F8F9FA" 
+              BorderBrush="#DEE2E6" 
+              BorderThickness="1" 
+              CornerRadius="8" 
+              Padding="16">
+        <StackPanel Spacing="12">
+          
+          <!-- IP输入 -->
+          <Grid ColumnDefinitions="*,Auto,Auto">
+            <TextBox Grid.Column="0" 
+                     Text="{Binding InputIp}"
+                     Watermark="输入IP地址 (留空查询当前IP)"
+                     Margin="0,0,10,0"/>
+            
+            <Button Grid.Column="1" 
+                    Content="获取当前IP"
+                    Command="{Binding GetCurrentIpCommand}"
+                    IsEnabled="{Binding !IsLoading}"
+                    Margin="0,0,10,0"/>
+            
+            <Button Grid.Column="2" 
+                    Content="查询"
+                    Command="{Binding QueryIpCommand}"
+                    IsEnabled="{Binding !IsLoading}"
+                    Classes="accent"/>
+          </Grid>
+
+          <!-- 验证消息 -->
+          <TextBlock Text="{Binding ValidationMessage}" 
+                     Foreground="Orange"
+                     IsVisible="{Binding !IsValidIp}"
+                     FontSize="12"/>
+
+          <!-- 当前IP显示 -->
+          <StackPanel Orientation="Horizontal" 
+                      IsVisible="{Binding CurrentIp, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Text="当前IP: " FontWeight="Medium"/>
+            <TextBlock Text="{Binding CurrentIp}" 
+                       Foreground="#007ACC"
+                       FontFamily="Consolas,Monaco,monospace"/>
+          </StackPanel>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 加载指示器 -->
+      <ProgressBar IsIndeterminate="{Binding IsLoading}" 
+                   IsVisible="{Binding IsLoading}"
+                   Height="4"/>
+
+      <!-- 错误消息 -->
+      <Border IsVisible="{Binding HasError}"
+              Background="#FFEBEE"
+              BorderBrush="#F44336"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="12">
+        <TextBlock Text="{Binding ErrorMessage}" 
+                   Foreground="#D32F2F"
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- IP信息显示 -->
+      <Border IsVisible="{Binding IpInfo, Converter={x:Static ObjectConverters.IsNotNull}}"
+              Background="White"
+              BorderBrush="#DEE2E6"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="16">
+          
+          <TextBlock Text="查询结果" 
+                     FontSize="18" 
+                     FontWeight="Bold"
+                     Margin="0,0,0,10"/>
+
+          <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            
+            <!-- IP地址 -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="IP地址:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" 
+                       Text="{Binding IpInfo.Ip}" 
+                       FontFamily="Consolas,Monaco,monospace"
+                       Foreground="#007ACC"
+                       Margin="0,0,0,8"/>
+
+            <!-- 国家 -->
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="国家:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,8">
+              <TextBlock Text="{Binding IpInfo.Country}"/>
+              <TextBlock Text="{Binding IpInfo.CountryCode, StringFormat=' ({0})'}" 
+                         Foreground="Gray"
+                         IsVisible="{Binding IpInfo.CountryCode, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            </StackPanel>
+
+            <!-- 地区 -->
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="地区:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding IpInfo.Region}" Margin="0,0,0,8"/>
+
+            <!-- 城市 -->
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="城市:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding IpInfo.City}" Margin="0,0,0,8"/>
+
+            <!-- 邮编 -->
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="邮编:" FontWeight="Medium" Margin="0,0,0,8"
+                       IsVisible="{Binding IpInfo.ZipCode, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding IpInfo.ZipCode}" Margin="0,0,0,8"
+                       IsVisible="{Binding IpInfo.ZipCode, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+            <!-- 坐标 -->
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="坐标:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" 
+                       Text="{Binding IpInfo.Coordinates}" 
+                       FontFamily="Consolas,Monaco,monospace"
+                       Margin="0,0,0,8"/>
+
+            <!-- 时区 -->
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="时区:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding IpInfo.Timezone}" Margin="0,0,0,8"/>
+
+            <!-- ISP -->
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="ISP:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding IpInfo.Isp}" Margin="0,0,0,8"/>
+
+            <!-- 组织 -->
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="组织:" FontWeight="Medium" Margin="0,0,0,8"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding IpInfo.Organization}" Margin="0,0,0,8"/>
+
+            <!-- AS号 -->
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="AS号:" FontWeight="Medium" Margin="0,0,0,8"
+                       IsVisible="{Binding IpInfo.AsNumber, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" 
+                       Text="{Binding IpInfo.AsNumber}" 
+                       FontFamily="Consolas,Monaco,monospace"
+                       Margin="0,0,0,8"
+                       IsVisible="{Binding IpInfo.AsNumber, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            
+          </Grid>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 查询历史 -->
+      <Border IsVisible="{Binding QueryHistory.Count, Converter={x:Static ObjectConverters.IsNotNull}}"
+              Background="White"
+              BorderBrush="#DEE2E6"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="20">
+        <StackPanel Spacing="12">
+          
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="查询历史" 
+                       FontSize="16" 
+                       FontWeight="Bold"/>
+            <Button Grid.Column="1" 
+                    Content="清空历史"
+                    Command="{Binding ClearHistoryCommand}"
+                    Background="Transparent"
+                    Foreground="Gray"/>
+          </Grid>
+
+          <ItemsControl ItemsSource="{Binding QueryHistory}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Background="#F8F9FA" 
+                        BorderBrush="#DEE2E6" 
+                        BorderThickness="1" 
+                        CornerRadius="4" 
+                        Padding="12" 
+                        Margin="0,2"
+                        Command="{Binding SelectCommand}">
+                  
+                  <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0">
+                      <TextBlock Text="{Binding DisplayText}" FontWeight="Medium"/>
+                      <TextBlock Text="{Binding QueryTime, StringFormat='查询时间: {0:yyyy-MM-dd HH:mm:ss}'}" 
+                                 FontSize="12" 
+                                 Foreground="Gray"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" 
+                               Text="点击选择" 
+                               FontSize="12" 
+                               Foreground="#007ACC"
+                               VerticalAlignment="Center"/>
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 操作按钮 -->
+      <StackPanel Orientation="Horizontal" 
+                  Spacing="10" 
+                  HorizontalAlignment="Center">
+        <Button Content="清空所有" 
+                Command="{Binding ClearAllCommand}"/>
+      </StackPanel>
+      
+    </StackPanel>
+  </ScrollViewer>
+  
+</UserControl>

@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -142,10 +144,43 @@ public partial class PasswordGeneratorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void CopyPassword()
+    private async void CopyPassword()
     {
-        // 这里需要实现剪贴板功能
-        // 在实际应用中需要使用Avalonia的剪贴板API
+        try
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var clipboard = desktop.MainWindow?.Clipboard;
+                if (clipboard != null && !string.IsNullOrEmpty(GeneratedPassword))
+                {
+                    await clipboard.SetTextAsync(GeneratedPassword);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // 静默处理剪贴板错误
+        }
+    }
+
+    [RelayCommand]
+    private async void CopyBatchPassword(string password)
+    {
+        try
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var clipboard = desktop.MainWindow?.Clipboard;
+                if (clipboard != null && !string.IsNullOrEmpty(password))
+                {
+                    await clipboard.SetTextAsync(password);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // 静默处理剪贴板错误
+        }
     }
 
     private string BuildCharset()

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -245,12 +247,21 @@ public partial class BaseConverterViewModel : ObservableObject
         CopyToClipboard(HexValue);
     }
 
-    private void CopyToClipboard(string text)
+    private async void CopyToClipboard(string text)
     {
         try
         {
-            // TODO: 实现剪贴板复制功能
-            // 这里需要使用Avalonia的剪贴板API
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var clipboard = desktop.MainWindow?.Clipboard;
+                if (clipboard != null)
+                {
+                    await clipboard.SetTextAsync(text);
+                    SetError("已复制到剪贴板");
+                    // 清除错误状态，显示成功消息
+                    HasError = false;
+                }
+            }
         }
         catch (Exception ex)
         {

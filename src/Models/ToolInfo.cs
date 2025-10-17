@@ -7,6 +7,7 @@ public class ToolInfo
     public string Icon { get; set; }
     public string Description { get; set; }
     public ToolType Type { get; set; }
+    public int SortOrder { get; set; } = 0;
 
     public ToolInfo(string name, string displayName, string icon, string description, ToolType type)
     {
@@ -20,8 +21,6 @@ public class ToolInfo
 
 public enum ToolType
 {
-    AiChat,
-    AiTranslate,
     TimestampConverter,
     UnitConverter,
     BaseConverter,

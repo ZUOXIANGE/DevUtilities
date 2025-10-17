@@ -1,0 +1,279 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.ParquetViewerView"
+             x:DataType="vm:ParquetViewerViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="16" Margin="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="Parquet 文件查看器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 Margin="0,0,0,10"/>
+
+      <!-- 文件操作区域 -->
+      <Border Background="#F8F9FA" 
+              BorderBrush="#DEE2E6" 
+              BorderThickness="1" 
+              CornerRadius="8" 
+              Padding="16">
+        <StackPanel Spacing="12">
+          
+          <!-- 文件操作按钮 -->
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="打开文件"
+                    Command="{Binding OpenFileCommand}"
+                    IsEnabled="{Binding !IsLoading}"
+                    Classes="accent"/>
+            <Button Content="刷新"
+                    Command="{Binding RefreshCommand}"
+                    IsEnabled="{Binding IsFileLoaded}"
+                    IsVisible="{Binding IsFileLoaded}"/>
+            <Button Content="关闭文件"
+                    Command="{Binding CloseFileCommand}"
+                    IsEnabled="{Binding IsFileLoaded}"
+                    IsVisible="{Binding IsFileLoaded}"/>
+          </StackPanel>
+
+          <!-- 文件信息 -->
+          <StackPanel IsVisible="{Binding IsFileLoaded}" Spacing="8">
+            <Grid ColumnDefinitions="Auto,*">
+              <TextBlock Grid.Column="0" Text="文件名: " FontWeight="Medium" Width="80"/>
+              <TextBlock Grid.Column="1" Text="{Binding FileName}" FontFamily="Consolas,Monaco,monospace"/>
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*">
+              <TextBlock Grid.Column="0" Text="文件大小: " FontWeight="Medium" Width="80"/>
+              <TextBlock Grid.Column="1" Text="{Binding FileSizeText}"/>
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto,*">
+              <TextBlock Grid.Column="0" Text="总行数: " FontWeight="Medium" Width="80"/>
+              <TextBlock Grid.Column="1" Text="{Binding TotalRows}" Margin="0,0,20,0"/>
+              <TextBlock Grid.Column="2" Text="总列数: " FontWeight="Medium" Width="80"/>
+              <TextBlock Grid.Column="3" Text="{Binding TotalColumns}"/>
+            </Grid>
+          </StackPanel>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 加载指示器 -->
+      <ProgressBar IsIndeterminate="{Binding IsLoading}" 
+                   IsVisible="{Binding IsLoading}"
+                   Height="4"/>
+
+      <!-- 错误消息 -->
+      <Border IsVisible="{Binding HasError}"
+              Background="#FFEBEE"
+              BorderBrush="#F44336"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="12">
+        <TextBlock Text="{Binding ErrorMessage}" 
+                   Foreground="#D32F2F"
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 搜索和过滤区域 -->
+      <Border IsVisible="{Binding IsFileLoaded}"
+              Background="White"
+              BorderBrush="#DEE2E6"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="16">
+        <StackPanel Spacing="12">
+          
+          <TextBlock Text="搜索和过滤" FontSize="16" FontWeight="Bold"/>
+
+          <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+            <!-- 搜索框 -->
+            <TextBox Grid.Column="0" 
+                     Text="{Binding SearchText}"
+                     Watermark="输入搜索内容..."
+                     Margin="0,0,10,0"/>
+            
+            <!-- 列选择 -->
+            <ComboBox Grid.Column="1" 
+                      ItemsSource="{Binding ColumnNames}"
+                      SelectedItem="{Binding SelectedColumn}"
+                      PlaceholderText="选择列"
+                      Width="120"
+                      Margin="0,0,10,0"/>
+            
+            <!-- 大小写敏感 -->
+            <CheckBox Grid.Column="2" 
+                      IsChecked="{Binding CaseSensitive}"
+                      Content="区分大小写"
+                      Margin="0,0,10,0"/>
+            
+            <!-- 清空搜索 -->
+            <Button Grid.Column="3" 
+                    Content="清空"
+                    Command="{Binding ClearSearchCommand}"/>
+          </Grid>
+
+          <!-- 搜索结果信息 -->
+          <TextBlock IsVisible="{Binding IsFileLoaded}">
+            <Run Text="显示 "/>
+            <Run Text="{Binding FilteredRows}" FontWeight="Bold"/>
+            <Run Text=" 行，共 "/>
+            <Run Text="{Binding TotalRows}" FontWeight="Bold"/>
+            <Run Text=" 行"/>
+          </TextBlock>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 列信息 -->
+      <Border IsVisible="{Binding IsFileLoaded}"
+              Background="White"
+              BorderBrush="#DEE2E6"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="16">
+        <StackPanel Spacing="12">
+          
+          <TextBlock Text="列信息" FontSize="16" FontWeight="Bold"/>
+
+          <ScrollViewer MaxHeight="200">
+            <ItemsControl ItemsSource="{Binding Columns}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Background="#F8F9FA" 
+                          BorderBrush="#DEE2E6" 
+                          BorderThickness="1" 
+                          CornerRadius="4" 
+                          Padding="8" 
+                          Margin="0,2">
+                    <TextBlock Text="{Binding DisplayText}" FontFamily="Consolas,Monaco,monospace"/>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 分页控制 -->
+      <Border IsVisible="{Binding IsFileLoaded}"
+              Background="White"
+              BorderBrush="#DEE2E6"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="16">
+        <StackPanel Spacing="12">
+          
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="{Binding PageInfo}" 
+                       VerticalAlignment="Center"/>
+            
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+              <Button Content="首页" 
+                      Command="{Binding FirstPageCommand}"
+                      IsEnabled="{Binding FirstPageCommand.CanExecute}"/>
+              <Button Content="上一页" 
+                      Command="{Binding PreviousPageCommand}"
+                      IsEnabled="{Binding PreviousPageCommand.CanExecute}"/>
+              <Button Content="下一页" 
+                      Command="{Binding NextPageCommand}"
+                      IsEnabled="{Binding NextPageCommand.CanExecute}"/>
+              <Button Content="末页" 
+                      Command="{Binding LastPageCommand}"
+                      IsEnabled="{Binding LastPageCommand.CanExecute}"/>
+            </StackPanel>
+          </Grid>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 数据表格 -->
+      <Border IsVisible="{Binding IsFileLoaded}"
+              Background="White"
+              BorderBrush="#DEE2E6"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="16">
+        <StackPanel Spacing="12">
+          
+          <Grid ColumnDefinitions="*,Auto,Auto">
+            <TextBlock Grid.Column="0" 
+                       Text="数据内容" 
+                       FontSize="16" 
+                       FontWeight="Bold"/>
+            <Button Grid.Column="1" 
+                    Content="导出 CSV"
+                    Command="{Binding ExportCsvCommand}"
+                    IsEnabled="{Binding ExportCsvCommand.CanExecute}"
+                    Margin="0,0,10,0"/>
+            <Button Grid.Column="2" 
+                    Content="导出 JSON"
+                    Command="{Binding ExportJsonCommand}"
+                    IsEnabled="{Binding ExportJsonCommand.CanExecute}"/>
+          </Grid>
+
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                        VerticalScrollBarVisibility="Auto"
+                        MaxHeight="600">
+            <DataGrid Name="DataGrid"
+                      ItemsSource="{Binding Data}"
+                      AutoGenerateColumns="False"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      IsReadOnly="True"
+                      Background="White"
+                      RowBackground="White"
+                      MinHeight="300">
+              <DataGrid.Columns>
+                <!-- 动态生成列 -->
+              </DataGrid.Columns>
+              <DataGrid.Styles>
+                <Style Selector="DataGridColumnHeader">
+                  <Setter Property="Background" Value="#E9ECEF"/>
+                  <Setter Property="Foreground" Value="#495057"/>
+                  <Setter Property="FontWeight" Value="Bold"/>
+                  <Setter Property="Padding" Value="8,4"/>
+                </Style>
+                <Style Selector="DataGridCell">
+                  <Setter Property="Padding" Value="8,4"/>
+                  <Setter Property="FontFamily" Value="Consolas,Monaco,monospace"/>
+                </Style>
+              </DataGrid.Styles>
+            </DataGrid>
+          </ScrollViewer>
+          
+        </StackPanel>
+      </Border>
+
+      <!-- 提示信息 -->
+      <Border IsVisible="{Binding !IsFileLoaded}"
+              Background="#E3F2FD"
+              BorderBrush="#2196F3"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="16">
+        <StackPanel Spacing="8">
+          <TextBlock Text="使用说明" FontWeight="Bold" Foreground="#1976D2"/>
+          <TextBlock TextWrapping="Wrap" Foreground="#1976D2">
+            1. 点击"打开文件"按钮选择 Parquet 文件 (.parquet 或 .pq)
+            <LineBreak/>
+            2. 文件加载后可以查看列信息和数据内容
+            <LineBreak/>
+            3. 支持搜索、过滤和分页浏览
+            <LineBreak/>
+            4. 可以导出数据为 CSV 或 JSON 格式
+            <LineBreak/>
+            注意：当前版本使用示例数据进行演示，实际使用需要集成 Parquet 读取库
+          </TextBlock>
+        </StackPanel>
+      </Border>
+      
+    </StackPanel>
+  </ScrollViewer>
+  
+</UserControl>

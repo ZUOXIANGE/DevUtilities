@@ -1,0 +1,211 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.HttpRequestView"
+             x:DataType="vm:HttpRequestViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="16" Margin="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="HTTP 请求工具" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 Margin="0,0,0,10"/>
+      
+      <!-- URL和方法 -->
+      <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,10">
+        <ComboBox Grid.Column="0" 
+                  ItemsSource="{Binding HttpMethods}"
+                  SelectedItem="{Binding SelectedMethod}"
+                  Width="100"
+                  Margin="0,0,10,0"/>
+        
+        <TextBox Grid.Column="1" 
+                 Text="{Binding Url}"
+                 Watermark="输入请求URL..."
+                 Margin="0,0,10,0"/>
+        
+        <Button Grid.Column="2" 
+                Content="发送"
+                Command="{Binding SendRequestCommand}"
+                IsEnabled="{Binding !IsLoading}"
+                Classes="accent"
+                Width="80"/>
+      </Grid>
+
+      <!-- 加载指示器 -->
+      <ProgressBar IsIndeterminate="{Binding IsLoading}" 
+                   IsVisible="{Binding IsLoading}"
+                   Height="4"/>
+
+      <!-- 错误消息 -->
+      <Border IsVisible="{Binding HasError}"
+              Background="#FFEBEE"
+              BorderBrush="#F44336"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="12">
+        <TextBlock Text="{Binding ErrorMessage}" 
+                   Foreground="#D32F2F"
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 主要内容区域 -->
+      <TabControl>
+        
+        <!-- 请求配置 -->
+        <TabItem Header="请求配置">
+          <ScrollViewer>
+            <StackPanel Spacing="16" Margin="10">
+              
+              <!-- 认证设置 -->
+              <Expander Header="认证设置" IsExpanded="False">
+                <StackPanel Spacing="10" Margin="10">
+                  <CheckBox Content="启用认证" IsChecked="{Binding UseAuth}"/>
+                  
+                  <Grid ColumnDefinitions="Auto,*" IsEnabled="{Binding UseAuth}">
+                    <ComboBox Grid.Column="0"
+                              ItemsSource="{Binding AuthTypes}"
+                              SelectedItem="{Binding SelectedAuthType}"
+                              Width="100"
+                              Margin="0,0,10,0"/>
+                    
+                    <TextBox Grid.Column="1"
+                             Text="{Binding AuthToken}"
+                             Watermark="输入认证令牌..."
+                             PasswordChar="*"/>
+                  </Grid>
+                </StackPanel>
+              </Expander>
+
+              <!-- 请求头 -->
+              <Expander Header="请求头" IsExpanded="True">
+                <StackPanel Spacing="10" Margin="10">
+                  <Button Content="添加请求头" 
+                          Command="{Binding AddHeaderCommand}"
+                          HorizontalAlignment="Left"/>
+                  
+                  <ItemsControl ItemsSource="{Binding RequestHeaders}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Grid ColumnDefinitions="*,*,Auto" Margin="0,2">
+                          <TextBox Grid.Column="0" 
+                                   Text="{Binding Name}"
+                                   Watermark="Header Name"
+                                   Margin="0,0,5,0"/>
+                          <TextBox Grid.Column="1" 
+                                   Text="{Binding Value}"
+                                   Watermark="Header Value"
+                                   Margin="5,0,5,0"/>
+                          <Button Grid.Column="2" 
+                                  Content="×"
+                                  Command="{Binding RemoveCommand}"
+                                  Width="30"
+                                  Background="Transparent"
+                                  Foreground="Red"/>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Expander>
+
+              <!-- 请求体 -->
+              <Expander Header="请求体" IsExpanded="True">
+                <StackPanel Spacing="10" Margin="10">
+                  <Grid ColumnDefinitions="*,Auto,Auto">
+                    <TextBlock Grid.Column="0" 
+                               Text="请求体内容" 
+                               VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" 
+                            Content="格式化JSON"
+                            Command="{Binding FormatJsonCommand}"
+                            Margin="10,0"/>
+                    <Button Grid.Column="2" 
+                            Content="清空"
+                            Command="{Binding ClearAllCommand}"/>
+                  </Grid>
+                  
+                  <TextBox Text="{Binding RequestBody}"
+                           AcceptsReturn="True"
+                           TextWrapping="Wrap"
+                           Height="150"
+                           ScrollViewer.VerticalScrollBarVisibility="Auto"
+                           FontFamily="Consolas,Monaco,monospace"/>
+                </StackPanel>
+              </Expander>
+
+              <!-- 快速示例 -->
+              <Expander Header="快速示例" IsExpanded="False">
+                <StackPanel Spacing="10" Margin="10" Orientation="Horizontal">
+                  <Button Content="GET 示例" Command="{Binding LoadExampleCommand}"/>
+                  <Button Content="POST 示例" Command="{Binding LoadPostExampleCommand}"/>
+                </StackPanel>
+              </Expander>
+              
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+
+        <!-- 响应结果 -->
+        <TabItem Header="响应结果">
+          <Grid RowDefinitions="Auto,*">
+            
+            <!-- 响应状态 -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto,*" Margin="10">
+              <TextBlock Grid.Column="0" 
+                         Text="状态码:" 
+                         VerticalAlignment="Center"
+                         Margin="0,0,10,0"/>
+              <TextBlock Grid.Column="1" 
+                         Text="{Binding StatusCode}"
+                         FontWeight="Bold"
+                         VerticalAlignment="Center"
+                         Margin="0,0,20,0"/>
+              
+              <TextBlock Grid.Column="2" 
+                         Text="响应时间:" 
+                         VerticalAlignment="Center"
+                         Margin="0,0,10,0"/>
+              <TextBlock Grid.Column="3" 
+                         Text="{Binding ResponseTime}"
+                         FontWeight="Bold"
+                         VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- 响应内容 -->
+            <TabControl Grid.Row="1" Margin="10,0,10,10">
+              
+              <!-- 响应体 -->
+              <TabItem Header="响应体">
+                <TextBox Text="{Binding ResponseBody}"
+                         IsReadOnly="True"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         FontFamily="Consolas,Monaco,monospace"
+                         Background="#F5F5F5"/>
+              </TabItem>
+
+              <!-- 响应头 -->
+              <TabItem Header="响应头">
+                <TextBox Text="{Binding ResponseHeaders}"
+                         IsReadOnly="True"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         FontFamily="Consolas,Monaco,monospace"
+                         Background="#F5F5F5"/>
+              </TabItem>
+              
+            </TabControl>
+          </Grid>
+        </TabItem>
+        
+      </TabControl>
+      
+    </StackPanel>
+  </ScrollViewer>
+  
+</UserControl>

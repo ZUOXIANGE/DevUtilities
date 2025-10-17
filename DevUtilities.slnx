@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="src/DevUtilities.csproj" />
+  <Project Path="tests/DevUtilities.Tests.csproj" />
 </Solution>

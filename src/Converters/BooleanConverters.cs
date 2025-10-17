@@ -26,7 +26,12 @@ public class BooleanToColorConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        if (value is SolidColorBrush brush)
+        {
+            // 比较颜色值而不是引用
+            return brush.Color == Colors.Green;
+        }
+        return false;
     }
 }
 
@@ -49,6 +54,20 @@ public class BooleanToStringConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        if (value is string stringValue && parameter is string paramString)
+        {
+            var options = paramString.Split('|');
+            if (options.Length == 2)
+            {
+                return stringValue == options[0];
+            }
+        }
+        
+        if (value is string str)
+        {
+            return bool.TryParse(str, out var result) ? result : false;
+        }
+        
+        return false;
     }
 }

@@ -59,10 +59,10 @@
       <Setter Property="BorderBrush" Value="#E0E0E0"/>
       <Setter Property="BorderThickness" Value="1"/>
       <Setter Property="CornerRadius" Value="8"/>
-      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="Padding" Value="16,16"/>
       <Setter Property="Margin" Value="8"/>
-      <Setter Property="MinHeight" Value="80"/>
-      <Setter Property="MinWidth" Value="120"/>
+      <Setter Property="Height" Value="140"/>
+      <Setter Property="Width" Value="160"/>
       <Setter Property="HorizontalContentAlignment" Value="Center"/>
       <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
@@ -89,6 +89,8 @@
       <Setter Property="TextAlignment" Value="Center"/>
       <Setter Property="TextWrapping" Value="Wrap"/>
       <Setter Property="Margin" Value="0,4,0,0"/>
+      <Setter Property="MaxWidth" Value="130"/>
+      <Setter Property="Height" Value="32"/>
     </Style>
     
     <Style Selector="Panel.tool-content">
