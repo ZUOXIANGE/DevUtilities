@@ -107,35 +107,64 @@ DevUtilities/
 
 ### 安装方式
 
-#### 方式一：从发布版本下载
+#### 系统要求
+- **操作系统**: Windows 10/11, macOS 10.15+, Linux (Ubuntu 18.04+)
+- **.NET 运行时**: .NET 9.0 或更高版本
+- **内存**: 最低 512MB RAM，推荐 1GB+
+- **存储空间**: 约 100MB 可用空间
+
+#### 方式一：从发布版本下载（推荐）
 1. 访问 [Releases 页面](https://github.com/yourusername/DevUtilities/releases)
-2. 下载适合您操作系统的版本：
-   - Windows: `DevUtilities-win-x64.zip`
-   - Linux: `DevUtilities-linux-x64.tar.gz`
-   - macOS: `DevUtilities-osx-x64.tar.gz`
-3. 解压并运行可执行文件
+2. 根据您的操作系统选择对应版本：
+   - **Windows**: `DevUtilities-win-x64.zip` 或 `DevUtilities-win-arm64.zip`
+   - **macOS**: `DevUtilities-osx-x64.zip` 或 `DevUtilities-osx-arm64.zip`
+   - **Linux**: `DevUtilities-linux-x64.zip` 或 `DevUtilities-linux-arm64.zip`
+3. 解压下载的文件到任意目录
+4. 运行可执行文件：
+   - **Windows**: 双击 `DevUtilities.exe`
+   - **macOS/Linux**: 在终端中运行 `./DevUtilities`
 
 #### 方式二：从源码构建
 ```bash
-# 克隆仓库
+# 1. 确保已安装 .NET 9.0 SDK
+dotnet --version  # 应显示 9.0.x
+
+# 2. 克隆仓库
 git clone https://github.com/yourusername/DevUtilities.git
 cd DevUtilities
 
-# 构建项目
-./scripts/build.ps1
+# 3. 还原依赖包
+dotnet restore
 
-# 构建所有平台版本
-./scripts/build-all.ps1
+# 4. 构建项目
+dotnet build -c Release
 
-# 构建特定平台
-./scripts/build.ps1 -Runtime win-x64
-./scripts/build.ps1 -Runtime linux-x64
-./scripts/build.ps1 -Runtime osx-x64
+# 5. 运行应用
+dotnet run --project src/DevUtilities.csproj
 
-# 运行开发版本
-cd src
-dotnet run
+# 或者发布为独立应用
+dotnet publish -c Release -r win-x64 --self-contained true
 ```
+
+#### 方式三：使用包管理器安装
+```bash
+# 通过 .NET 工具安装（即将支持）
+dotnet tool install --global DevUtilities
+
+# 通过 Chocolatey 安装 (Windows)
+choco install devutilities
+
+# 通过 Homebrew 安装 (macOS)
+brew install devutilities
+
+# 通过 Snap 安装 (Linux)
+sudo snap install devutilities
+```
+
+#### 首次运行配置
+1. 启动应用后，系统会自动创建配置目录
+2. 可以通过 **设置** 菜单自定义主题、语言等选项
+3. 所有工具的历史记录和设置会自动保存
 
 ### 使用说明
 
@@ -205,6 +234,27 @@ DevUtilities/
 <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
 ```
+
+## 📚 文档
+
+### 用户文档
+- 📖 [安装指南](./docs/INSTALLATION_GUIDE.md) - 详细的安装和配置说明
+- 🎯 [使用示例](./docs/USAGE_EXAMPLES.md) - 各工具的详细使用方法和最佳实践
+- 🖼️ [界面截图](./docs/SCREENSHOTS.md) - 应用程序界面展示和功能说明
+- ❓ [常见问题](./docs/FAQ.md) - 常见问题解答和故障排除
+
+### 开发者文档
+- 🏗️ [架构设计](./docs/ARCHITECTURE.md) - 技术架构和设计模式详解
+- 🎨 [UI 样式指南](./docs/UI_STYLE_GUIDE.md) - 界面设计规范和样式指导
+- 🧩 [组件库](./docs/COMPONENT_LIBRARY.md) - UI 组件使用说明和规范
+- 🔧 [开发指南](./docs/DEVELOPMENT.md) - 开发环境搭建和贡献指南
+- 📋 [API 文档](./docs/API.md) - 内部 API 和扩展接口说明
+
+### 项目管理
+- 📝 [更新日志](./CHANGELOG.md) - 版本更新记录和新功能说明
+- 🚀 [路线图](./ROADMAP.md) - 未来功能规划和开发计划
+- 🤝 [贡献指南](./CONTRIBUTING.md) - 如何参与项目开发
+- 📄 [许可证](./LICENSE) - 开源许可证信息
 
 ## 🤝 贡献指南
 

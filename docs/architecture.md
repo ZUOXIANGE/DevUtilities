@@ -1,4 +1,4 @@
-# 架构设计
+# DevUtilities 架构设计文档
 
 本文档详细介绍 DevUtilities 项目的架构设计、技术选型和实现原理。
 
@@ -11,38 +11,44 @@
 ├─────────────────────────────────────────────────────────────┤
 │                        UI 层 (Views)                        │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐ │
-│  │ MainWindow  │ │ QrCodeView  │ │ CryptoView  │ │   ...   │ │
+│  │ MainWindow  │ │ ColorPicker │ │ JsonFormat  │ │   ...   │ │
+│  │SettingsView │ │ QrCodeView  │ │ CryptoView  │ │ 19 Tools│ │
 │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘ │
 ├─────────────────────────────────────────────────────────────┤
 │                    ViewModel 层 (MVVM)                      │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐ │
-│  │MainViewModel│ │QrCodeViewModel│CryptoViewModel│   ...   │ │
+│  │MainViewModel│ │ColorPickerVM│ │JsonFormatVM │ │   ...   │ │
+│  │SettingsVM   │ │QrCodeViewModel│CryptoViewModel│ToolVMs  │ │
 │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘ │
 ├─────────────────────────────────────────────────────────────┤
 │                      Model 层 (Models)                      │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐ │
-│  │  ToolModel  │ │ QrCodeModel │ │ CryptoModel │ │   ...   │ │
+│  │  ToolInfo   │ │ ColorModel  │ │ JsonModel   │ │   ...   │ │
+│  │ AppSettings │ │ QrCodeModel │ │ CryptoModel │ │ Models  │ │
 │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘ │
 ├─────────────────────────────────────────────────────────────┤
 │                     Service 层 (Services)                   │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐ │
-│  │QrCodeService│ │CryptoService│ │FileService  │ │   ...   │ │
+│  │ToolService  │ │ColorService │ │JsonService  │ │   ...   │ │
+│  │FileService  │ │QrCodeService│ │CryptoService│ │Services │ │
 │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘ │
 ├─────────────────────────────────────────────────────────────┤
 │                    基础设施层 (Infrastructure)                │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐ │
-│  │   Logging   │ │Configuration│ │  Validation │ │   DI    │ │
+│  │  Converters │ │ Validation  │ │  Utilities  │ │   DI    │ │
+│  │   Controls  │ │Configuration│ │   Logging   │ │ Config  │ │
 │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 技术栈
-- **UI 框架**: Avalonia UI 11.0+
-- **开发平台**: .NET 9.0
+### 核心技术栈
+- **UI 框架**: Avalonia UI 11.1.3 (跨平台 XAML UI)
+- **开发平台**: .NET 9.0 (最新 LTS 版本)
 - **架构模式**: MVVM (Model-View-ViewModel)
-- **依赖注入**: Microsoft.Extensions.DependencyInjection
-- **配置管理**: Microsoft.Extensions.Configuration
-- **日志记录**: Microsoft.Extensions.Logging
+- **MVVM 工具**: CommunityToolkit.Mvvm (源生成器)
+- **响应式编程**: ReactiveUI + System.Reactive
+- **主题系统**: Avalonia.Themes.Fluent (Fluent Design)
+- **字体支持**: Avalonia.Fonts.Inter (现代字体)
 
 ## 🎯 设计原则
 

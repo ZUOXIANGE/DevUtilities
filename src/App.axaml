@@ -161,6 +161,130 @@
     <Style Selector="Button.secondary-button:pointerover">
       <Setter Property="Background" Value="#F0F8FF"/>
     </Style>
+    
+    <!-- Card Container Styles -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="24"/>
+      <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+    </Style>
+    
+    <Style Selector="Border.card-small">
+      <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="16"/>
+    </Style>
+    
+    <!-- Input/Output Area Styles -->
+    <Style Selector="Border.input-area">
+      <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="20"/>
+      <Setter Property="MinHeight" Value="400"/>
+      <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+    </Style>
+    
+    <!-- Code Display Styles -->
+    <Style Selector="SelectableTextBlock.code">
+      <Setter Property="FontFamily" Value="JetBrains Mono,Consolas,Monaco,monospace"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="TextWrapping" Value="NoWrap"/>
+      <Setter Property="LineHeight" Value="20"/>
+    </Style>
+    
+    <Style Selector="TextBox.code">
+      <Setter Property="FontFamily" Value="JetBrains Mono,Consolas,Monaco,monospace"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="TextWrapping" Value="NoWrap"/>
+      <Setter Property="LineHeight" Value="20"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    
+    <!-- Title Styles -->
+    <Style Selector="TextBlock.page-title">
+      <Setter Property="FontSize" Value="28"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}"/>
+    </Style>
+    
+    <Style Selector="TextBlock.section-title">
+      <Setter Property="FontSize" Value="18"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    
+    <Style Selector="TextBlock.subsection-title">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    
+    <!-- Description Styles -->
+    <Style Selector="TextBlock.description">
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}"/>
+    </Style>
+    
+    <!-- Status Indicator Styles -->
+    <Style Selector="ProgressBar.loading">
+      <Setter Property="Height" Value="4"/>
+      <Setter Property="IsIndeterminate" Value="True"/>
+    </Style>
+    
+    <Style Selector="Border.error">
+      <Setter Property="Background" Value="#FFEBEE"/>
+      <Setter Property="BorderBrush" Value="#F44336"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Padding" Value="12"/>
+    </Style>
+    
+    <Style Selector="Border.success">
+      <Setter Property="Background" Value="#E8F5E8"/>
+      <Setter Property="BorderBrush" Value="#4CAF50"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Padding" Value="12"/>
+    </Style>
+    
+    <Style Selector="Border.info">
+      <Setter Property="Background" Value="#E3F2FD"/>
+      <Setter Property="BorderBrush" Value="#2196F3"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Padding" Value="12"/>
+    </Style>
+    
+    <!-- Control Panel Styles -->
+    <Style Selector="StackPanel.control-group">
+      <Setter Property="Spacing" Value="8"/>
+    </Style>
+    
+    <Style Selector="Grid.control-grid">
+      <Setter Property="RowSpacing" Value="16"/>
+      <Setter Property="ColumnSpacing" Value="20"/>
+    </Style>
+    
+    <!-- Button Group Styles -->
+    <Style Selector="StackPanel.button-group">
+      <Setter Property="Orientation" Value="Horizontal"/>
+      <Setter Property="Spacing" Value="12"/>
+    </Style>
+    
+    <!-- File Drop Area Styles -->
+    <Style Selector="Border.drop-area">
+      <Setter Property="Background" Value="#F8F9FA"/>
+      <Setter Property="BorderBrush" Value="#DEE2E6"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="24"/>
+      <Setter Property="MinHeight" Value="120"/>
+    </Style>
+    
+    <Style Selector="Border.drop-area:pointerover">
+      <Setter Property="Background" Value="#E3F2FD"/>
+      <Setter Property="BorderBrush" Value="#2196F3"/>
+    </Style>
   </Application.Styles>
 
 </Application>

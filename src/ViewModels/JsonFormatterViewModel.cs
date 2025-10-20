@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
@@ -14,6 +15,9 @@ namespace DevUtilities.ViewModels;
 
 public partial class JsonFormatterViewModel : BaseFormatterViewModel
 {
+    [ObservableProperty]
+    private bool _sortProperties = false;
+
     public JsonFormatterViewModel()
     {
         Title = "JSON格式化器";
@@ -55,6 +59,12 @@ public partial class JsonFormatterViewModel : BaseFormatterViewModel
         {
             var parsedJson = JToken.Parse(input);
             
+            // 如果启用属性排序，则对JSON对象进行排序
+            if (SortProperties)
+            {
+                parsedJson = SortJsonProperties(parsedJson);
+            }
+            
             if (CompactOutput)
             {
                 return parsedJson.ToString(Formatting.None);
@@ -79,6 +89,28 @@ public partial class JsonFormatterViewModel : BaseFormatterViewModel
     {
         return await Task.Run(() =>
         {
+            // 对于大文件，如果需要排序，先解析再格式化
+            if (SortProperties)
+            {
+                var parsedJson = JToken.Parse(input);
+                parsedJson = SortJsonProperties(parsedJson);
+                
+                if (CompactOutput)
+                {
+                    return parsedJson.ToString(Formatting.None);
+                }
+                
+                var formatted = parsedJson.ToString(Formatting.Indented);
+                
+                if (IndentSize != 2)
+                {
+                    return AdjustIndentation(formatted);
+                }
+                
+                return formatted;
+            }
+            
+            // 不需要排序时使用流式处理
             using var stringReader = new StringReader(input);
             using var jsonReader = new JsonTextReader(stringReader);
             using var stringWriter = new StringWriter();
@@ -146,7 +178,54 @@ public partial class JsonFormatterViewModel : BaseFormatterViewModel
         return result.ToString();
     }
 
+    /// <summary>
+    /// 递归排序JSON对象的属性
+    /// </summary>
+    private JToken SortJsonProperties(JToken token)
+    {
+        switch (token.Type)
+        {
+            case JTokenType.Object:
+                var obj = (JObject)token;
+                var sortedObj = new JObject();
+                
+                // 按属性名排序
+                foreach (var property in obj.Properties().OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase))
+                {
+                    sortedObj.Add(property.Name, SortJsonProperties(property.Value));
+                }
+                
+                return sortedObj;
+                
+            case JTokenType.Array:
+                var array = (JArray)token;
+                var sortedArray = new JArray();
+                
+                // 递归处理数组中的每个元素
+                foreach (var item in array)
+                {
+                    sortedArray.Add(SortJsonProperties(item));
+                }
+                
+                return sortedArray;
+                
+            default:
+                // 基本类型直接返回
+                return token;
+        }
+    }
+
     // JSON特定的命令
+    [RelayCommand]
+    private void SortJsonProperties()
+    {
+        SortProperties = !SortProperties;
+        if (!string.IsNullOrWhiteSpace(InputText))
+        {
+            FormatCommand.Execute(null);
+        }
+    }
+
     [RelayCommand]
     private void MinifyJson()
     {
@@ -350,16 +429,38 @@ public partial class JsonFormatterViewModel : BaseFormatterViewModel
     {
         return """
         {
-          "name": "张三",
-          "age": 30,
-          "city": "北京",
-          "skills": ["C#", "JavaScript", "Python"],
+          "user": {
+            "name": "张三",
+            "age": 30,
+            "email": "zhangsan@example.com",
+            "isActive": true
+          },
           "address": {
             "street": "中关村大街1号",
-            "zipCode": "100080"
+            "city": "北京",
+            "zipCode": "100080",
+            "country": "中国"
           },
-          "isActive": true,
-          "lastLogin": "2025-01-15T10:30:00Z"
+          "skills": ["C#", "JavaScript", "Python", "SQL"],
+          "projects": [
+            {
+              "name": "项目A",
+              "status": "completed",
+              "startDate": "2024-01-15T09:00:00Z",
+              "endDate": "2024-06-30T18:00:00Z"
+            },
+            {
+              "name": "项目B", 
+              "status": "in-progress",
+              "startDate": "2024-07-01T09:00:00Z",
+              "endDate": null
+            }
+          ],
+          "metadata": {
+            "createdAt": "2025-01-15T10:30:00Z",
+            "updatedAt": "2025-01-15T14:20:00Z",
+            "version": "1.2.3"
+          }
         }
         """;
     }
