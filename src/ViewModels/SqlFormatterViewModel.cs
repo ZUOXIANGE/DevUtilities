@@ -4,31 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DevUtilities.Core.ViewModels.Base;
 
 namespace DevUtilities.ViewModels;
 
-public partial class SqlFormatterViewModel : ObservableObject
+public partial class SqlFormatterViewModel : BaseFormatterViewModel
 {
-    [ObservableProperty]
-    private string inputSql = "";
-
-    [ObservableProperty]
-    private string outputSql = "";
-
-    [ObservableProperty]
-    private string validationMessage = "";
-
-    [ObservableProperty]
-    private bool isValidSql = true;
-
-    [ObservableProperty]
-    private int indentSize = 2;
-
     [ObservableProperty]
     private bool uppercaseKeywords = true;
 
@@ -53,130 +36,44 @@ public partial class SqlFormatterViewModel : ObservableObject
 
     public SqlFormatterViewModel()
     {
-        // BaseToolViewModel只有Message属性，不需要设置Title、Icon、Description
+        Title = "SQL格式化器";
+        Description = "SQL语句格式化和美化";
+        Icon = "🗃️";
+        ToolType = Models.ToolType.SqlFormatter;
     }
 
-    partial void OnInputSqlChanged(string value)
-    {
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            ValidateSql();
-        }
-        else
-        {
-            ClearValidation();
-        }
-    }
-
-    [RelayCommand]
-    private void FormatSql()
+    protected override async Task<string> FormatContentAsync(string input)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(InputSql))
+            if (CompactOutput)
             {
-                OutputSql = "";
-                ClearValidation();
-                return;
+                return MinifySqlQuery(input);
             }
-
-            var formatted = FormatSqlQuery(InputSql);
-            OutputSql = formatted;
-            SetValidation("SQL格式化成功", true);
+            else
+            {
+                return FormatSqlQuery(input);
+            }
         }
         catch (Exception ex)
         {
-            SetValidation($"格式化失败: {ex.Message}", false);
+            throw new DevUtilities.Core.Exceptions.SqlFormatterException(ex.Message, input);
         }
     }
 
+    // SQL特定的命令
     [RelayCommand]
     private void MinifySql()
     {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(InputSql))
-            {
-                OutputSql = "";
-                ClearValidation();
-                return;
-            }
-
-            var minified = MinifySqlQuery(InputSql);
-            OutputSql = minified;
-            SetValidation("SQL压缩成功", true);
-        }
-        catch (Exception ex)
-        {
-            SetValidation($"压缩失败: {ex.Message}", false);
-        }
+        CompactOutput = true;
+        FormatCommand.Execute(null);
     }
 
     [RelayCommand]
-    private void ValidateSql()
+    private void BeautifySql()
     {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(InputSql))
-            {
-                ClearValidation();
-                return;
-            }
-
-            var validation = ValidateSqlSyntax(InputSql);
-            SetValidation(validation.message, validation.isValid);
-        }
-        catch (Exception ex)
-        {
-            SetValidation($"验证失败: {ex.Message}", false);
-        }
-    }
-
-    [RelayCommand]
-    private void SwapInputOutput()
-    {
-        if (!string.IsNullOrWhiteSpace(OutputSql))
-        {
-            var temp = InputSql;
-            InputSql = OutputSql;
-            OutputSql = temp;
-        }
-    }
-
-    [RelayCommand]
-    private void ClearAll()
-    {
-        InputSql = "";
-        OutputSql = "";
-        ClearValidation();
-    }
-
-    [RelayCommand]
-    private void UseExample()
-    {
-        InputSql = @"SELECT u.id, u.name, u.email, p.title, p.content, c.name as category FROM users u LEFT JOIN posts p ON u.id = p.user_id INNER JOIN categories c ON p.category_id = c.id WHERE u.status = 'active' AND p.published_at > '2023-01-01' ORDER BY p.published_at DESC, u.name ASC LIMIT 10;";
-    }
-
-    [RelayCommand]
-    private async Task CopyOutput()
-    {
-        if (string.IsNullOrWhiteSpace(OutputSql)) return;
-
-        try
-        {
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                var clipboard = desktop.MainWindow?.Clipboard;
-                if (clipboard != null)
-                {
-                    await clipboard.SetTextAsync(OutputSql);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            SetValidation($"复制失败: {ex.Message}", false);
-        }
+        CompactOutput = false;
+        FormatCommand.Execute(null);
     }
 
     private string FormatSqlQuery(string sql)
@@ -220,7 +117,8 @@ public partial class SqlFormatterViewModel : ObservableObject
             // 处理缩进
             var lines = result.Split('\n');
             var indentedLines = new List<string>();
-            var indent = new string(' ', IndentSize);
+            var indentChar = UseTabsForIndent ? "\t" : " ";
+            var indent = new string(indentChar[0], UseTabsForIndent ? 1 : IndentSize);
 
             foreach (var line in lines)
             {
@@ -261,6 +159,195 @@ public partial class SqlFormatterViewModel : ObservableObject
         return result.Trim();
     }
 
+    protected override async Task<ValidationResult> OnValidateAsync(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return new ValidationResult(false, "请输入SQL语句");
+        }
+
+        try
+        {
+            var sql = input.Trim();
+            var issues = new List<string>();
+            var warnings = new List<string>();
+
+            // 基本语法检查
+            ValidateBasicSyntax(sql, issues);
+            
+            // 检查SQL结构
+            var structureInfo = AnalyzeSqlStructure(sql);
+            
+            // 性能建议
+            CheckPerformanceIssues(sql, warnings);
+
+            var message = BuildValidationMessage(structureInfo, issues, warnings);
+            var isValid = issues.Count == 0;
+
+            return new ValidationResult(isValid, message);
+        }
+        catch (Exception ex)
+        {
+            return new ValidationResult(false, $"验证失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 验证基本SQL语法
+    /// </summary>
+    private void ValidateBasicSyntax(string sql, List<string> issues)
+    {
+        // 检查括号匹配
+        var openParens = sql.Count(c => c == '(');
+        var closeParens = sql.Count(c => c == ')');
+        if (openParens != closeParens)
+        {
+            issues.Add("括号不匹配");
+        }
+
+        // 检查引号匹配
+        var singleQuotes = sql.Count(c => c == '\'');
+        if (singleQuotes % 2 != 0)
+        {
+            issues.Add("单引号不匹配");
+        }
+
+        // 检查基本SQL关键字
+        var hasValidKeyword = Regex.IsMatch(sql, @"\b(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)\b", RegexOptions.IgnoreCase);
+        if (!hasValidKeyword)
+        {
+            issues.Add("未找到有效的SQL关键字");
+        }
+
+        // 检查SELECT语句的基本结构
+        if (Regex.IsMatch(sql, @"\bSELECT\b", RegexOptions.IgnoreCase))
+        {
+            if (!Regex.IsMatch(sql, @"\bFROM\b", RegexOptions.IgnoreCase) && 
+                !Regex.IsMatch(sql, @"SELECT\s+\d+", RegexOptions.IgnoreCase))
+            {
+                issues.Add("SELECT语句缺少FROM子句");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 分析SQL结构
+    /// </summary>
+    private SqlStructureInfo AnalyzeSqlStructure(string sql)
+    {
+        var info = new SqlStructureInfo();
+        
+        // 统计各种子句
+        info.HasSelect = Regex.IsMatch(sql, @"\bSELECT\b", RegexOptions.IgnoreCase);
+        info.HasFrom = Regex.IsMatch(sql, @"\bFROM\b", RegexOptions.IgnoreCase);
+        info.HasWhere = Regex.IsMatch(sql, @"\bWHERE\b", RegexOptions.IgnoreCase);
+        info.HasJoin = Regex.IsMatch(sql, @"\b(JOIN|INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN)\b", RegexOptions.IgnoreCase);
+        info.HasOrderBy = Regex.IsMatch(sql, @"\bORDER BY\b", RegexOptions.IgnoreCase);
+        info.HasGroupBy = Regex.IsMatch(sql, @"\bGROUP BY\b", RegexOptions.IgnoreCase);
+        
+        // 统计表数量
+        var fromMatches = Regex.Matches(sql, @"\bFROM\s+(\w+)", RegexOptions.IgnoreCase);
+        var joinMatches = Regex.Matches(sql, @"\bJOIN\s+(\w+)", RegexOptions.IgnoreCase);
+        info.TableCount = fromMatches.Count + joinMatches.Count;
+        
+        // 统计字段数量
+        if (info.HasSelect)
+        {
+            var selectMatch = Regex.Match(sql, @"SELECT\s+(.*?)\s+FROM", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            if (selectMatch.Success)
+            {
+                var fields = selectMatch.Groups[1].Value;
+                if (fields.Trim() == "*")
+                {
+                    info.FieldCount = -1; // 表示使用了 *
+                }
+                else
+                {
+                    info.FieldCount = fields.Split(',').Length;
+                }
+            }
+        }
+        
+        return info;
+    }
+
+    /// <summary>
+    /// 检查性能问题
+    /// </summary>
+    private void CheckPerformanceIssues(string sql, List<string> warnings)
+    {
+        // 检查SELECT *
+        if (Regex.IsMatch(sql, @"SELECT\s+\*", RegexOptions.IgnoreCase))
+        {
+            warnings.Add("建议避免使用 SELECT *，明确指定需要的字段");
+        }
+
+        // 检查缺少WHERE子句
+        if (Regex.IsMatch(sql, @"\b(UPDATE|DELETE)\b", RegexOptions.IgnoreCase) &&
+            !Regex.IsMatch(sql, @"\bWHERE\b", RegexOptions.IgnoreCase))
+        {
+            warnings.Add("UPDATE/DELETE语句缺少WHERE条件，可能影响所有记录");
+        }
+
+        // 检查LIKE的使用
+        if (Regex.IsMatch(sql, @"LIKE\s+'%.*%'", RegexOptions.IgnoreCase))
+        {
+            warnings.Add("使用前后通配符的LIKE查询可能影响性能");
+        }
+    }
+
+    /// <summary>
+    /// 构建验证消息
+    /// </summary>
+    private string BuildValidationMessage(SqlStructureInfo info, List<string> issues, List<string> warnings)
+    {
+        if (issues.Count > 0)
+        {
+            return $"SQL语法错误: {string.Join(", ", issues)}";
+        }
+
+        var messageParts = new List<string> { "SQL语法正确" };
+        
+        if (info.HasSelect)
+        {
+            var structureParts = new List<string>();
+            if (info.TableCount > 0) structureParts.Add($"{info.TableCount}个表");
+            if (info.FieldCount > 0) structureParts.Add($"{info.FieldCount}个字段");
+            else if (info.FieldCount == -1) structureParts.Add("所有字段(*)");
+            if (info.HasJoin) structureParts.Add("包含连接");
+            if (info.HasWhere) structureParts.Add("包含条件");
+            if (info.HasOrderBy) structureParts.Add("包含排序");
+            if (info.HasGroupBy) structureParts.Add("包含分组");
+            
+            if (structureParts.Count > 0)
+            {
+                messageParts.Add($"({string.Join(", ", structureParts)})");
+            }
+        }
+
+        if (warnings.Count > 0)
+        {
+            messageParts.Add($"建议: {string.Join("; ", warnings)}");
+        }
+
+        return string.Join(" ", messageParts);
+    }
+
+    /// <summary>
+    /// SQL结构信息
+    /// </summary>
+    private class SqlStructureInfo
+    {
+        public bool HasSelect { get; set; }
+        public bool HasFrom { get; set; }
+        public bool HasWhere { get; set; }
+        public bool HasJoin { get; set; }
+        public bool HasOrderBy { get; set; }
+        public bool HasGroupBy { get; set; }
+        public int TableCount { get; set; }
+        public int FieldCount { get; set; }
+    }
+
     private string AlignSelectColumns(string sql)
     {
         var lines = sql.Split('\n');
@@ -287,7 +374,8 @@ public partial class SqlFormatterViewModel : ObservableObject
             
             if (columnList.Count > 1)
             {
-                var indent = new string(' ', IndentSize);
+                var indentChar = UseTabsForIndent ? "\t" : " ";
+                var indent = new string(indentChar[0], UseTabsForIndent ? 1 : IndentSize);
                 lines[selectIndex] = "SELECT " + columnList[0];
                 
                 for (int i = 1; i < columnList.Count; i++)
@@ -320,65 +408,16 @@ public partial class SqlFormatterViewModel : ObservableObject
         return result.Trim();
     }
 
-    private (bool isValid, string message) ValidateSqlSyntax(string sql)
+    protected override string GetExampleData()
     {
-        if (string.IsNullOrWhiteSpace(sql))
-        {
-            return (false, "SQL语句不能为空");
-        }
-
-        var trimmedSql = sql.Trim();
-
-        // 基本语法检查
-        var issues = new List<string>();
-
-        // 检查括号匹配
-        var openParens = trimmedSql.Count(c => c == '(');
-        var closeParens = trimmedSql.Count(c => c == ')');
-        if (openParens != closeParens)
-        {
-            issues.Add($"括号不匹配 (开括号: {openParens}, 闭括号: {closeParens})");
-        }
-
-        // 检查引号匹配
-        var singleQuotes = trimmedSql.Count(c => c == '\'');
-        if (singleQuotes % 2 != 0)
-        {
-            issues.Add("单引号不匹配");
-        }
-
-        var doubleQuotes = trimmedSql.Count(c => c == '"');
-        if (doubleQuotes % 2 != 0)
-        {
-            issues.Add("双引号不匹配");
-        }
-
-        // 检查基本SQL语句类型
-        var sqlUpper = trimmedSql.ToUpper();
-        var validStarters = new[] { "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP", "WITH" };
-        
-        if (!validStarters.Any(starter => sqlUpper.StartsWith(starter)))
-        {
-            issues.Add("SQL语句应以有效的关键字开始 (SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, WITH)");
-        }
-
-        if (issues.Any())
-        {
-            return (false, "语法问题: " + string.Join("; ", issues));
-        }
-
-        return (true, "SQL语法验证通过");
-    }
-
-    private void SetValidation(string message, bool isValid)
-    {
-        ValidationMessage = message;
-        IsValidSql = isValid;
-    }
-
-    private void ClearValidation()
-    {
-        ValidationMessage = "";
-        IsValidSql = true;
+        return """
+        SELECT u.id, u.name, u.email, p.title, p.content, c.name as category_name 
+        FROM users u 
+        INNER JOIN posts p ON u.id = p.user_id 
+        LEFT JOIN categories c ON p.category_id = c.id 
+        WHERE u.status = 'active' AND p.published_at IS NOT NULL 
+        ORDER BY p.created_at DESC, u.name ASC 
+        LIMIT 10 OFFSET 0;
+        """;
     }
 }

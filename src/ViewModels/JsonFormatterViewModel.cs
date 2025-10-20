@@ -1,180 +1,366 @@
 using System;
-using System.Text.Json;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Collections.Generic;
+using System.Linq;
+using DevUtilities.Core.ViewModels.Base;
+using System.IO;
+using System.Text;
 
 namespace DevUtilities.ViewModels;
 
-public partial class JsonFormatterViewModel : ObservableObject
+public partial class JsonFormatterViewModel : BaseFormatterViewModel
 {
-    [ObservableProperty]
-    private string inputJson = "";
+    public JsonFormatterViewModel()
+    {
+        Title = "JSON格式化器";
+        Description = "JSON格式化和验证工具";
+        Icon = "📋";
+        ToolType = Models.ToolType.JsonFormatter;
+    }
 
-    [ObservableProperty]
-    private string outputJson = "";
-
-    [ObservableProperty]
-    private string validationMessage = "";
-
-    [ObservableProperty]
-    private bool isValidJson = false;
-
-    [ObservableProperty]
-    private int indentSize = 2;
-
-    [RelayCommand]
-    private void FormatJson()
+    protected override async Task<string> FormatContentAsync(string input)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(InputJson))
+            // 对于大文件，使用流式处理
+            var inputSize = Encoding.UTF8.GetByteCount(input);
+            if (inputSize > 512 * 1024) // 512KB以上使用流式处理
             {
-                OutputJson = "";
-                ValidationMessage = "";
-                IsValidJson = false;
-                return;
+                return await FormatLargeJsonAsync(input);
             }
 
-            // 尝试解析JSON
-            var parsedJson = JToken.Parse(InputJson);
-            
-            // 格式化JSON
-            var formatted = parsedJson.ToString(IndentSize == 2 ? Formatting.Indented : Formatting.None);
-            
-            if (IndentSize != 2 && IndentSize > 0)
-            {
-                // 自定义缩进
-                var settings = new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented
-                };
-                formatted = JsonConvert.SerializeObject(parsedJson, settings);
-                
-                // 替换默认的2空格缩进为自定义缩进
-                var lines = formatted.Split('\n');
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    var line = lines[i];
-                    var leadingSpaces = 0;
-                    foreach (char c in line)
-                    {
-                        if (c == ' ') leadingSpaces++;
-                        else break;
-                    }
-                    
-                    if (leadingSpaces > 0)
-                    {
-                        var indentLevel = leadingSpaces / 2;
-                        var newIndent = new string(' ', indentLevel * IndentSize);
-                        lines[i] = newIndent + line.Substring(leadingSpaces);
-                    }
-                }
-                formatted = string.Join('\n', lines);
-            }
-
-            OutputJson = formatted;
-            ValidationMessage = "✅ JSON格式正确";
-            IsValidJson = true;
+            // 小文件使用标准处理
+            return await FormatStandardJsonAsync(input);
         }
-        catch (JsonReaderException ex)
+        catch (Newtonsoft.Json.JsonException ex)
         {
-            OutputJson = "";
-            ValidationMessage = $"❌ JSON格式错误: {ex.Message}";
-            IsValidJson = false;
+            throw new DevUtilities.Core.Exceptions.JsonFormatterException(ex.Message);
         }
         catch (Exception ex)
         {
-            OutputJson = "";
-            ValidationMessage = $"❌ 处理错误: {ex.Message}";
-            IsValidJson = false;
+            throw new InvalidOperationException($"格式化失败: {ex.Message}", ex);
         }
     }
 
+    /// <summary>
+    /// 标准JSON格式化（适用于小文件）
+    /// </summary>
+    private async Task<string> FormatStandardJsonAsync(string input)
+    {
+        return await Task.Run(() =>
+        {
+            var parsedJson = JToken.Parse(input);
+            
+            if (CompactOutput)
+            {
+                return parsedJson.ToString(Formatting.None);
+            }
+
+            var formatted = parsedJson.ToString(Formatting.Indented);
+            
+            if (IndentSize != 2)
+            {
+                // 优化缩进处理
+                return AdjustIndentation(formatted);
+            }
+
+            return formatted;
+        });
+    }
+
+    /// <summary>
+    /// 大文件JSON流式格式化
+    /// </summary>
+    private async Task<string> FormatLargeJsonAsync(string input)
+    {
+        return await Task.Run(() =>
+        {
+            using var stringReader = new StringReader(input);
+            using var jsonReader = new JsonTextReader(stringReader);
+            using var stringWriter = new StringWriter();
+            using var jsonWriter = new JsonTextWriter(stringWriter);
+
+            // 配置输出格式
+            if (CompactOutput)
+            {
+                jsonWriter.Formatting = Formatting.None;
+            }
+            else
+            {
+                jsonWriter.Formatting = Formatting.Indented;
+                jsonWriter.IndentChar = UseTabsForIndent ? '\t' : ' ';
+                jsonWriter.Indentation = UseTabsForIndent ? 1 : IndentSize;
+            }
+
+            // 流式复制JSON结构
+            jsonWriter.WriteToken(jsonReader);
+            
+            return stringWriter.ToString();
+        });
+    }
+
+    /// <summary>
+    /// 优化的缩进调整算法
+    /// </summary>
+    private string AdjustIndentation(string formatted)
+    {
+        var lines = formatted.Split('\n');
+        var result = new StringBuilder(formatted.Length);
+        
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i];
+            var leadingSpaces = 0;
+            
+            // 快速计算前导空格
+            for (int j = 0; j < line.Length && line[j] == ' '; j++)
+            {
+                leadingSpaces++;
+            }
+            
+            if (leadingSpaces > 0)
+            {
+                var indentLevel = leadingSpaces / 2;
+                var newIndent = UseTabsForIndent ? 
+                    new string('\t', indentLevel) : 
+                    new string(' ', indentLevel * IndentSize);
+                
+                result.Append(newIndent);
+                result.Append(line.AsSpan(leadingSpaces));
+            }
+            else
+            {
+                result.Append(line);
+            }
+            
+            if (i < lines.Length - 1)
+            {
+                result.AppendLine();
+            }
+        }
+        
+        return result.ToString();
+    }
+
+    // JSON特定的命令
     [RelayCommand]
     private void MinifyJson()
     {
+        CompactOutput = true;
+        FormatCommand.Execute(null);
+    }
+
+    [RelayCommand]
+    private void BeautifyJson()
+    {
+        CompactOutput = false;
+        FormatCommand.Execute(null);
+    }
+
+    protected override async Task<ValidationResult> OnValidateAsync(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return new ValidationResult(false, "请输入JSON内容");
+        }
+
         try
         {
-            if (string.IsNullOrWhiteSpace(InputJson))
+            // 对于大文件，使用流式验证
+            var inputSize = Encoding.UTF8.GetByteCount(input);
+            if (inputSize > 1024 * 1024) // 1MB以上使用流式验证
             {
-                OutputJson = "";
-                ValidationMessage = "";
-                IsValidJson = false;
-                return;
+                return await ValidateLargeJsonAsync(input);
             }
 
-            var parsedJson = JToken.Parse(InputJson);
-            var minified = parsedJson.ToString(Formatting.None);
-
-            OutputJson = minified;
-            ValidationMessage = "✅ JSON已压缩";
-            IsValidJson = true;
+            // 标准验证
+            return await ValidateStandardJsonAsync(input);
         }
-        catch (JsonReaderException ex)
+        catch (Newtonsoft.Json.JsonException ex)
         {
-            OutputJson = "";
-            ValidationMessage = $"❌ JSON格式错误: {ex.Message}";
-            IsValidJson = false;
+            // 提供更详细的错误信息
+            var errorMessage = ParseJsonError(ex.Message);
+            return new ValidationResult(false, $"JSON格式错误: {errorMessage}");
         }
         catch (Exception ex)
         {
-            OutputJson = "";
-            ValidationMessage = $"❌ 处理错误: {ex.Message}";
-            IsValidJson = false;
+            return new ValidationResult(false, $"验证失败: {ex.Message}");
         }
     }
 
-    [RelayCommand]
-    private void ValidateJson()
+    /// <summary>
+    /// 标准JSON验证
+    /// </summary>
+    private async Task<ValidationResult> ValidateStandardJsonAsync(string input)
     {
-        try
+        return await Task.Run(() =>
         {
-            if (string.IsNullOrWhiteSpace(InputJson))
+            // 尝试解析JSON
+            using var document = JsonDocument.Parse(input);
+            
+            // 检查JSON结构
+            var root = document.RootElement;
+            var elementCount = CountJsonElements(root);
+            var depth = GetJsonDepth(root);
+            
+            var message = $"JSON格式正确 - 包含 {elementCount} 个元素，最大深度 {depth} 层";
+            return new ValidationResult(true, message);
+        });
+    }
+
+    /// <summary>
+    /// 大文件JSON流式验证
+    /// </summary>
+    private async Task<ValidationResult> ValidateLargeJsonAsync(string input)
+    {
+        return await Task.Run(() =>
+        {
+            using var stringReader = new StringReader(input);
+            using var jsonReader = new JsonTextReader(stringReader);
+            
+            int elementCount = 0;
+            int maxDepth = 0;
+            int currentDepth = 0;
+            
+            try
             {
-                ValidationMessage = "";
-                IsValidJson = false;
-                return;
+                while (jsonReader.Read())
+                {
+                    switch (jsonReader.TokenType)
+                    {
+                        case JsonToken.StartObject:
+                        case JsonToken.StartArray:
+                            currentDepth++;
+                            maxDepth = Math.Max(maxDepth, currentDepth);
+                            break;
+                        case JsonToken.EndObject:
+                        case JsonToken.EndArray:
+                            currentDepth--;
+                            break;
+                        case JsonToken.PropertyName:
+                        case JsonToken.String:
+                        case JsonToken.Integer:
+                        case JsonToken.Float:
+                        case JsonToken.Boolean:
+                        case JsonToken.Null:
+                            elementCount++;
+                            break;
+                    }
+                }
+                
+                var sizeText = input.Length > 1024 * 1024 ? 
+                    $"{input.Length / (1024.0 * 1024.0):F1}MB" : 
+                    $"{input.Length / 1024.0:F0}KB";
+                    
+                var message = $"JSON格式正确 - 文件大小 {sizeText}，包含 {elementCount} 个元素，最大深度 {maxDepth} 层";
+                return new ValidationResult(true, message);
             }
-
-            JToken.Parse(InputJson);
-            ValidationMessage = "✅ JSON格式正确";
-            IsValidJson = true;
-        }
-        catch (JsonReaderException ex)
-        {
-            ValidationMessage = $"❌ JSON格式错误: {ex.Message}";
-            IsValidJson = false;
-        }
-        catch (Exception ex)
-        {
-            ValidationMessage = $"❌ 验证错误: {ex.Message}";
-            IsValidJson = false;
-        }
+            catch (JsonReaderException ex)
+            {
+                var errorMessage = ParseJsonError(ex.Message);
+                return new ValidationResult(false, $"JSON格式错误: {errorMessage}");
+            }
+        });
     }
 
-    [RelayCommand]
-    private void ClearAll()
+    /// <summary>
+    /// 解析JSON错误信息，提供更友好的提示
+    /// </summary>
+    private string ParseJsonError(string originalError)
     {
-        InputJson = "";
-        OutputJson = "";
-        ValidationMessage = "";
-        IsValidJson = false;
-    }
-
-    [RelayCommand]
-    private void CopyOutput()
-    {
-        if (!string.IsNullOrWhiteSpace(OutputJson))
+        if (originalError.Contains("unexpected character"))
         {
-            // 这里需要实现剪贴板功能
-            // 在实际应用中需要使用Avalonia的剪贴板API
+            return "存在意外字符，请检查语法";
         }
+        if (originalError.Contains("unterminated string"))
+        {
+            return "字符串未正确结束，请检查引号";
+        }
+        if (originalError.Contains("invalid number"))
+        {
+            return "数字格式不正确";
+        }
+        if (originalError.Contains("expected"))
+        {
+            return "缺少必要的符号（如逗号、冒号、括号等）";
+        }
+        
+        return originalError;
     }
 
-    partial void OnInputJsonChanged(string value)
+    /// <summary>
+    /// 计算JSON元素数量（优化版本）
+    /// </summary>
+    private int CountJsonElements(JsonElement element)
     {
-        ValidateJson();
+        int count = 1;
+        
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                foreach (var property in element.EnumerateObject())
+                {
+                    count += CountJsonElements(property.Value);
+                }
+                break;
+            case JsonValueKind.Array:
+                foreach (var item in element.EnumerateArray())
+                {
+                    count += CountJsonElements(item);
+                }
+                break;
+        }
+        
+        return count;
+    }
+
+    /// <summary>
+    /// 计算JSON最大深度（优化版本）
+    /// </summary>
+    private int GetJsonDepth(JsonElement element, int currentDepth = 1)
+    {
+        int maxDepth = currentDepth;
+        
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                foreach (var property in element.EnumerateObject())
+                {
+                    var depth = GetJsonDepth(property.Value, currentDepth + 1);
+                    maxDepth = Math.Max(maxDepth, depth);
+                }
+                break;
+            case JsonValueKind.Array:
+                foreach (var item in element.EnumerateArray())
+                {
+                    var depth = GetJsonDepth(item, currentDepth + 1);
+                    maxDepth = Math.Max(maxDepth, depth);
+                }
+                break;
+        }
+        
+        return maxDepth;
+    }
+
+    protected override string GetExampleData()
+    {
+        return """
+        {
+          "name": "张三",
+          "age": 30,
+          "city": "北京",
+          "skills": ["C#", "JavaScript", "Python"],
+          "address": {
+            "street": "中关村大街1号",
+            "zipCode": "100080"
+          },
+          "isActive": true,
+          "lastLogin": "2025-01-15T10:30:00Z"
+        }
+        """;
     }
 }

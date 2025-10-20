@@ -71,106 +71,122 @@
       <!-- 操作按钮 -->
       <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
         <Button Content="格式化" 
-                Command="{Binding FormatHtmlCommand}"
+                Command="{Binding FormatCommand}"
                 Classes="accent"
-                Padding="20,8"/>
+                Padding="20,8"
+                ToolTip.Tip="格式化HTML (Ctrl+F)"/>
         <Button Content="压缩" 
-                Command="{Binding MinifyHtmlCommand}"
-                Padding="20,8"/>
+                Command="{Binding CompressCommand}"
+                Padding="20,8"
+                ToolTip.Tip="压缩HTML (Ctrl+M)"/>
         <Button Content="验证" 
-                Command="{Binding ValidateHtmlCommand}"
-                Padding="20,8"/>
+                Command="{Binding ValidateCommand}"
+                Padding="20,8"
+                ToolTip.Tip="验证HTML (Ctrl+V)"/>
         <Button Content="交换" 
                 Command="{Binding SwapInputOutputCommand}"
-                Padding="20,8"/>
+                Padding="20,8"
+                ToolTip.Tip="交换输入输出 (Ctrl+S)"/>
         <Button Content="示例" 
                 Command="{Binding UseExampleCommand}"
-                Padding="20,8"/>
+                Padding="20,8"
+                ToolTip.Tip="使用示例 (Ctrl+E)"/>
         <Button Content="清空" 
-                Command="{Binding ClearAllCommand}"
-                Padding="20,8"/>
+                Command="{Binding ClearCommand}"
+                Padding="20,8"
+                ToolTip.Tip="清空所有内容 (Ctrl+L)"/>
       </StackPanel>
 
       <!-- 验证消息 -->
-      <Border Background="{Binding IsValidHtml, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+      <Border Background="{Binding IsValid, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
               CornerRadius="5"
               Padding="10"
               IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringIsNotNullOrEmptyConverter.Instance}}">
         <TextBlock Text="{Binding ValidationMessage}"
-                   Foreground="{Binding IsValidHtml, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
+                   Foreground="{Binding IsValid, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
                    TextWrapping="Wrap"/>
       </Border>
 
       <!-- 输入输出区域 -->
-      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,*">
+      <Grid ColumnDefinitions="*,24,*" RowDefinitions="Auto,*" RowSpacing="16">
         
         <!-- 输入区域标题 -->
-        <TextBlock Grid.Column="0" Grid.Row="0" 
-                   Text="输入HTML" 
-                   FontWeight="SemiBold" 
-                   FontSize="16" 
-                   Margin="0,0,0,10"/>
+        <StackPanel Grid.Column="0" Grid.Row="0" Spacing="8">
+          <TextBlock Text="输入HTML" 
+                     FontWeight="SemiBold" 
+                     FontSize="18"/>
+          <TextBlock Text="在此输入需要格式化的HTML代码" 
+                     FontSize="12" 
+                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
         
-        <!-- 输出区域标题和复制按钮 -->
-        <Grid Grid.Column="2" Grid.Row="0" Margin="0,0,0,10">
+        <!-- 输出区域标题 -->
+        <StackPanel Grid.Column="2" Grid.Row="0" Spacing="8">
           <TextBlock Text="格式化结果" 
                      FontWeight="SemiBold" 
-                     FontSize="16" 
-                     HorizontalAlignment="Left"/>
-          <Button Content="复制" 
-                  Command="{Binding CopyOutputCommand}"
-                  HorizontalAlignment="Right"
-                  Classes="accent"
-                  Padding="12,4"/>
-        </Grid>
+                     FontSize="18"/>
+          <TextBlock Text="格式化后的HTML将显示在这里" 
+                     FontSize="12" 
+                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
 
         <!-- 输入区域 -->
         <Border Grid.Column="0" Grid.Row="1" 
                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="8"
-                Padding="15"
-                MinHeight="300">
+                CornerRadius="12"
+                Padding="20"
+                MinHeight="400"
+                BoxShadow="0 2 8 0 #10000000">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox Text="{Binding InputHtml}" 
+            <TextBox Text="{Binding InputText}"
                      AcceptsReturn="True"
                      TextWrapping="NoWrap"
-                     FontFamily="Consolas,Monaco,monospace"
-                     FontSize="13"
+                     FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
+                     FontSize="14"
                      Background="Transparent"
                      BorderThickness="0"
-                     Watermark="在此输入HTML代码..."/>
+                     LineHeight="20"
+                     Watermark="请输入HTML代码..."/>
           </ScrollViewer>
         </Border>
 
         <!-- 输出区域 -->
         <Border Grid.Column="2" Grid.Row="1" 
                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="8"
-                Padding="15"
-                MinHeight="300">
+                CornerRadius="12"
+                Padding="20"
+                MinHeight="400"
+                BoxShadow="0 2 8 0 #10000000">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <SelectableTextBlock Text="{Binding OutputHtml}" 
-                                 FontFamily="Consolas,Monaco,monospace"
-                                 FontSize="13"
-                                 TextWrapping="NoWrap"/>
+            <SelectableTextBlock Text="{Binding OutputText}"
+                                 FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
+                                 FontSize="14"
+                                 TextWrapping="NoWrap"
+                                 LineHeight="20"/>
           </ScrollViewer>
         </Border>
-
       </Grid>
 
-      <!-- 使用说明 -->
+      <!-- 使用说明区域 -->
       <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="8"
-              Padding="20">
-        <StackPanel Spacing="10">
-          <TextBlock Text="💡 使用说明" FontWeight="SemiBold" FontSize="16"/>
-          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-            • 格式化：美化HTML代码，添加适当的缩进和换行
-            • 压缩：移除不必要的空白字符，减小文件大小
-            • 验证：检查HTML语法错误和结构问题
-            • 支持多种文档类型：HTML5、XHTML、HTML 4.01等
-            • 可配置缩进大小、属性格式化、注释处理等选项
-            • 自动检测常见的HTML结构问题和标签配对错误
+              CornerRadius="12"
+              Padding="24"
+              BoxShadow="0 2 8 0 #10000000">
+        <StackPanel Spacing="16">
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Text="💡" FontSize="20" VerticalAlignment="Center"/>
+            <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
+          </StackPanel>
+          <TextBlock TextWrapping="Wrap" 
+                     FontSize="14" 
+                     LineHeight="22"
+                     Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+            • 格式化：美化HTML代码，添加适当的缩进和换行，提高可读性
+            • 压缩：移除多余的空白字符和注释，生成紧凑的HTML代码
+            • 验证：检查HTML标签的基本正确性和结构问题
+            • 支持多种文档类型：HTML5、XHTML、HTML4等
+            • 可自定义缩进大小、属性格式化、空白处理和注释移除选项
+            • 支持复杂HTML结构的格式化，包括嵌套标签和内联样式
           </TextBlock>
         </StackPanel>
       </Border>

@@ -125,6 +125,14 @@
               <TextBlock Text="{Binding SelectedTool.Description}" FontSize="12" Foreground="#666666"/>
             </StackPanel>
           </StackPanel>
+          
+          <!-- Settings Button -->
+          <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" 
+                  Command="{Binding OpenSettingsCommand}" 
+                  Background="Transparent" BorderThickness="0" Padding="8"
+                  ToolTip.Tip="设置">
+            <TextBlock Text="⚙️" FontSize="16"/>
+          </Button>
         </Grid>
       </Border>
       

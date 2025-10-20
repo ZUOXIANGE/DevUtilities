@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DevUtilities.Models;
+using DevUtilities.Views;
 
 namespace DevUtilities.ViewModels;
 
@@ -117,6 +119,24 @@ public partial class MainWindowViewModel : ObservableObject
         IsToolViewVisible = false;
         CurrentToolViewModel = null;
         SelectedTool = null;
+    }
+
+    [RelayCommand]
+    private async Task OpenSettings()
+    {
+        var settingsViewModel = new SettingsDialogViewModel();
+        var settingsDialog = new SettingsDialog(settingsViewModel);
+        
+        // 设置对话框的父窗口（如果需要的话）
+        // settingsDialog.ShowDialog(parentWindow);
+        
+        var result = await settingsDialog.ShowDialog<bool?>(null);
+        
+        if (result == true)
+        {
+            // 设置已保存，可以在这里处理设置更新后的逻辑
+            // 例如通知其他ViewModel设置已更改
+        }
     }
 
     private object CreateToolViewModel(ToolType toolType)

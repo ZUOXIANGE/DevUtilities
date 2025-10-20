@@ -1,0 +1,259 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DevUtilities.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+        x:Class="DevUtilities.Views.SettingsDialog"
+        x:DataType="vm:SettingsDialogViewModel"
+        Title="设置"
+        Width="600" Height="500"
+        MinWidth="500" MinHeight="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="true">
+
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- 设置内容 -->
+    <TabControl Grid.Row="0" Margin="0,0,0,16">
+      
+      <!-- 格式化选项 -->
+      <TabItem Header="格式化选项">
+        <ScrollViewer Padding="16">
+          <StackPanel Spacing="16">
+            
+            <!-- 缩进设置 -->
+            <Border Background="#F8F9FA" 
+                    BorderBrush="#DEE2E6" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="16">
+              <StackPanel Spacing="12">
+                <TextBlock Text="缩进设置" FontWeight="Bold" FontSize="16"/>
+                
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <TextBlock Grid.Column="0" Text="缩进大小:" VerticalAlignment="Center" Width="100"/>
+                  <Slider Grid.Column="1" 
+                          Value="{Binding IndentSize}" 
+                          Minimum="1" 
+                          Maximum="8" 
+                          TickFrequency="1" 
+                          IsSnapToTickEnabled="True"
+                          Margin="8,0"/>
+                  <TextBlock Grid.Column="2" 
+                             Text="{Binding IndentSize}" 
+                             VerticalAlignment="Center" 
+                             Width="30" 
+                             TextAlignment="Center"/>
+                </Grid>
+                
+                <CheckBox Content="使用制表符缩进" 
+                          IsChecked="{Binding UseTabsForIndent}"/>
+              </StackPanel>
+            </Border>
+
+            <!-- 格式化行为 -->
+            <Border Background="#F8F9FA" 
+                    BorderBrush="#DEE2E6" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="16">
+              <StackPanel Spacing="12">
+                <TextBlock Text="格式化行为" FontWeight="Bold" FontSize="16"/>
+                
+                <CheckBox Content="自动格式化（输入时实时格式化）" 
+                          IsChecked="{Binding AutoFormat}"/>
+                <TextBlock Text="启用后，在输入内容时会自动进行格式化" 
+                           FontSize="12" 
+                           Foreground="#666666" 
+                           Margin="24,0,0,0"/>
+                
+                <CheckBox Content="压缩输出（移除不必要的空白）" 
+                          IsChecked="{Binding CompactOutput}"/>
+                <TextBlock Text="启用后，格式化结果会尽可能紧凑" 
+                           FontSize="12" 
+                           Foreground="#666666" 
+                           Margin="24,0,0,0"/>
+              </StackPanel>
+            </Border>
+
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- 性能设置 -->
+      <TabItem Header="性能设置">
+        <ScrollViewer Padding="16">
+          <StackPanel Spacing="16">
+            
+            <!-- 文件处理限制 -->
+            <Border Background="#F8F9FA" 
+                    BorderBrush="#DEE2E6" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="16">
+              <StackPanel Spacing="12">
+                <TextBlock Text="文件处理限制" FontWeight="Bold" FontSize="16"/>
+                
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <TextBlock Grid.Column="0" Text="最大文件大小:" VerticalAlignment="Center" Width="120"/>
+                  <Slider Grid.Column="1" 
+                          Value="{Binding MaxFileSize}" 
+                          Minimum="1" 
+                          Maximum="100" 
+                          TickFrequency="5" 
+                          IsSnapToTickEnabled="True"
+                          Margin="8,0"/>
+                  <TextBlock Grid.Column="2" 
+                             Text="{Binding MaxFileSize, StringFormat='{}{0} MB'}" 
+                             VerticalAlignment="Center" 
+                             Width="60" 
+                             TextAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="超过此大小的文件将使用流式处理" 
+                           FontSize="12" 
+                           Foreground="#666666"/>
+                
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <TextBlock Grid.Column="0" Text="最大处理时间:" VerticalAlignment="Center" Width="120"/>
+                  <Slider Grid.Column="1" 
+                          Value="{Binding MaxProcessingTime}" 
+                          Minimum="5" 
+                          Maximum="120" 
+                          TickFrequency="5" 
+                          IsSnapToTickEnabled="True"
+                          Margin="8,0"/>
+                  <TextBlock Grid.Column="2" 
+                             Text="{Binding MaxProcessingTime, StringFormat='{}{0} 秒'}" 
+                             VerticalAlignment="Center" 
+                             Width="60" 
+                             TextAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="超过此时间的操作将被中断" 
+                           FontSize="12" 
+                           Foreground="#666666"/>
+              </StackPanel>
+            </Border>
+
+            <!-- 内存管理 -->
+            <Border Background="#F8F9FA" 
+                    BorderBrush="#DEE2E6" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="16">
+              <StackPanel Spacing="12">
+                <TextBlock Text="内存管理" FontWeight="Bold" FontSize="16"/>
+                
+                <CheckBox Content="启用内存监控" 
+                          IsChecked="{Binding EnableMemoryMonitoring}"/>
+                <TextBlock Text="启用后会显示内存使用情况并自动进行垃圾回收" 
+                           FontSize="12" 
+                           Foreground="#666666" 
+                           Margin="24,0,0,0"/>
+                
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <TextBlock Grid.Column="0" Text="内存阈值:" VerticalAlignment="Center" Width="120"/>
+                  <Slider Grid.Column="1" 
+                          Value="{Binding MemoryThreshold}" 
+                          Minimum="50" 
+                          Maximum="500" 
+                          TickFrequency="25" 
+                          IsSnapToTickEnabled="True"
+                          Margin="8,0"/>
+                  <TextBlock Grid.Column="2" 
+                             Text="{Binding MemoryThreshold, StringFormat='{}{0} MB'}" 
+                             VerticalAlignment="Center" 
+                             Width="60" 
+                             TextAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="超过此阈值时会自动触发垃圾回收" 
+                           FontSize="12" 
+                           Foreground="#666666"/>
+              </StackPanel>
+            </Border>
+
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- 键盘快捷键 -->
+      <TabItem Header="键盘快捷键">
+        <ScrollViewer Padding="16">
+          <StackPanel Spacing="16">
+            
+            <Border Background="#F8F9FA" 
+                    BorderBrush="#DEE2E6" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="16">
+              <StackPanel Spacing="12">
+                <TextBlock Text="常用快捷键" FontWeight="Bold" FontSize="16"/>
+                
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="格式化" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Ctrl+F" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="压缩" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="Ctrl+M" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="验证" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="Ctrl+T" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="交换输入输出" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="3" Grid.Column="1" Text="Ctrl+Shift+S" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="4" Grid.Column="0" Text="复制输出" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="4" Grid.Column="1" Text="Ctrl+C" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="5" Grid.Column="0" Text="清除所有" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="5" Grid.Column="1" Text="Ctrl+L" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="6" Grid.Column="0" Text="使用示例" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="6" Grid.Column="1" Text="Ctrl+E" FontFamily="Consolas"/>
+                  
+                  <TextBlock Grid.Row="7" Grid.Column="0" Text="取消操作" FontWeight="Medium"/>
+                  <TextBlock Grid.Row="7" Grid.Column="1" Text="Escape" FontFamily="Consolas"/>
+                </Grid>
+              </StackPanel>
+            </Border>
+
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+    </TabControl>
+
+    <!-- 按钮区域 -->
+    <Border Grid.Row="1" 
+            Background="#F8F9FA" 
+            BorderBrush="#DEE2E6" 
+            BorderThickness="0,1,0,0" 
+            Padding="0,16,0,0">
+      <StackPanel Orientation="Horizontal" 
+                  HorizontalAlignment="Right" 
+                  Spacing="12">
+        <Button Content="重置为默认值" 
+                Command="{Binding ResetToDefaultCommand}"
+                Classes="secondary"/>
+        <Button Content="导出设置" 
+                Command="{Binding ExportSettingsCommand}"
+                Classes="secondary"/>
+        <Button Content="导入设置" 
+                Command="{Binding ImportSettingsCommand}"
+                Classes="secondary"/>
+        <Button Content="取消" 
+                Command="{Binding CancelCommand}"
+                Classes="secondary"/>
+        <Button Content="确定" 
+                Command="{Binding OkCommand}"
+                Classes="accent"/>
+      </StackPanel>
+    </Border>
+
+  </Grid>
+
+</Window>

@@ -44,20 +44,19 @@ namespace DevUtilities.ViewModels
                 values[1] is int green && 
                 values[2] is int blue)
             {
-                return new SolidColorBrush(Color.FromRgb(
+                return Color.FromRgb(
                     (byte)Math.Clamp(red, 0, 255),
                     (byte)Math.Clamp(green, 0, 255),
-                    (byte)Math.Clamp(blue, 0, 255)));
+                    (byte)Math.Clamp(blue, 0, 255));
             }
 
-            return new SolidColorBrush(Colors.Transparent);
+            return Colors.Transparent;
         }
 
         public object[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture)
         {
-            if (value is SolidColorBrush brush)
+            if (value is Color color)
             {
-                var color = brush.Color;
                 return new object[] { (int)color.R, (int)color.G, (int)color.B };
             }
             return new object[] { 0, 0, 0 };
