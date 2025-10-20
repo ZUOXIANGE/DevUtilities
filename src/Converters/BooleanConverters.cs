@@ -8,7 +8,7 @@ namespace DevUtilities.Converters;
 public static class BooleanConverters
 {
     public static readonly BooleanToColorConverter TrueToGreen = new();
-    public static readonly BooleanToStringConverter ToString = new();
+    public static new readonly BooleanToStringConverter ToString = new();
 }
 
 public class BooleanToColorConverter : IValueConverter

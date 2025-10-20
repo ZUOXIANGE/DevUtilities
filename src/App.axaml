@@ -35,6 +35,9 @@
     <DataTemplate DataType="{x:Type vm:HtmlFormatterViewModel}">
       <views:HtmlFormatterView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:StringEscapeViewModel}">
+      <views:StringEscapeView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:CryptoToolsViewModel}">
       <views:CryptoToolsView/>
     </DataTemplate>
@@ -67,6 +70,9 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:ColorPickerViewModel}">
       <views:ColorPickerView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TextDiffViewModel}">
+      <views:TextDiffView/>
     </DataTemplate>
   </Application.DataTemplates>
 

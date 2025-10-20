@@ -141,6 +141,8 @@ public partial class CryptoToolsViewModel : BaseToolViewModel
 
             ValidationMessage = "哈希计算成功";
             IsValidInput = true;
+            
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {
@@ -178,6 +180,8 @@ public partial class CryptoToolsViewModel : BaseToolViewModel
 
             ValidationMessage = "HMAC计算成功";
             IsValidInput = true;
+            
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {
@@ -224,6 +228,7 @@ public partial class CryptoToolsViewModel : BaseToolViewModel
     private async Task SwapInputOutputAsync()
     {
         (InputText, OutputText) = (OutputText, InputText);
+        await Task.CompletedTask;
     }
 
     [RelayCommand]

@@ -109,6 +109,8 @@ public partial class QrCodeViewModel : ObservableObject
 
             ValidationMessage = "二维码生成成功";
             IsValidInput = true;
+            
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {
@@ -317,6 +319,8 @@ public partial class QrCodeViewModel : ObservableObject
                 ValidationMessage = "未能识别二维码";
                 IsValidInput = false;
             }
+            
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {

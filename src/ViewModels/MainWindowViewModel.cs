@@ -79,25 +79,28 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void InitializeTools()
     {
-        AllTools.Add(new ToolInfo("Timestamp Converter", "时间戳转换", "⏰", "时间戳与日期格式互转", ToolType.TimestampConverter) { SortOrder = 1 });
-        AllTools.Add(new ToolInfo("Unit Converter", "单位转换", "📏", "各种单位间的转换", ToolType.UnitConverter) { SortOrder = 2 });
-        AllTools.Add(new ToolInfo("Base Converter", "进制转换", "🔢", "二进制、八进制、十进制、十六进制转换", ToolType.BaseConverter) { SortOrder = 3 });
-        AllTools.Add(new ToolInfo("JSON Formatter", "JSON格式化", "📋", "JSON数据格式化和验证", ToolType.JsonFormatter) { SortOrder = 4 });
-        AllTools.Add(new ToolInfo("SQL Formatter", "SQL格式化", "🗃️", "SQL查询语句格式化", ToolType.SqlFormatter) { SortOrder = 5 });
-        AllTools.Add(new ToolInfo("HTML Formatter", "HTML格式化", "🌐", "HTML代码格式化", ToolType.HtmlFormatter) { SortOrder = 6 });
-        AllTools.Add(new ToolInfo("Base64 Encoder", "Base64编码", "🔐", "Base64编码解码", ToolType.Base64Encoder) { SortOrder = 7 });
-        AllTools.Add(new ToolInfo("Hex Converter", "十六进制转换", "🔤", "十六进制与字符串互转", ToolType.HexConverter) { SortOrder = 8 });
-        AllTools.Add(new ToolInfo("JWT Encoder", "JWT编码", "🎫", "JWT令牌编码解码", ToolType.JwtEncoder) { SortOrder = 9 });
-        AllTools.Add(new ToolInfo("Regex Tester", "正则测试", "🔍", "正则表达式测试工具", ToolType.RegexTester) { SortOrder = 10 });
-        AllTools.Add(new ToolInfo("UUID Generator", "UUID生成", "🆔", "生成各种格式的UUID", ToolType.UuidGenerator) { SortOrder = 11 });
-        AllTools.Add(new ToolInfo("Password Generator", "密码生成器", "🔑", "生成安全密码", ToolType.PasswordGenerator) { SortOrder = 12 });
-        AllTools.Add(new ToolInfo("URL Tools", "URL工具", "🔗", "URL编码解码和解析", ToolType.UrlTools) { SortOrder = 13 });
-        AllTools.Add(new ToolInfo("HTTP Request", "HTTP请求", "🌍", "HTTP客户端工具", ToolType.HttpRequest) { SortOrder = 14 });
-        AllTools.Add(new ToolInfo("IP Query", "IP查询", "🌐", "IP地址查询和地理位置", ToolType.IpQuery) { SortOrder = 15 });
-        AllTools.Add(new ToolInfo("QR Code", "二维码", "📱", "二维码生成和扫描", ToolType.QrCode) { SortOrder = 16 });
-        AllTools.Add(new ToolInfo("Parquet Viewer", "Parquet查看器", "📊", "查看Parquet文件数据", ToolType.ParquetViewer) { SortOrder = 17 });
-        AllTools.Add(new ToolInfo("Crypto Tools", "加密工具", "🔒", "各种加密和哈希工具", ToolType.CryptoTools) { SortOrder = 18 });
-        AllTools.Add(new ToolInfo("Cron Expression", "Cron表达式", "⏲️", "Cron表达式解析和生成", ToolType.CronExpression) { SortOrder = 19 });
+        AllTools.Add(new ToolInfo("时间戳转换", "时间戳转换", "⏰", "时间戳与日期时间相互转换", ToolType.TimestampConverter));
+        AllTools.Add(new ToolInfo("Base64编码", "Base64编码", "📝", "Base64编码解码工具", ToolType.Base64Encoder));
+        AllTools.Add(new ToolInfo("URL工具", "URL工具", "🔗", "URL编码解码和组件解析", ToolType.UrlTools));
+        AllTools.Add(new ToolInfo("JSON格式化", "JSON格式化", "📋", "JSON格式化和验证工具", ToolType.JsonFormatter));
+        AllTools.Add(new ToolInfo("密码生成", "密码生成", "🔑", "安全密码生成工具", ToolType.PasswordGenerator));
+        AllTools.Add(new ToolInfo("进制转换", "进制转换", "🔢", "数字进制转换工具", ToolType.BaseConverter));
+        AllTools.Add(new ToolInfo("HTTP请求", "HTTP请求", "🌐", "HTTP请求测试工具", ToolType.HttpRequest));
+        AllTools.Add(new ToolInfo("加密工具", "加密工具", "🔒", "各种加密解密算法", ToolType.CryptoTools));
+        AllTools.Add(new ToolInfo("字符串转义", "字符串转义", "🔤", "字符串转义和反转义工具", ToolType.StringEscape));
+        AllTools.Add(new ToolInfo("SQL格式化", "SQL格式化", "🗃️", "SQL语句格式化和美化", ToolType.SqlFormatter));
+        AllTools.Add(new ToolInfo("HTML格式化", "HTML格式化", "🌐", "HTML代码格式化和美化", ToolType.HtmlFormatter));
+        AllTools.Add(new ToolInfo("正则测试", "正则测试", "🔍", "正则表达式测试和验证", ToolType.RegexTester));
+        AllTools.Add(new ToolInfo("文本对比", "文本对比", "📊", "文本差异对比工具", ToolType.TextDiff));
+        AllTools.Add(new ToolInfo("二维码", "二维码", "📱", "二维码生成和识别", ToolType.QrCode));
+        AllTools.Add(new ToolInfo("UUID生成", "UUID生成", "🆔", "UUID生成器", ToolType.UuidGenerator));
+        AllTools.Add(new ToolInfo("颜色选择", "颜色选择", "🎨", "颜色选择和转换工具", ToolType.ColorPicker));
+        AllTools.Add(new ToolInfo("十六进制", "十六进制", "🔢", "十六进制转换工具", ToolType.HexConverter));
+        AllTools.Add(new ToolInfo("JWT编码", "JWT编码", "🔐", "JWT令牌编码解码", ToolType.JwtEncoder));
+        AllTools.Add(new ToolInfo("单位转换", "单位转换", "📏", "各种单位转换工具", ToolType.UnitConverter));
+        AllTools.Add(new ToolInfo("Cron表达式", "Cron表达式", "⏱️", "Cron表达式生成和解析", ToolType.CronExpression));
+        AllTools.Add(new ToolInfo("Parquet查看", "Parquet查看", "📄", "Parquet文件查看器", ToolType.ParquetViewer));
+        AllTools.Add(new ToolInfo("IP查询", "IP查询", "🌍", "IP地址查询工具", ToolType.IpQuery));
     }
 
     [RelayCommand]
@@ -121,24 +124,27 @@ public partial class MainWindowViewModel : ObservableObject
         return toolType switch
         {
             ToolType.TimestampConverter => new TimestampConverterViewModel(),
-            ToolType.UnitConverter => new UnitConverterViewModel(),
-            ToolType.BaseConverter => new BaseConverterViewModel(),
+            ToolType.Base64Encoder => new Base64EncoderViewModel(),
+            ToolType.UrlTools => new UrlToolsViewModel(),
             ToolType.JsonFormatter => new JsonFormatterViewModel(),
+            ToolType.PasswordGenerator => new PasswordGeneratorViewModel(),
+            ToolType.BaseConverter => new BaseConverterViewModel(),
+            ToolType.HttpRequest => new HttpRequestViewModel(),
+            ToolType.CryptoTools => new CryptoToolsViewModel(),
+            ToolType.StringEscape => new StringEscapeViewModel(),
             ToolType.SqlFormatter => new SqlFormatterViewModel(),
             ToolType.HtmlFormatter => new HtmlFormatterViewModel(),
-            ToolType.Base64Encoder => new Base64EncoderViewModel(),
+            ToolType.RegexTester => new RegexTesterViewModel(),
+            ToolType.TextDiff => new TextDiffViewModel(),
+            ToolType.QrCode => new QrCodeViewModel(),
+            ToolType.UuidGenerator => new UuidGeneratorViewModel(),
+            ToolType.ColorPicker => new ColorPickerViewModel(),
             ToolType.HexConverter => new HexConverterViewModel(),
             ToolType.JwtEncoder => new JwtEncoderViewModel(),
-            ToolType.RegexTester => new RegexTesterViewModel(),
-            ToolType.UuidGenerator => new UuidGeneratorViewModel(),
-            ToolType.PasswordGenerator => new PasswordGeneratorViewModel(),
-            ToolType.UrlTools => new UrlToolsViewModel(),
-            ToolType.HttpRequest => new HttpRequestViewModel(),
-            ToolType.IpQuery => new IpQueryViewModel(),
-            ToolType.QrCode => new QrCodeViewModel(),
-            ToolType.ParquetViewer => new ParquetViewerViewModel(),
-            ToolType.CryptoTools => new CryptoToolsViewModel(),
+            ToolType.UnitConverter => new UnitConverterViewModel(),
             ToolType.CronExpression => new CronExpressionViewModel(),
+            ToolType.ParquetViewer => new ParquetViewerViewModel(),
+            ToolType.IpQuery => new IpQueryViewModel(),
             _ => new object()
         };
     }

@@ -185,7 +185,8 @@ public partial class HttpRequestViewModel : ObservableObject
             var responseContent = await response.Content.ReadAsStringAsync();
             
             // 尝试格式化JSON响应
-            if (response.Content.Headers.ContentType?.MediaType?.Contains("json") == true)
+            var contentType = response.Content.Headers.ContentType;
+            if (contentType?.MediaType?.Contains("json") == true)
             {
                 try
                 {

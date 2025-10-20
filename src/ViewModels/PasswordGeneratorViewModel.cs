@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -144,7 +145,7 @@ public partial class PasswordGeneratorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async void CopyPassword()
+    private async Task CopyPassword()
     {
         try
         {
@@ -164,7 +165,7 @@ public partial class PasswordGeneratorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async void CopyBatchPassword(string password)
+    private async Task CopyBatchPassword(string password)
     {
         try
         {

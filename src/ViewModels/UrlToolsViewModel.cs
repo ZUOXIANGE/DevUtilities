@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -29,7 +31,32 @@ public partial class UrlToolsViewModel : ObservableObject
     [ObservableProperty]
     private string validationMessage = "";
 
+    [ObservableProperty]
+    private string selectedEncodingType = "完整URL编码";
+
+    [ObservableProperty]
+    private string customQueryParams = "";
+
+    [ObservableProperty]
+    private string builtUrl = "";
+
+    [ObservableProperty]
+    private string baseUrl = "https://example.com";
+
+    [ObservableProperty]
+    private string pathSegments = "/api/v1/users";
+
+    public List<string> EncodingTypes { get; } = new()
+    {
+        "完整URL编码",
+        "查询参数编码", 
+        "路径编码",
+        "HTML实体编码",
+        "Base64编码"
+    };
+
     public ObservableCollection<UrlComponent> UrlComponents { get; } = new();
+    public ObservableCollection<QueryParameter> QueryParameters { get; } = new();
 
     public UrlToolsViewModel()
     {
@@ -41,39 +68,185 @@ public partial class UrlToolsViewModel : ObservableObject
     [RelayCommand]
     private void EncodeUrl()
     {
+        if (string.IsNullOrEmpty(InputUrl))
+        {
+            EncodedUrl = "";
+            return;
+        }
+
         try
         {
-            if (string.IsNullOrWhiteSpace(InputUrl))
+            EncodedUrl = SelectedEncodingType switch
             {
-                EncodedUrl = "";
-                return;
-            }
-
-            EncodedUrl = Uri.EscapeDataString(InputUrl);
+                "完整URL编码" => Uri.EscapeDataString(InputUrl),
+                "查询参数编码" => EncodeQueryParameters(InputUrl),
+                "路径编码" => EncodePath(InputUrl),
+                "HTML实体编码" => HttpUtility.HtmlEncode(InputUrl),
+                "Base64编码" => Convert.ToBase64String(Encoding.UTF8.GetBytes(InputUrl)),
+                _ => Uri.EscapeDataString(InputUrl)
+            };
         }
         catch (Exception ex)
         {
-            EncodedUrl = $"编码失败: {ex.Message}";
+            EncodedUrl = $"编码错误: {ex.Message}";
         }
     }
 
     [RelayCommand]
     private void DecodeUrl()
     {
+        if (string.IsNullOrEmpty(InputUrl))
+        {
+            DecodedUrl = "";
+            return;
+        }
+
         try
         {
-            if (string.IsNullOrWhiteSpace(InputUrl))
+            DecodedUrl = SelectedEncodingType switch
             {
-                DecodedUrl = "";
-                return;
-            }
-
-            DecodedUrl = Uri.UnescapeDataString(InputUrl);
+                "完整URL编码" => Uri.UnescapeDataString(InputUrl),
+                "查询参数编码" => DecodeQueryParameters(InputUrl),
+                "路径编码" => DecodePath(InputUrl),
+                "HTML实体编码" => HttpUtility.HtmlDecode(InputUrl),
+                "Base64编码" => Encoding.UTF8.GetString(Convert.FromBase64String(InputUrl)),
+                _ => Uri.UnescapeDataString(InputUrl)
+            };
         }
         catch (Exception ex)
         {
             DecodedUrl = $"解码错误: {ex.Message}";
         }
+    }
+
+    [RelayCommand]
+    private void BuildUrl()
+    {
+        try
+        {
+            var uriBuilder = new UriBuilder(BaseUrl);
+            
+            if (!string.IsNullOrEmpty(PathSegments))
+            {
+                uriBuilder.Path = PathSegments;
+            }
+
+            if (QueryParameters.Any())
+            {
+                var queryString = string.Join("&", 
+                    QueryParameters.Where(p => !string.IsNullOrEmpty(p.Key))
+                                  .Select(p => $"{Uri.EscapeDataString(p.Key)}={Uri.EscapeDataString(p.Value ?? "")}"));
+                uriBuilder.Query = queryString;
+            }
+
+            BuiltUrl = uriBuilder.ToString();
+        }
+        catch (Exception ex)
+        {
+            BuiltUrl = $"构建错误: {ex.Message}";
+        }
+    }
+
+    [RelayCommand]
+    private void AddQueryParameter()
+    {
+        var parameter = new QueryParameter("", "");
+        parameter.RemoveRequested += RemoveQueryParameterFromEvent;
+        QueryParameters.Add(parameter);
+    }
+
+    [RelayCommand]
+    private void RemoveQueryParameter(QueryParameter parameter)
+    {
+        QueryParameters.Remove(parameter);
+        BuildUrl();
+    }
+
+    private void RemoveQueryParameterFromEvent(QueryParameter parameter)
+    {
+        QueryParameters.Remove(parameter);
+        BuildUrl();
+    }
+
+    [RelayCommand]
+    private void ParseQueryToParameters()
+    {
+        if (string.IsNullOrEmpty(InputUrl))
+            return;
+
+        try
+        {
+            var uri = new Uri(InputUrl);
+            QueryParameters.Clear();
+            
+            var queryParams = ParseQueryString(uri.Query);
+            foreach (var param in queryParams)
+            {
+                var parameter = new QueryParameter(param.Key, param.Value);
+                parameter.RemoveRequested += RemoveQueryParameterFromEvent;
+                QueryParameters.Add(parameter);
+            }
+        }
+        catch (Exception ex)
+        {
+            ValidationMessage = $"解析查询参数失败: {ex.Message}";
+        }
+    }
+
+    private string EncodeQueryParameters(string input)
+    {
+        if (input.Contains('?'))
+        {
+            var parts = input.Split('?', 2);
+            var baseUrl = parts[0];
+            var queryString = parts[1];
+            
+            var encodedParams = queryString.Split('&')
+                .Select(param =>
+                {
+                    var keyValue = param.Split('=', 2);
+                    var key = Uri.EscapeDataString(keyValue[0]);
+                    var value = keyValue.Length > 1 ? Uri.EscapeDataString(keyValue[1]) : "";
+                    return $"{key}={value}";
+                });
+            
+            return $"{baseUrl}?{string.Join("&", encodedParams)}";
+        }
+        
+        return Uri.EscapeDataString(input);
+    }
+
+    private string DecodeQueryParameters(string input)
+    {
+        if (input.Contains('?'))
+        {
+            var parts = input.Split('?', 2);
+            var baseUrl = parts[0];
+            var queryString = parts[1];
+            
+            var decodedParams = queryString.Split('&')
+                .Select(param =>
+                {
+                    var keyValue = param.Split('=', 2);
+                    var key = Uri.UnescapeDataString(keyValue[0]);
+                    var value = keyValue.Length > 1 ? Uri.UnescapeDataString(keyValue[1]) : "";
+                    return $"{key}={value}";
+                });
+            
+            return $"{baseUrl}?{string.Join("&", decodedParams)}";
+        }
+        
+        return Uri.UnescapeDataString(input);
+    }
+
+    private string EncodePath(string input)
+    {
+        return string.Join("/", input.Split('/').Select(Uri.EscapeDataString));
+    }
+
+    private string DecodePath(string input)
+    {
+        return string.Join("/", input.Split('/').Select(Uri.UnescapeDataString));
     }
 
     [RelayCommand]
@@ -160,6 +333,10 @@ public partial class UrlToolsViewModel : ObservableObject
         InputUrl = "";
         EncodedUrl = "";
         DecodedUrl = "";
+        BuiltUrl = "";
+        BaseUrl = "https://example.com";
+        PathSegments = "/api/v1/users";
+        QueryParameters.Clear();
         ClearParseResult();
     }
 
@@ -257,6 +434,25 @@ public partial class UrlToolsViewModel : ObservableObject
     {
         ProcessUrl();
     }
+
+    partial void OnSelectedEncodingTypeChanged(string value)
+    {
+        if (!string.IsNullOrEmpty(InputUrl))
+        {
+            EncodeUrl();
+            DecodeUrl();
+        }
+    }
+
+    partial void OnBaseUrlChanged(string value)
+    {
+        BuildUrl();
+    }
+
+    partial void OnPathSegmentsChanged(string value)
+    {
+        BuildUrl();
+    }
 }
 
 public class UrlComponent
@@ -269,4 +465,37 @@ public class UrlComponent
         Name = name;
         Value = value;
     }
+}
+
+public class QueryParameter : ObservableObject
+{
+    private string _key = "";
+    private string _value = "";
+
+    public string Key
+    {
+        get => _key;
+        set => SetProperty(ref _key, value);
+    }
+
+    public string Value
+    {
+        get => _value;
+        set => SetProperty(ref _value, value);
+    }
+
+    public ICommand RemoveCommand { get; }
+
+    public QueryParameter(string key, string value)
+    {
+        Key = key;
+        Value = value;
+        RemoveCommand = new RelayCommand(() => 
+        {
+            // 通过事件通知父级ViewModel删除此项
+            RemoveRequested?.Invoke(this);
+        });
+    }
+
+    public event Action<QueryParameter>? RemoveRequested;
 }
