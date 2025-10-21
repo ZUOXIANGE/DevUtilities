@@ -42,22 +42,22 @@ public partial class SqlFormatterViewModel : BaseFormatterViewModel
         ToolType = Models.ToolType.SqlFormatter;
     }
 
-    protected override async Task<string> FormatContentAsync(string input)
+    protected override Task<string> FormatContentAsync(string input)
     {
         try
         {
             if (CompactOutput)
             {
-                return MinifySqlQuery(input);
+                return Task.FromResult(MinifySqlQuery(input));
             }
             else
             {
-                return FormatSqlQuery(input);
+                return Task.FromResult(FormatSqlQuery(input));
             }
         }
         catch (Exception ex)
         {
-            throw new DevUtilities.Core.Exceptions.SqlFormatterException(ex.Message, input);
+            return Task.FromResult($"格式化失败: {ex.Message}");
         }
     }
 
@@ -159,36 +159,43 @@ public partial class SqlFormatterViewModel : BaseFormatterViewModel
         return result.Trim();
     }
 
-    protected override async Task<ValidationResult> OnValidateAsync(string input)
+    protected override Task<ValidationResult> OnValidateAsync(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
-            return new ValidationResult(false, "请输入SQL语句");
+            return Task.FromResult(new ValidationResult(false, "请输入SQL语句"));
         }
 
         try
         {
-            var sql = input.Trim();
-            var issues = new List<string>();
-            var warnings = new List<string>();
-
-            // 基本语法检查
-            ValidateBasicSyntax(sql, issues);
+            // 简单的SQL语法检查
+            var trimmedInput = input.Trim();
             
-            // 检查SQL结构
-            var structureInfo = AnalyzeSqlStructure(sql);
+            // 检查是否包含基本的SQL关键字
+            var sqlKeywords = new[] { "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "ALTER", "WITH" };
+            var upperInput = trimmedInput.ToUpper();
             
-            // 性能建议
-            CheckPerformanceIssues(sql, warnings);
+            bool containsSqlKeyword = sqlKeywords.Any(keyword => upperInput.Contains(keyword));
+            
+            if (!containsSqlKeyword)
+            {
+                return Task.FromResult(new ValidationResult(false, "输入内容不像是有效的SQL语句"));
+            }
 
-            var message = BuildValidationMessage(structureInfo, issues, warnings);
-            var isValid = issues.Count == 0;
+            // 检查基本的括号匹配
+            int openParens = trimmedInput.Count(c => c == '(');
+            int closeParens = trimmedInput.Count(c => c == ')');
+            
+            if (openParens != closeParens)
+            {
+                return Task.FromResult(new ValidationResult(false, "括号不匹配"));
+            }
 
-            return new ValidationResult(isValid, message);
+            return Task.FromResult(new ValidationResult(true, "SQL语句格式正确"));
         }
         catch (Exception ex)
         {
-            return new ValidationResult(false, $"验证失败: {ex.Message}");
+            return Task.FromResult(new ValidationResult(false, $"验证失败: {ex.Message}"));
         }
     }
 

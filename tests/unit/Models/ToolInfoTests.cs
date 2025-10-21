@@ -90,7 +90,10 @@ public class ToolInfoTests
             ToolType.QrCode,
             ToolType.ParquetViewer,
             ToolType.CryptoTools,
-            ToolType.CronExpression
+            ToolType.CronExpression,
+            ToolType.StringEscape,
+            ToolType.TextDiff,
+            ToolType.ColorPicker
         };
 
         foreach (var expectedValue in expectedValues)
@@ -106,7 +109,7 @@ public class ToolInfoTests
         var enumValues = System.Enum.GetValues<ToolType>();
 
         // Assert
-        enumValues.Length.Should().Be(19, "ToolType enum should have exactly 19 values");
+        enumValues.Length.Should().Be(22, "ToolType enum should have exactly 22 values");
     }
 
     [Theory]
@@ -129,6 +132,9 @@ public class ToolInfoTests
     [InlineData(ToolType.ParquetViewer)]
     [InlineData(ToolType.CryptoTools)]
     [InlineData(ToolType.CronExpression)]
+    [InlineData(ToolType.StringEscape)]
+    [InlineData(ToolType.TextDiff)]
+    [InlineData(ToolType.ColorPicker)]
     public void ToolType_AllValues_ShouldBeValid(ToolType toolType)
     {
         // Act & Assert

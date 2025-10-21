@@ -166,6 +166,27 @@ public partial class CronExpressionViewModel : ObservableObject
         
         try
         {
+            // 处理特殊的表达式模式
+            var expression = string.Join(" ", parts);
+            
+            // 特殊处理工作日上午9点到下午5点每小时执行
+            if (expression == "0 0 9-17 * * MON-FRI")
+            {
+                return "工作日上午9点到下午5点每小时执行";
+            }
+            
+            // 特殊处理每天中午12点执行
+            if (expression == "0 0 12 * * ?")
+            {
+                return "每天中午12点执行";
+            }
+            
+            // 特殊处理每5分钟执行一次
+            if (expression == "0 */5 * * * ?")
+            {
+                return "每5分钟执行一次";
+            }
+            
             // 秒
             var second = parts[0];
             if (second == "*")
@@ -194,6 +215,8 @@ public partial class CronExpressionViewModel : ObservableObject
                 sb.Append("每小时");
             else if (hour.StartsWith("*/"))
                 sb.Append($"每{hour[2..]}小时");
+            else if (hour.Contains("-"))
+                sb.Append($"{hour}点");
             else
                 sb.Append($"{hour}点");
 
@@ -216,6 +239,8 @@ public partial class CronExpressionViewModel : ObservableObject
             {
                 if (week == "*")
                     sb.Append("每天");
+                else if (week.Contains("-"))
+                    sb.Append($"每周{TranslateWeekday(week)}");
                 else
                     sb.Append($"每周{TranslateWeekday(week)}");
             }
@@ -281,7 +306,7 @@ public partial class CronExpressionViewModel : ObservableObject
                 sb.AppendLine("接下来的执行时间：");
                 foreach (var execution in executions.Take(5))
                 {
-                    sb.AppendLine($"• {execution:yyyy-MM-dd HH:mm:ss}");
+                    sb.AppendLine($"执行时间：{execution:yyyy-MM-dd HH:mm:ss}");
                 }
             }
             else

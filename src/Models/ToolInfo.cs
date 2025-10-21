@@ -32,6 +32,7 @@ public enum ToolType
     StringEscape,
     SqlFormatter,
     HtmlFormatter,
+    XmlFormatter,
     RegexTester,
     TextDiff,
     QrCode,

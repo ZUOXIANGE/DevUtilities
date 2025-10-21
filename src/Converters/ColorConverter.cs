@@ -24,12 +24,7 @@ namespace DevUtilities.ViewModels
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is SolidColorBrush brush)
-            {
-                var color = brush.Color;
-                return color.R; // 返回红色分量，这是一个简化实现
-            }
-            return 0;
+            throw new NotImplementedException();
         }
     }
 
@@ -44,22 +39,30 @@ namespace DevUtilities.ViewModels
                 values[1] is int green && 
                 values[2] is int blue)
             {
-                return Color.FromRgb(
+                var color = Color.FromRgb(
                     (byte)Math.Clamp(red, 0, 255),
                     (byte)Math.Clamp(green, 0, 255),
                     (byte)Math.Clamp(blue, 0, 255));
+                
+                // 根据目标类型返回相应的对象
+                if (targetType == typeof(IBrush) || targetType == typeof(SolidColorBrush))
+                {
+                    return new SolidColorBrush(color);
+                }
+                return color;
             }
 
+            // 根据目标类型返回相应的默认值
+            if (targetType == typeof(IBrush) || targetType == typeof(SolidColorBrush))
+            {
+                return new SolidColorBrush(Colors.Transparent);
+            }
             return Colors.Transparent;
         }
 
         public object[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture)
         {
-            if (value is Color color)
-            {
-                return new object[] { (int)color.R, (int)color.G, (int)color.B };
-            }
-            return new object[] { 0, 0, 0 };
+            throw new NotImplementedException();
         }
     }
 }

@@ -35,6 +35,9 @@
     <DataTemplate DataType="{x:Type vm:HtmlFormatterViewModel}">
       <views:HtmlFormatterView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:XmlFormatterViewModel}">
+      <views:XmlFormatterView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:StringEscapeViewModel}">
       <views:StringEscapeView/>
     </DataTemplate>

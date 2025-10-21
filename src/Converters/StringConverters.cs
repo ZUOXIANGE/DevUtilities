@@ -21,9 +21,7 @@ public class StringIsNotNullOrEmptyConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        // 这个转换器主要用于单向绑定，ConvertBack通常不需要实现
-        // 但为了避免异常，返回一个默认值
-        return value is bool boolValue && boolValue ? "NotEmpty" : string.Empty;
+        throw new NotImplementedException();
     }
 }
 
@@ -38,8 +36,6 @@ public class StringIsNullOrEmptyConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        // 这个转换器主要用于单向绑定，ConvertBack通常不需要实现
-        // 但为了避免异常，返回一个默认值
-        return value is bool boolValue && boolValue ? string.Empty : "NotEmpty";
+        throw new NotImplementedException();
     }
 }

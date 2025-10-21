@@ -307,51 +307,132 @@ public partial class CryptoToolsViewModel : BaseToolViewModel
         }
     }
 
-    private async Task PerformCryptoOperationAsync(bool encrypt)
+    private Task PerformCryptoOperationAsync(bool encrypt)
     {
         if (string.IsNullOrEmpty(InputText))
         {
             ValidationMessage = "请输入要处理的文本";
             IsValidInput = false;
-            return;
+            return Task.CompletedTask;
         }
 
         if (string.IsNullOrEmpty(KeyText))
         {
             ValidationMessage = "请输入密钥";
             IsValidInput = false;
-            return;
+            return Task.CompletedTask;
         }
+
+        try
+        {
+            string result;
+            switch (SelectedAlgorithm)
+            {
+                case "AES":
+                    result = encrypt ? EncryptAES(InputText, KeyText) : DecryptAES(InputText, KeyText);
+                    break;
+                case "DES":
+                    result = encrypt ? EncryptDES(InputText, KeyText) : DecryptDES(InputText, KeyText);
+                    break;
+                case "Base64":
+                    result = encrypt ? Convert.ToBase64String(Encoding.UTF8.GetBytes(InputText)) : 
+                                     Encoding.UTF8.GetString(Convert.FromBase64String(InputText));
+                    break;
+                default:
+                    ValidationMessage = "不支持的加密算法";
+                    IsValidInput = false;
+                    return Task.CompletedTask;
+            }
+
+            OutputText = result;
+            ValidationMessage = encrypt ? "加密成功" : "解密成功";
+            IsValidInput = true;
+        }
+        catch (Exception ex)
+        {
+            ValidationMessage = $"{(encrypt ? "加密" : "解密")}失败: {ex.Message}";
+            IsValidInput = false;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private string EncryptAES(string plainText, string key)
+    {
+        using var aes = Aes.Create();
+        var keyBytes = Convert.FromHexString(key);
+        var ivBytes = !string.IsNullOrEmpty(IvText) ? Convert.FromHexString(IvText) : new byte[aes.BlockSize / 8];
+        
+        aes.Key = keyBytes;
+        aes.IV = ivBytes;
+        aes.Mode = GetCipherMode(SelectedMode);
+        aes.Padding = GetPaddingMode(SelectedPadding);
 
         var encoding = GetEncoding(SelectedEncoding);
+        var inputBytes = encoding.GetBytes(plainText);
         
-        using var algorithm = CreateSymmetricAlgorithm(SelectedAlgorithm);
-        algorithm.Mode = GetCipherMode(SelectedMode);
-        algorithm.Padding = GetPaddingMode(SelectedPadding);
+        using var encryptor = aes.CreateEncryptor();
+        var encryptedBytes = encryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
+        return Convert.ToHexString(encryptedBytes).ToLower();
+    }
 
-        var keyBytes = Convert.FromHexString(KeyText);
-        var ivBytes = !string.IsNullOrEmpty(IvText) ? Convert.FromHexString(IvText) : new byte[algorithm.BlockSize / 8];
+    private string DecryptAES(string cipherText, string key)
+    {
+        using var aes = Aes.Create();
+        var keyBytes = Convert.FromHexString(key);
+        var ivBytes = !string.IsNullOrEmpty(IvText) ? Convert.FromHexString(IvText) : new byte[aes.BlockSize / 8];
+        
+        aes.Key = keyBytes;
+        aes.IV = ivBytes;
+        aes.Mode = GetCipherMode(SelectedMode);
+        aes.Padding = GetPaddingMode(SelectedPadding);
 
-        algorithm.Key = keyBytes;
-        algorithm.IV = ivBytes;
+        var inputBytes = Convert.FromHexString(cipherText);
+        
+        using var decryptor = aes.CreateDecryptor();
+        var decryptedBytes = decryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
+        
+        var encoding = GetEncoding(SelectedEncoding);
+        return encoding.GetString(decryptedBytes);
+    }
 
-        if (encrypt)
-        {
-            var inputBytes = encoding.GetBytes(InputText);
-            using var encryptor = algorithm.CreateEncryptor();
-            var encryptedBytes = encryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
-            OutputText = Convert.ToHexString(encryptedBytes).ToLower();
-        }
-        else
-        {
-            var inputBytes = Convert.FromHexString(InputText);
-            using var decryptor = algorithm.CreateDecryptor();
-            var decryptedBytes = decryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
-            OutputText = encoding.GetString(decryptedBytes);
-        }
+    private string EncryptDES(string plainText, string key)
+    {
+        using var des = DES.Create();
+        var keyBytes = Convert.FromHexString(key);
+        var ivBytes = !string.IsNullOrEmpty(IvText) ? Convert.FromHexString(IvText) : new byte[des.BlockSize / 8];
+        
+        des.Key = keyBytes;
+        des.IV = ivBytes;
+        des.Mode = GetCipherMode(SelectedMode);
+        des.Padding = GetPaddingMode(SelectedPadding);
 
-        ValidationMessage = encrypt ? "加密成功" : "解密成功";
-        IsValidInput = true;
+        var encoding = GetEncoding(SelectedEncoding);
+        var inputBytes = encoding.GetBytes(plainText);
+        
+        using var encryptor = des.CreateEncryptor();
+        var encryptedBytes = encryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
+        return Convert.ToHexString(encryptedBytes).ToLower();
+    }
+
+    private string DecryptDES(string cipherText, string key)
+    {
+        using var des = DES.Create();
+        var keyBytes = Convert.FromHexString(key);
+        var ivBytes = !string.IsNullOrEmpty(IvText) ? Convert.FromHexString(IvText) : new byte[des.BlockSize / 8];
+        
+        des.Key = keyBytes;
+        des.IV = ivBytes;
+        des.Mode = GetCipherMode(SelectedMode);
+        des.Padding = GetPaddingMode(SelectedPadding);
+
+        var inputBytes = Convert.FromHexString(cipherText);
+        
+        using var decryptor = des.CreateDecryptor();
+        var decryptedBytes = decryptor.TransformFinalBlock(inputBytes, 0, inputBytes.Length);
+        
+        var encoding = GetEncoding(SelectedEncoding);
+        return encoding.GetString(decryptedBytes);
     }
 
     private SymmetricAlgorithm CreateSymmetricAlgorithm(string algorithm)

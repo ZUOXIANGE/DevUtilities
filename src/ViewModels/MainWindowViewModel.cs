@@ -6,6 +6,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DevUtilities.Models;
 using DevUtilities.Views;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace DevUtilities.ViewModels;
 
@@ -92,6 +95,7 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("字符串转义", "字符串转义", "🔤", "字符串转义和反转义工具", ToolType.StringEscape));
         AllTools.Add(new ToolInfo("SQL格式化", "SQL格式化", "🗃️", "SQL语句格式化和美化", ToolType.SqlFormatter));
         AllTools.Add(new ToolInfo("HTML格式化", "HTML格式化", "🌐", "HTML代码格式化和美化", ToolType.HtmlFormatter));
+        AllTools.Add(new ToolInfo("XML格式化", "XML格式化", "📄", "XML代码格式化和验证", ToolType.XmlFormatter));
         AllTools.Add(new ToolInfo("正则测试", "正则测试", "🔍", "正则表达式测试和验证", ToolType.RegexTester));
         AllTools.Add(new ToolInfo("文本对比", "文本对比", "📊", "文本差异对比工具", ToolType.TextDiff));
         AllTools.Add(new ToolInfo("二维码", "二维码", "📱", "二维码生成和识别", ToolType.QrCode));
@@ -130,13 +134,23 @@ public partial class MainWindowViewModel : ObservableObject
         // 设置对话框的父窗口（如果需要的话）
         // settingsDialog.ShowDialog(parentWindow);
         
-        var result = await settingsDialog.ShowDialog<bool?>(null);
+        var mainWindow = GetMainWindow();
+        var result = await settingsDialog.ShowDialog<bool?>(mainWindow);
         
         if (result == true)
         {
             // 设置已保存，可以在这里处理设置更新后的逻辑
             // 例如通知其他ViewModel设置已更改
         }
+    }
+
+    private Window? GetMainWindow()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return desktop.MainWindow;
+        }
+        return null;
     }
 
     private object CreateToolViewModel(ToolType toolType)
@@ -154,6 +168,7 @@ public partial class MainWindowViewModel : ObservableObject
             ToolType.StringEscape => new StringEscapeViewModel(),
             ToolType.SqlFormatter => new SqlFormatterViewModel(),
             ToolType.HtmlFormatter => new HtmlFormatterViewModel(),
+            ToolType.XmlFormatter => new XmlFormatterViewModel(),
             ToolType.RegexTester => new RegexTesterViewModel(),
             ToolType.TextDiff => new TextDiffViewModel(),
             ToolType.QrCode => new QrCodeViewModel(),

@@ -354,7 +354,7 @@ public partial class Base64EncoderViewModel : ObservableObject
                 await topLevel.Clipboard.SetTextAsync(OutputText);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Handle clipboard error silently or show notification
         }

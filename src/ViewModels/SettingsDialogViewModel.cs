@@ -164,7 +164,7 @@ public partial class SettingsDialogViewModel : ObservableObject
     /// 导入设置命令
     /// </summary>
     [RelayCommand]
-    private async Task ImportSettings()
+    private Task ImportSettings()
     {
         try
         {
@@ -174,9 +174,10 @@ public partial class SettingsDialogViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            // 这里可以显示错误消息
             System.Diagnostics.Debug.WriteLine($"导入设置失败: {ex.Message}");
         }
+        
+        return Task.CompletedTask;
     }
 
     #endregion

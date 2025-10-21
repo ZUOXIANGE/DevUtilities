@@ -186,7 +186,7 @@ public partial class HttpRequestViewModel : ObservableObject
             
             // 尝试格式化JSON响应
             var contentType = response.Content.Headers.ContentType;
-            if (contentType?.MediaType?.Contains("json") == true)
+            if (contentType?.MediaType != null && contentType.MediaType.Contains("json"))
             {
                 try
                 {

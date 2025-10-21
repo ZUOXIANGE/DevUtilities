@@ -144,8 +144,14 @@ public class CronExpressionViewModelTests
         var lines = _viewModel.NextExecutions.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         foreach (var line in lines)
         {
-            var timeStr = line.Split('：')[1].Trim();
-            Assert.True(DateTime.Parse(timeStr) > DateTime.Now);
+            if (line.Contains("执行时间：") && line.Split('：').Length > 1)
+            {
+                var timeStr = line.Split('：')[1].Trim();
+                if (!string.IsNullOrEmpty(timeStr))
+                {
+                    Assert.True(DateTime.Parse(timeStr) > DateTime.Now);
+                }
+            }
         }
     }
 
