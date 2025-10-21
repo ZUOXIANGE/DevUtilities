@@ -77,6 +77,9 @@
     <DataTemplate DataType="{x:Type vm:TextDiffViewModel}">
       <views:TextDiffView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:JsonExampleGeneratorViewModel}">
+      <views:JsonExampleGeneratorView/>
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Styles>

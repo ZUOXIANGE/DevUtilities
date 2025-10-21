@@ -1,0 +1,277 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DevUtilities.Views.JsonExampleGeneratorView"
+             x:DataType="vm:JsonExampleGeneratorViewModel">
+
+  <ScrollViewer>
+    <StackPanel Spacing="20" Margin="20">
+      
+      <!-- 标题区域 -->
+      <StackPanel Spacing="6">
+        <TextBlock Text="JSON示例生成器" 
+                   FontSize="26" 
+                   FontWeight="Bold" 
+                   Foreground="{DynamicResource SystemAccentColor}"/>
+        <TextBlock Text="支持类定义与JSON之间的双向转换" 
+                   FontSize="13" 
+                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+      </StackPanel>
+      
+      <!-- 控制面板 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="12"
+              Padding="20"
+              BoxShadow="0 2 8 0 #10000000">
+        <StackPanel Spacing="16">
+          <TextBlock Text="转换选项与操作" FontWeight="SemiBold" FontSize="16"/>
+          
+          <!-- 转换模式选择 -->
+          <StackPanel Spacing="8">
+            <TextBlock Text="转换模式" FontWeight="SemiBold" FontSize="13"/>
+            <StackPanel Orientation="Horizontal" Spacing="16">
+              <RadioButton Content="类定义 → JSON示例" 
+                           IsChecked="{Binding IsClassToJsonMode}"
+                           GroupName="ConversionMode"/>
+              <RadioButton Content="JSON → 类定义" 
+                           IsChecked="{Binding !IsClassToJsonMode}"
+                           GroupName="ConversionMode"/>
+            </StackPanel>
+          </StackPanel>
+          
+          <!-- 选项设置 -->
+          <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+            <!-- 语言选择 -->
+            <StackPanel Grid.Column="0" Spacing="6">
+              <TextBlock Text="编程语言" FontWeight="SemiBold" FontSize="13"/>
+              <ComboBox ItemsSource="{Binding SupportedLanguages}"
+                        SelectedItem="{Binding SelectedLanguage}"
+                        Height="32"
+                        HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            
+            <!-- 包含空值 (仅在类到JSON模式下显示) -->
+            <StackPanel Grid.Column="1" Spacing="6" IsVisible="{Binding IsClassToJsonMode}">
+              <TextBlock Text="空值处理" FontWeight="SemiBold" FontSize="13"/>
+              <ToggleSwitch IsChecked="{Binding IncludeNullValues}"
+                            OnContent="包含空值"
+                            OffContent="忽略空值"
+                            Height="32"
+                            HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            
+            <!-- 随机值 (仅在类到JSON模式下显示) -->
+            <StackPanel Grid.Column="2" Spacing="6" IsVisible="{Binding IsClassToJsonMode}">
+              <TextBlock Text="数据生成" FontWeight="SemiBold" FontSize="13"/>
+              <ToggleSwitch IsChecked="{Binding UseRandomValues}"
+                            OnContent="随机数据"
+                            OffContent="固定数据"
+                            Height="32"
+                            HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            
+            <!-- 格式化 -->
+            <StackPanel Grid.Column="3" Spacing="6">
+              <TextBlock Text="输出格式" FontWeight="SemiBold" FontSize="13"/>
+              <ToggleSwitch IsChecked="{Binding PrettyFormat}"
+                            OnContent="格式化"
+                            OffContent="压缩"
+                            Height="32"
+                            HorizontalAlignment="Stretch"/>
+            </StackPanel>
+          </Grid>
+          
+          <!-- 操作按钮 -->
+          <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="8">
+            <Button Grid.Column="0" 
+                    Content="{Binding ConvertButtonText}" 
+                    Command="{Binding FormatCommand}"
+                    Classes="accent"
+                    Height="36"
+                    Padding="12,8"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    ToolTip.Tip="{Binding ConvertButtonTooltip}"/>
+            <Button Grid.Column="1" 
+                    Content="📋 复制" 
+                    Command="{Binding CopyCommand}"
+                    Height="36"
+                    Padding="12,8"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    ToolTip.Tip="复制输出 (Ctrl+C)"/>
+            <Button Grid.Column="2" 
+                    Content="🔄 交换" 
+                    Command="{Binding SwapInputOutputCommand}"
+                    Height="36"
+                    Padding="12,8"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    ToolTip.Tip="交换输入输出 (Ctrl+S)"/>
+            <Button Grid.Column="3" 
+                    Content="📝 示例" 
+                    Command="{Binding UseExampleCommand}"
+                    Height="36"
+                    Padding="12,8"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    ToolTip.Tip="加载示例代码"/>
+            <Button Grid.Column="4" 
+                    Content="🗑️ 清空" 
+                    Command="{Binding ClearCommand}"
+                    Height="36"
+                    Padding="12,8"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    ToolTip.Tip="清空所有内容"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 错误消息 -->
+       <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+               CornerRadius="8"
+               Padding="16"
+               IsVisible="{Binding HasError}">
+         <StackPanel Orientation="Horizontal" Spacing="8">
+           <TextBlock Text="❌" FontSize="16"/>
+           <TextBlock Text="{Binding ErrorMessage}"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"
+                      Foreground="Red"/>
+         </StackPanel>
+       </Border>
+
+       <!-- 成功消息 -->
+       <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+               CornerRadius="8"
+               Padding="16"
+               IsVisible="{Binding HasSuccess}">
+         <StackPanel Orientation="Horizontal" Spacing="8">
+           <TextBlock Text="✅" FontSize="16"/>
+           <TextBlock Text="{Binding SuccessMessage}"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"
+                      Foreground="Green"/>
+         </StackPanel>
+       </Border>
+
+      <!-- 输入输出区域 -->
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+        <!-- 输入区域 -->
+        <Border Grid.Column="0" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="12"
+                Padding="0"
+                BoxShadow="0 2 8 0 #10000000">
+          <StackPanel>
+            <!-- 输入标题栏 -->
+            <Border Background="{DynamicResource SystemAccentColorLight2}"
+                    CornerRadius="12,12,0,0"
+                    Padding="16,12">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="📝" FontSize="16"/>
+                  <TextBlock Text="{Binding InputAreaTitle}" FontWeight="SemiBold" FontSize="14" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12">
+                  <TextBlock Text="{Binding InputCharCount, StringFormat='{}{0} 字符'}" 
+                             FontSize="12" 
+                             Foreground="White" 
+                             Opacity="0.8"/>
+                  <TextBlock Text="{Binding InputLineCount, StringFormat='{}{0} 行'}" 
+                             FontSize="12" 
+                             Foreground="White" 
+                             Opacity="0.8"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            
+            <!-- 输入文本框 -->
+            <TextBox Text="{Binding InputText}"
+                     Watermark="{Binding InputPlaceholder}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     FontFamily="Consolas,Monaco,monospace"
+                     FontSize="13"
+                     MinHeight="300"
+                     Padding="16"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     CornerRadius="0,0,12,12"/>
+          </StackPanel>
+        </Border>
+
+        <!-- 输出区域 -->
+        <Border Grid.Column="1" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="12"
+                Padding="0"
+                BoxShadow="0 2 8 0 #10000000">
+          <StackPanel>
+            <!-- 输出标题栏 -->
+            <Border Background="{DynamicResource SystemAccentColorLight1}"
+                    CornerRadius="12,12,0,0"
+                    Padding="16,12">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="📄" FontSize="16"/>
+                  <TextBlock Text="{Binding OutputAreaTitle}" FontWeight="SemiBold" FontSize="14" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12">
+                  <TextBlock Text="{Binding OutputCharCount, StringFormat='{}{0} 字符'}" 
+                             FontSize="12" 
+                             Foreground="White" 
+                             Opacity="0.8"/>
+                  <TextBlock Text="{Binding OutputLineCount, StringFormat='{}{0} 行'}" 
+                             FontSize="12" 
+                             Foreground="White" 
+                             Opacity="0.8"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            
+            <!-- 输出文本框 -->
+            <TextBox Text="{Binding OutputText}"
+                     Watermark="{Binding OutputPlaceholder}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     FontFamily="Consolas,Monaco,monospace"
+                     FontSize="13"
+                     MinHeight="300"
+                     Padding="16"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     CornerRadius="0,0,12,12"
+                     IsReadOnly="True"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 使用说明 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              CornerRadius="8"
+              Padding="16">
+        <StackPanel Spacing="8">
+          <TextBlock Text="💡 使用说明" FontWeight="SemiBold" FontSize="14"/>
+          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+            <Run Text="1. 选择编程语言（C# 或 Java）"/>
+            <LineBreak/>
+            <Run Text="2. 在左侧输入框中粘贴或输入类定义"/>
+            <LineBreak/>
+            <Run Text="3. 配置生成选项（空值处理、数据类型、格式化等）"/>
+            <LineBreak/>
+            <Run Text="4. 点击&quot;生成JSON&quot;按钮获得示例数据"/>
+            <LineBreak/>
+            <Run Text="5. 支持嵌套类、泛型集合、数组等复杂类型"/>
+          </TextBlock>
+        </StackPanel>
+      </Border>
+      
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -24,7 +24,7 @@
       <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="24,16">
         <StackPanel>
           <TextBlock Text="DevUtilities" FontSize="28" FontWeight="Bold" Foreground="#333333"/>
-          <TextBlock Text="开发者工具集 - 19个实用工具" FontSize="14" Foreground="#666666" Margin="0,4,0,0"/>
+          <TextBlock Text="开发者工具集 - 多功能实用工具" FontSize="14" Foreground="#666666" Margin="0,4,0,0"/>
         </StackPanel>
       </Border>
       

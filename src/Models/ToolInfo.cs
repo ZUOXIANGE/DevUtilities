@@ -43,5 +43,6 @@ public enum ToolType
     UnitConverter,
     CronExpression,
     ParquetViewer,
-    IpQuery
+    IpQuery,
+    JsonExampleGenerator
 }

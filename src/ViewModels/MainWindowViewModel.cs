@@ -107,6 +107,7 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("Cron表达式", "Cron表达式", "⏱️", "Cron表达式生成和解析", ToolType.CronExpression));
         AllTools.Add(new ToolInfo("Parquet查看", "Parquet查看", "📄", "Parquet文件查看器", ToolType.ParquetViewer));
         AllTools.Add(new ToolInfo("IP查询", "IP查询", "🌍", "IP地址查询工具", ToolType.IpQuery));
+        AllTools.Add(new ToolInfo("JSON示例生成", "JSON示例生成", "📄", "根据类定义生成JSON示例", ToolType.JsonExampleGenerator));
     }
 
     [RelayCommand]
@@ -180,6 +181,7 @@ public partial class MainWindowViewModel : ObservableObject
             ToolType.CronExpression => new CronExpressionViewModel(),
             ToolType.ParquetViewer => new ParquetViewerViewModel(),
             ToolType.IpQuery => new IpQueryViewModel(),
+            ToolType.JsonExampleGenerator => new JsonExampleGeneratorViewModel(),
             _ => new object()
         };
     }
