@@ -79,7 +79,7 @@ public partial class Base64EncoderViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ConvertBase64ToImage()
+    private Task ConvertBase64ToImage()
     {
         try
         {
@@ -88,7 +88,7 @@ public partial class Base64EncoderViewModel : ObservableObject
                 ImagePreview = null;
                 ImageInfo = "";
                 OutputText = "";
-                return;
+                return Task.CompletedTask;
             }
 
             // 清理Base64字符串（移除data:image前缀等）
@@ -119,6 +119,8 @@ public partial class Base64EncoderViewModel : ObservableObject
             ImageInfo = "";
             OutputText = $"Base64解码失败: {ex.Message}";
         }
+        
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -220,12 +222,12 @@ public partial class Base64EncoderViewModel : ObservableObject
         }
     }
 
-    private async Task LoadImagePreview()
+    private Task LoadImagePreview()
     {
         try
         {
             if (string.IsNullOrEmpty(SelectedImagePath) || !File.Exists(SelectedImagePath))
-                return;
+                return Task.CompletedTask;
 
             using var stream = File.OpenRead(SelectedImagePath);
             ImagePreview = new Bitmap(stream);
@@ -239,6 +241,8 @@ public partial class Base64EncoderViewModel : ObservableObject
         {
             ImageInfo = $"加载图片失败: {ex.Message}";
         }
+        
+        return Task.CompletedTask;
     }
 
     private async Task ConvertImageToBase64()
@@ -339,11 +343,24 @@ public partial class Base64EncoderViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task CopyToClipboard()
+    private void ClearInput()
+    {
+        InputText = "";
+    }
+
+    [RelayCommand]
+    private void ClearOutput()
+    {
+        OutputText = "";
+    }
+
+    [RelayCommand]
+    private async Task CopyToClipboard(string? text = null)
     {
         try
         {
-            if (string.IsNullOrEmpty(OutputText))
+            var textToCopy = text ?? OutputText;
+            if (string.IsNullOrEmpty(textToCopy))
                 return;
 
             var topLevel = TopLevel.GetTopLevel(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop 
@@ -351,7 +368,7 @@ public partial class Base64EncoderViewModel : ObservableObject
             
             if (topLevel?.Clipboard != null)
             {
-                await topLevel.Clipboard.SetTextAsync(OutputText);
+                await topLevel.Clipboard.SetTextAsync(textToCopy);
             }
         }
         catch (Exception)

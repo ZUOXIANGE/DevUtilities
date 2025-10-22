@@ -1,0 +1,226 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DevUtilities.Views.DockerComposeConverterView"
+             x:DataType="vm:DockerComposeConverterViewModel">
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" Spacing="20">
+      <!-- 标题 -->
+      <TextBlock Text="Docker Compose 转换器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"
+                 Foreground="#333333"/>
+
+      <!-- 状态信息 -->
+      <Border Background="#E3F2FD" CornerRadius="4" Padding="12" 
+              IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <TextBlock Text="{Binding StatusMessage}" 
+                   Foreground="#1976D2" 
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 服务名称设置 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="服务配置" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="服务名称：" VerticalAlignment="Center" Margin="0,0,12,0"/>
+            <TextBox Grid.Column="1" 
+                     Text="{Binding ServiceName}" 
+                     Watermark="输入Docker Compose服务名称"
+                     Width="200"
+                     HorizontalAlignment="Left"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 输入输出区域 -->
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Docker Run 命令输入 -->
+        <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="Docker Run 命令" FontWeight="Bold" FontSize="16"/>
+            
+            <TextBox Text="{Binding DockerRunCommand}" 
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap" 
+                     Height="300" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     FontFamily="Consolas"
+                     Watermark="输入 docker run 命令，例如：&#10;docker run -d --name myapp -p 8080:80 -v /host/path:/container/path nginx" />
+            
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="从剪贴板粘贴" Command="{Binding CopyInputCommand}"/>
+              <Button Content="清空" Command="{Binding ClearAllCommand}"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        
+        <!-- 转换按钮 -->
+        <StackPanel Grid.Column="1" Spacing="12" Margin="16,20,16,0" VerticalAlignment="Center">
+          <Button Content="转换" 
+                  Command="{Binding ConvertToDockerComposeCommand}" 
+                  Width="100"
+                  Height="40"
+                  FontWeight="Bold"/>
+          <Button Content="示例" 
+                  Command="{Binding SwapContentCommand}" 
+                  Width="100"/>
+          <Button Content="清空全部" 
+                  Command="{Binding ClearAllCommand}" 
+                  Width="100"/>
+        </StackPanel>
+        
+        <!-- Docker Compose 输出 -->
+        <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="Docker Compose 输出" FontWeight="Bold" FontSize="16"/>
+            
+            <TextBox Text="{Binding DockerComposeOutput}" 
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap" 
+                     Height="300" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"/>
+            
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="复制结果" Command="{Binding CopyOutputCommand}"/>
+              <Button Content="保存到文件" Command="{Binding ClearAllCommand}"/>
+              <Button Content="验证语法" Command="{Binding SwapContentCommand}"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 转换选项 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="转换选项" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <CheckBox Grid.Column="0" 
+                      Content="包含网络配置" 
+                      IsChecked="False"
+                      Margin="4"/>
+            <CheckBox Grid.Column="1" 
+                      Content="包含卷配置" 
+                      IsChecked="False"
+                      Margin="4"/>
+            <CheckBox Grid.Column="2" 
+                      Content="使用相对路径" 
+                      IsChecked="False"
+                      Margin="4"/>
+          </Grid>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <CheckBox Grid.Column="0" 
+                      Content="添加重启策略" 
+                      IsChecked="False"
+                      Margin="4"/>
+            <CheckBox Grid.Column="1" 
+                      Content="优化端口映射" 
+                      IsChecked="False"
+                      Margin="4"/>
+            <CheckBox Grid.Column="2" 
+                      Content="生成环境变量文件" 
+                      IsChecked="False"
+                      Margin="4"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 常用示例 -->
+      <Expander Header="常用示例" IsExpanded="False">
+        <StackPanel Spacing="12" Margin="10">
+          <TextBlock Text="Web 服务器示例" FontWeight="SemiBold"/>
+          <Border Background="#F5F5F5" CornerRadius="4" Padding="8">
+            <TextBlock Text="docker run -d --name nginx-server -p 80:80 -v /var/www/html:/usr/share/nginx/html nginx:latest" 
+                       FontFamily="Consolas" 
+                       TextWrapping="Wrap"/>
+          </Border>
+          
+          <TextBlock Text="数据库示例" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <Border Background="#F5F5F5" CornerRadius="4" Padding="8">
+            <TextBlock Text="docker run -d --name mysql-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -v mysql-data:/var/lib/mysql mysql:8.0" 
+                       FontFamily="Consolas" 
+                       TextWrapping="Wrap"/>
+          </Border>
+          
+          <TextBlock Text="应用服务示例" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <Border Background="#F5F5F5" CornerRadius="4" Padding="8">
+            <TextBlock Text="docker run -d --name myapp -p 8080:3000 -e NODE_ENV=production -v /app/logs:/usr/src/app/logs node:16-alpine" 
+                       FontFamily="Consolas" 
+                       TextWrapping="Wrap"/>
+          </Border>
+        </StackPanel>
+      </Expander>
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="12" Margin="10">
+          <TextBlock Text="支持的 Docker Run 参数" FontWeight="SemiBold"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• -d, --detach：后台运行"/>
+            <TextBlock Text="• -p, --publish：端口映射"/>
+            <TextBlock Text="• -v, --volume：卷挂载"/>
+            <TextBlock Text="• -e, --env：环境变量"/>
+            <TextBlock Text="• --name：容器名称"/>
+            <TextBlock Text="• --network：网络配置"/>
+            <TextBlock Text="• --restart：重启策略"/>
+            <TextBlock Text="• --memory：内存限制"/>
+            <TextBlock Text="• --cpus：CPU限制"/>
+          </StackPanel>
+          
+          <TextBlock Text="转换规则" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 容器名称将作为服务名称（可自定义）"/>
+            <TextBlock Text="• 端口映射转换为 ports 配置"/>
+            <TextBlock Text="• 卷挂载转换为 volumes 配置"/>
+            <TextBlock Text="• 环境变量转换为 environment 配置"/>
+            <TextBlock Text="• 网络配置转换为 networks 配置"/>
+            <TextBlock Text="• 资源限制转换为 deploy.resources 配置"/>
+          </StackPanel>
+          
+          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 支持多行 docker run 命令"/>
+            <TextBlock Text="• 自动处理命令行参数的引号和转义"/>
+            <TextBlock Text="• 生成的 YAML 格式符合 Docker Compose 规范"/>
+            <TextBlock Text="• 可以选择性包含网络和卷的全局配置"/>
+            <TextBlock Text="• 支持验证生成的 YAML 语法"/>
+          </StackPanel>
+        </StackPanel>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

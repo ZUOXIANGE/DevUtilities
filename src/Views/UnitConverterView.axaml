@@ -6,151 +6,257 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="DevUtilities.Views.UnitConverterView"
              x:DataType="vm:UnitConverterViewModel">
-
-  <ScrollViewer>
+  
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="24" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="单位转换器" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      <TextBlock Text="单位转换工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
       
       <!-- 类别选择 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="转换类别" FontSize="14" FontWeight="SemiBold"/>
+          <TextBlock Text="转换类别" FontSize="16" FontWeight="SemiBold"/>
           <ComboBox ItemsSource="{Binding Categories}" 
                     SelectedItem="{Binding SelectedCategory}"
-                    HorizontalAlignment="Stretch"
-                    FontSize="14"/>
+                    HorizontalAlignment="Stretch"/>
         </StackPanel>
       </Border>
-
-      <!-- 转换面板 -->
+      
+      <!-- 单位转换区域 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
-        <Grid RowDefinitions="Auto,20,Auto,20,Auto,20,Auto" ColumnDefinitions="*,20,Auto,20,*">
+        <Grid RowDefinitions="Auto,20,Auto,20,Auto,20,Auto" ColumnDefinitions="*,20,*">
           
-          <!-- 输入部分 -->
+          <!-- 从单位 -->
           <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
-            <TextBlock Text="从" FontSize="12" Foreground="#666666"/>
+            <TextBlock Text="从" FontWeight="SemiBold"/>
             <ComboBox ItemsSource="{Binding FromUnits}" 
                       SelectedItem="{Binding SelectedFromUnit}"
-                      HorizontalAlignment="Stretch"
-                      FontSize="14"/>
+                      HorizontalAlignment="Stretch"/>
           </StackPanel>
-
-          <!-- 交换按钮 -->
-          <Button Grid.Row="0" Grid.Column="2" 
-                  Content="⇄" 
-                  Command="{Binding SwapUnitsCommand}"
-                  FontSize="16"
-                  Width="40" Height="40"
-                  HorizontalContentAlignment="Center"
-                  VerticalContentAlignment="Center"
-                  ToolTip.Tip="交换单位"/>
-
-          <!-- 输出部分 -->
-          <StackPanel Grid.Row="0" Grid.Column="4" Spacing="8">
-            <TextBlock Text="到" FontSize="12" Foreground="#666666"/>
+          
+          <!-- 到单位 -->
+          <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
+            <TextBlock Text="到" FontWeight="SemiBold"/>
             <ComboBox ItemsSource="{Binding ToUnits}" 
                       SelectedItem="{Binding SelectedToUnit}"
-                      HorizontalAlignment="Stretch"
-                      FontSize="14"/>
+                      HorizontalAlignment="Stretch"/>
           </StackPanel>
-
+          
           <!-- 输入值 -->
           <StackPanel Grid.Row="2" Grid.Column="0" Spacing="8">
-            <TextBlock Text="输入值" FontSize="12" Foreground="#666666"/>
+            <TextBlock Text="输入值" FontWeight="SemiBold"/>
             <TextBox Text="{Binding InputValue}" 
-                     FontSize="16" 
-                     FontFamily="Consolas"
-                     HorizontalAlignment="Stretch"
-                     Watermark="请输入数值"/>
+                     Watermark="请输入数值"
+                     HorizontalAlignment="Stretch"/>
           </StackPanel>
-
-          <!-- 等号 -->
-          <TextBlock Grid.Row="2" Grid.Column="2" 
-                     Text="=" 
-                     FontSize="20" 
-                     FontWeight="Bold"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center"/>
-
+          
+          <!-- 转换按钮 -->
+          <Button Grid.Row="2" Grid.Column="1" 
+                  Content="→" 
+                  FontSize="20"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Bottom"
+                  Width="40" Height="40"
+                  Command="{Binding ConvertCommand}"/>
+          
           <!-- 输出值 -->
-          <StackPanel Grid.Row="2" Grid.Column="4" Spacing="8">
-            <TextBlock Text="结果" FontSize="12" Foreground="#666666"/>
-            <Border Background="#F5F5F5" CornerRadius="4" Padding="8">
-              <TextBlock Text="{Binding OutputValue}" 
-                         FontSize="16" 
-                         FontFamily="Consolas"
-                         FontWeight="SemiBold"
-                         Foreground="#2563EB"/>
-            </Border>
+          <StackPanel Grid.Row="2" Grid.Column="2" Spacing="8">
+            <TextBlock Text="转换结果" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding OutputValue}" 
+                     IsReadOnly="True"
+                     Background="#F5F5F5"
+                     HorizontalAlignment="Stretch"/>
           </StackPanel>
-
+          
           <!-- 转换公式 -->
-          <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" 
-                  Background="#EFF6FF" 
-                  CornerRadius="4" 
-                  Padding="12">
-            <TextBlock Text="{Binding ConversionFormula}" 
-                       FontSize="14" 
-                       FontFamily="Consolas"
-                       HorizontalAlignment="Center"
-                       Foreground="#1E40AF"/>
-          </Border>
-
+          <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+                     Text="{Binding ConversionFormula}"
+                     FontStyle="Italic"
+                     Foreground="Gray"
+                     HorizontalAlignment="Center"/>
+          
           <!-- 操作按钮 -->
-          <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="5" 
+          <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
                       Orientation="Horizontal" 
                       HorizontalAlignment="Center" 
-                      Spacing="12">
-            <Button Content="清除" 
-                    Command="{Binding ClearCommand}"
-                    Classes="secondary-button"
-                    Padding="16,8"/>
-            <Button Content="复制结果" 
-                    Command="{Binding CopyResultCommand}"
-                    Classes="primary-button"
-                    Padding="16,8"/>
+                      Spacing="10">
+            <Button Content="交换单位" Command="{Binding SwapUnitsCommand}"/>
+            <Button Content="清空" Command="{Binding ClearCommand}"/>
+            <Button Content="复制结果" Command="{Binding CopyResultCommand}"/>
           </StackPanel>
         </Grid>
       </Border>
-
-      <!-- 使用说明 -->
-      <Border Background="#F8F9FA" CornerRadius="8" Padding="16" BorderBrush="#E9ECEF" BorderThickness="1">
-        <StackPanel Spacing="8">
-          <TextBlock Text="使用说明" FontSize="14" FontWeight="SemiBold" Foreground="#495057"/>
-          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#6C757D">
-            <Run Text="• 选择转换类别（长度、重量、温度等）"/>
-            <LineBreak/>
-            <Run Text="• 选择源单位和目标单位"/>
-            <LineBreak/>
-            <Run Text="• 输入数值，系统会自动进行转换"/>
-            <LineBreak/>
-            <Run Text="• 点击交换按钮可以快速交换单位"/>
-            <LineBreak/>
-            <Run Text="• 支持小数和科学计数法输入"/>
-          </TextBlock>
-        </StackPanel>
-      </Border>
-
-      <!-- 常用转换表 -->
+      
+      <!-- 常用转换 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="常用转换参考" FontSize="14" FontWeight="SemiBold"/>
-          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,*">
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="长度: 1米 = 100厘米 = 1000毫米" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="重量: 1千克 = 1000克 = 2.20462磅" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="温度: 0°C = 32°F = 273.15K" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="面积: 1平方米 = 10000平方厘米" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="体积: 1升 = 1000毫升" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="时间: 1小时 = 60分钟 = 3600秒" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="速度: 1米/秒 = 3.6千米/小时" FontSize="12" Foreground="#666666"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="压力: 1大气压 = 101325帕斯卡" FontSize="12" Foreground="#666666"/>
+          <TextBlock Text="常用转换" FontSize="16" FontWeight="SemiBold"/>
+          <WrapPanel Orientation="Horizontal" ItemWidth="120" ItemHeight="35">
+            <Button Content="1米=100厘米" Margin="2"/>
+            <Button Content="1千米=1000米" Margin="2"/>
+            <Button Content="1英尺=12英寸" Margin="2"/>
+            <Button Content="1英里=1.6千米" Margin="2"/>
+            <Button Content="1千克=1000克" Margin="2"/>
+            <Button Content="1磅=0.45千克" Margin="2"/>
+            <Button Content="1°C=33.8°F" Margin="2"/>
+            <Button Content="1升=1000毫升" Margin="2"/>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+      
+      <!-- 批量转换 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="批量转换" FontSize="16" FontWeight="SemiBold"/>
+          <Grid RowDefinitions="Auto,10,Auto,10,Auto" ColumnDefinitions="*,10,*">
+            
+            <!-- 批量输入 -->
+            <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
+              <TextBlock Text="批量输入（每行一个数值）" FontWeight="SemiBold"/>
+              <TextBox AcceptsReturn="True" 
+                       Height="100"
+                       TextWrapping="Wrap"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                       Watermark="1&#x0A;2&#x0A;3"/>
+            </StackPanel>
+            
+            <!-- 批量结果 -->
+            <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
+              <TextBlock Text="批量结果" FontWeight="SemiBold"/>
+              <TextBox AcceptsReturn="True" 
+                       Height="100"
+                       IsReadOnly="True"
+                       Background="#F5F5F5"
+                       TextWrapping="Wrap"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
+            
+            <!-- 批量操作按钮 -->
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        Spacing="10">
+              <Button Content="批量转换"/>
+              <Button Content="清空输入"/>
+              <Button Content="复制结果"/>
+              <Button Content="导出CSV"/>
+            </StackPanel>
           </Grid>
         </StackPanel>
       </Border>
-
+      
+      <!-- 转换历史 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="转换历史" FontSize="16" FontWeight="SemiBold"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+              <Button Content="清空历史" FontSize="12" Padding="8,4"/>
+              <Button Content="导出历史" FontSize="12" Padding="8,4"/>
+            </StackPanel>
+          </Grid>
+          
+          <ListBox Height="150" Background="#FAFAFA">
+            <ListBoxItem>
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="1 米 → 100 厘米" Width="200"/>
+                <TextBlock Text="2024-01-01 12:00" Foreground="Gray"/>
+                <Button Content="重用" FontSize="10" Padding="4,2"/>
+              </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="100 千克 → 220.46 磅" Width="200"/>
+                <TextBlock Text="2024-01-01 11:30" Foreground="Gray"/>
+                <Button Content="重用" FontSize="10" Padding="4,2"/>
+              </StackPanel>
+            </ListBoxItem>
+          </ListBox>
+        </StackPanel>
+      </Border>
+      
+      <!-- 精度设置 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="精度设置" FontSize="16" FontWeight="SemiBold"/>
+          <Grid ColumnDefinitions="Auto,10,*,10,Auto,10,*">
+            <TextBlock Grid.Column="0" Text="小数位数:" VerticalAlignment="Center"/>
+            <Slider Grid.Column="2" 
+                    Minimum="0" 
+                    Maximum="10" 
+                    Value="2"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True"/>
+            <TextBlock Grid.Column="4" Text="科学计数法:" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="6" VerticalAlignment="Center"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+      
+      <!-- 自定义单位 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="自定义单位" FontSize="16" FontWeight="SemiBold"/>
+          <Grid RowDefinitions="Auto,10,Auto" ColumnDefinitions="*,10,*,10,*,10,Auto">
+            
+            <TextBox Grid.Row="0" Grid.Column="0" 
+                     Watermark="单位名称"
+                     VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="2" 
+                     Watermark="转换系数"
+                     VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="0" Grid.Column="4" 
+                      VerticalAlignment="Center">
+              <ComboBoxItem Content="长度"/>
+              <ComboBoxItem Content="重量"/>
+              <ComboBoxItem Content="温度"/>
+            </ComboBox>
+            <Button Grid.Row="0" Grid.Column="6" 
+                    Content="添加" 
+                    VerticalAlignment="Center"/>
+            
+            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7" 
+                     Height="80" 
+                     Background="#FAFAFA">
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <TextBlock Text="自定义单位1" Width="100"/>
+                  <TextBlock Text="系数: 1.5" Width="80"/>
+                  <TextBlock Text="类别: 长度" Width="80"/>
+                  <Button Content="删除" FontSize="10" Padding="4,2"/>
+                </StackPanel>
+              </ListBoxItem>
+            </ListBox>
+          </Grid>
+        </StackPanel>
+      </Border>
+      
+      <!-- 错误信息显示 -->
+      <Border Background="#FFEBEE" 
+              CornerRadius="4" 
+              Padding="12" 
+              BorderBrush="#F44336" 
+              BorderThickness="1"
+              IsVisible="False">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="⚠" Foreground="#F44336" FontWeight="Bold"/>
+          <TextBlock Text="错误信息将在这里显示" Foreground="#F44336"/>
+        </StackPanel>
+      </Border>
+      
+      <!-- 加载指示器 -->
+      <Border Background="White" 
+              CornerRadius="4" 
+              Padding="12" 
+              HorizontalAlignment="Center"
+              IsVisible="False">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="⟳" FontSize="16" Classes="rotating"/>
+          <TextBlock Text="正在转换..."/>
+        </StackPanel>
+      </Border>
+      
     </StackPanel>
   </ScrollViewer>
-
 </UserControl>

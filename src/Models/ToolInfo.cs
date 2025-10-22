@@ -44,5 +44,8 @@ public enum ToolType
     CronExpression,
     ParquetViewer,
     IpQuery,
-    JsonExampleGenerator
+    JsonExampleGenerator,
+    HashGenerator,
+    TextEncryption,
+    DockerComposeConverter
 }

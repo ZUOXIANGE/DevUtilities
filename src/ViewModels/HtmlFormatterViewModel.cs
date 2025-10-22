@@ -47,17 +47,17 @@ public partial class HtmlFormatterViewModel : BaseFormatterViewModel
         ToolType = Models.ToolType.HtmlFormatter;
     }
 
-    protected override async Task<string> FormatContentAsync(string input)
+    protected override Task<string> FormatContentAsync(string input)
     {
         try
         {
             if (CompactOutput)
             {
-                return MinifyHtmlContent(input);
+                return Task.FromResult(MinifyHtmlContent(input));
             }
             else
             {
-                return FormatHtmlContent(input);
+                return Task.FromResult(FormatHtmlContent(input));
             }
         }
         catch (Exception ex)
@@ -200,11 +200,11 @@ public partial class HtmlFormatterViewModel : BaseFormatterViewModel
         return result.Trim();
     }
 
-    protected override async Task<ValidationResult> OnValidateAsync(string input)
+    protected override Task<ValidationResult> OnValidateAsync(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
-            return new ValidationResult(false, "请输入HTML内容");
+            return Task.FromResult(new ValidationResult(false, "请输入HTML内容"));
         }
 
         try
@@ -225,11 +225,11 @@ public partial class HtmlFormatterViewModel : BaseFormatterViewModel
             var message = BuildValidationMessage(structureInfo, issues, warnings);
             var isValid = issues.Count == 0;
 
-            return new ValidationResult(isValid, message);
+            return Task.FromResult(new ValidationResult(isValid, message));
         }
         catch (Exception ex)
         {
-            return new ValidationResult(false, $"验证失败: {ex.Message}");
+            return Task.FromResult(new ValidationResult(false, $"验证失败: {ex.Message}"));
         }
     }
 

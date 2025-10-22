@@ -1,16 +1,29 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
-             xmlns:converters="using:DevUtilities.Converters"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DevUtilities.Views.CronExpressionView"
              x:DataType="vm:CronExpressionViewModel">
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" Spacing="20">
+      <!-- 标题 -->
+      <TextBlock Text="Cron表达式生成器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"/>
 
-  <ScrollViewer>
-    <StackPanel Margin="24" Spacing="20">
-      
+      <!-- 错误信息 -->
+      <Border Background="#FFEBEE" CornerRadius="4" Padding="12" 
+              IsVisible="{Binding !IsValidExpression}">
+        <TextBlock Text="{Binding ValidationMessage}" 
+                   Foreground="#C62828" 
+                   TextWrapping="Wrap"/>
+      </Border>
+
       <!-- Cron Expression Input -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
@@ -20,44 +33,40 @@
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
             <TextBox Grid.Column="0" 
                      Text="{Binding CronExpression}" 
-                     Watermark="输入Cron表达式，例如：0 0 12 * * ?"
-                     FontFamily="Consolas,Monaco,monospace"/>
+                     FontFamily="Consolas" 
+                     FontSize="14"
+                     Watermark="输入Cron表达式，例如：0 0 12 * * ?"/>
             
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="8,0,0,0">
-              <Button Content="解析" Classes="primary-button" Command="{Binding ParseExpressionCommand}"/>
-              <Button Content="清空" Classes="secondary-button" Command="{Binding ClearCommand}"/>
-            </StackPanel>
+            <Button Grid.Column="1" 
+                    Content="验证" 
+                    Command="{Binding ParseExpressionCommand}"
+                    Margin="8,0,0,0"/>
+            
+            <Button Grid.Column="2" 
+                    Content="清空" 
+                    Command="{Binding ClearCommand}"
+                    Margin="8,0,0,0"/>
           </Grid>
-          
-          <!-- Validation Message -->
-          <Border Background="LightCoral" 
-                  CornerRadius="4" 
-                  Padding="8" 
-                  Margin="0,8,0,0"
-                  IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}">
-            <TextBlock Text="{Binding ValidationMessage}" 
-                       Foreground="White" 
-                       FontWeight="SemiBold"/>
-          </Border>
 
-          <!-- Description -->
-          <Border Background="LightGreen" 
-                  CornerRadius="4" 
-                  Padding="8" 
-                  Margin="0,8,0,0"
-                  IsVisible="{Binding Description, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}">
-            <TextBlock Text="{Binding Description}" 
-                       Foreground="DarkGreen" 
-                       FontWeight="SemiBold"/>
+          <!-- 表达式描述 -->
+          <Border Background="#F5F5F5" CornerRadius="4" Padding="12"
+                  IsVisible="{Binding IsValidExpression}">
+            <StackPanel Spacing="8">
+              <TextBlock Text="表达式含义：" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding Description}" 
+                         TextWrapping="Wrap"
+                         FontStyle="Italic"/>
+            </StackPanel>
           </Border>
         </StackPanel>
       </Border>
 
-      <!-- Preset Expressions -->
+      <!-- 预设表达式 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
           <TextBlock Text="常用表达式" FontWeight="Bold" FontSize="16"/>
@@ -70,22 +79,44 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <Button Content="{Binding Key}" 
-                        Classes="preset-button"
-                        Command="{Binding $parent[UserControl].((vm:CronExpressionViewModel)DataContext).UsePresetCommand}"
-                        CommandParameter="{Binding Key}"
-                        Margin="4,2"
-                        Padding="12,6"/>
+                <Border Background="#F8F9FA" 
+                        CornerRadius="4" 
+                        Padding="12,8" 
+                        Margin="4"
+                        BorderBrush="#DEE2E6" 
+                        BorderThickness="1"
+                        Cursor="Hand">
+                  <Border.Styles>
+                    <Style Selector="Border:pointerover">
+                      <Setter Property="Background" Value="#E9ECEF"/>
+                    </Style>
+                  </Border.Styles>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding Key}" 
+                               FontWeight="SemiBold" 
+                               FontSize="12"/>
+                    <TextBlock Text="{Binding Value}" 
+                               FontFamily="Consolas" 
+                               FontSize="11" 
+                               Foreground="#6C757D"/>
+                  </StackPanel>
+                  <i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="Tapped">
+                      <ia:InvokeCommandAction Command="{Binding $parent[UserControl].DataContext.UsePresetCommand}" 
+                                           CommandParameter="{Binding Value}"/>
+                    </ia:EventTriggerBehavior>
+                  </i:Interaction.Behaviors>
+                </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
         </StackPanel>
       </Border>
 
-      <!-- Visual Builder -->
+      <!-- 字段构建器 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="可视化构建器" FontWeight="Bold" FontSize="16"/>
+          <TextBlock Text="字段构建器" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -109,117 +140,129 @@
             <TextBlock Grid.Row="0" Grid.Column="4" Text="月" HorizontalAlignment="Center" FontWeight="Bold"/>
             <TextBlock Grid.Row="0" Grid.Column="5" Text="周" HorizontalAlignment="Center" FontWeight="Bold"/>
             
-            <!-- Selectors -->
-            <ComboBox Grid.Row="1" Grid.Column="0" 
-                      ItemsSource="{Binding SecondOptions}" 
-                      SelectedItem="{Binding SelectedSecond}"
-                      Margin="4"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" 
-                      ItemsSource="{Binding MinuteOptions}" 
-                      SelectedItem="{Binding SelectedMinute}"
-                      Margin="4"/>
-            <ComboBox Grid.Row="1" Grid.Column="2" 
-                      ItemsSource="{Binding HourOptions}" 
-                      SelectedItem="{Binding SelectedHour}"
-                      Margin="4"/>
-            <ComboBox Grid.Row="1" Grid.Column="3" 
-                      ItemsSource="{Binding DayOptions}" 
-                      SelectedItem="{Binding SelectedDay}"
-                      Margin="4"/>
-            <ComboBox Grid.Row="1" Grid.Column="4" 
-                      ItemsSource="{Binding MonthOptions}" 
-                      SelectedItem="{Binding SelectedMonth}"
-                      Margin="4"/>
-            <ComboBox Grid.Row="1" Grid.Column="5" 
-                      ItemsSource="{Binding WeekOptions}" 
-                      SelectedItem="{Binding SelectedWeek}"
-                      Margin="4"/>
+            <!-- Dropdowns - 使用AutoCompleteBox实现可编辑功能 -->
+            <AutoCompleteBox Grid.Row="1" Grid.Column="0" 
+                             ItemsSource="{Binding SecondOptions}"
+                             Text="{Binding SelectedSecond, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="Contains"
+                             Margin="4"/>
+            <AutoCompleteBox Grid.Row="1" Grid.Column="1" 
+                             ItemsSource="{Binding MinuteOptions}"
+                             Text="{Binding SelectedMinute, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="Contains"
+                             Margin="4"/>
+            <AutoCompleteBox Grid.Row="1" Grid.Column="2" 
+                             ItemsSource="{Binding HourOptions}"
+                             Text="{Binding SelectedHour, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="Contains"
+                             Margin="4"/>
+            <AutoCompleteBox Grid.Row="1" Grid.Column="3" 
+                             ItemsSource="{Binding DayOptions}"
+                             Text="{Binding SelectedDay, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="Contains"
+                             Margin="4"/>
+            <AutoCompleteBox Grid.Row="1" Grid.Column="4" 
+                             ItemsSource="{Binding MonthOptions}"
+                             Text="{Binding SelectedMonth, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="Contains"
+                             Margin="4"/>
+            <AutoCompleteBox Grid.Row="1" Grid.Column="5" 
+                             ItemsSource="{Binding WeekOptions}"
+                             Text="{Binding SelectedWeek, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="Contains"
+                             Margin="4"/>
           </Grid>
           
           <Button Content="生成表达式" 
-                  Classes="primary-button" 
                   Command="{Binding GenerateExpressionCommand}"
                   HorizontalAlignment="Center"/>
         </StackPanel>
       </Border>
 
-      <!-- Description and Next Executions -->
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Description -->
-        <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,10,0">
-          <StackPanel Spacing="12">
-            <TextBlock Text="表达式描述" FontWeight="Bold" FontSize="16"/>
-            <TextBlock Text="{Binding Description}" 
-                       TextWrapping="Wrap"
-                       IsVisible="{Binding Description, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}"/>
-            <TextBlock Text="暂无描述" 
-                       Foreground="Gray"
-                       IsVisible="{Binding Description, Converter={x:Static converters:StringConverters.IsNullOrEmpty}}"/>
-          </StackPanel>
-        </Border>
-        
-        <!-- Next Executions -->
-        <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1" Margin="10,0,0,0">
-          <StackPanel Spacing="12">
-            <TextBlock Text="执行时间预览" FontWeight="Bold" FontSize="16"/>
-            <ScrollViewer MaxHeight="200">
-              <TextBlock Text="{Binding NextExecutions}" 
-                         TextWrapping="Wrap"
-                         FontFamily="Consolas,Monaco,monospace"
-                         FontSize="12"
-                         IsVisible="{Binding NextExecutions, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}"/>
-            </ScrollViewer>
-            <TextBlock Text="暂无执行时间信息" 
-                       Foreground="Gray"
-                       IsVisible="{Binding NextExecutions, Converter={x:Static converters:StringConverters.IsNullOrEmpty}}"/>
-          </StackPanel>
-        </Border>
-      </Grid>
-
-      <!-- Help Information -->
-      <Border Background="#F8F9FA" CornerRadius="8" Padding="16" BorderBrush="#E9ECEF" BorderThickness="1">
+      <!-- 下次执行时间 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1"
+              IsVisible="{Binding IsValidExpression}">
         <StackPanel Spacing="12">
-          <TextBlock Text="Cron表达式格式说明" FontWeight="Bold" FontSize="16"/>
-          <TextBlock TextWrapping="Wrap">
-            <Run Text="Cron表达式由6个字段组成："/>
-            <Run Text="秒 分 时 日 月 周" FontWeight="Bold" FontFamily="Consolas"/>
-          </TextBlock>
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto"/>
-              <RowDefinition Height="Auto"/>
-              <RowDefinition Height="Auto"/>
-              <RowDefinition Height="Auto"/>
-              <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="*" FontFamily="Consolas" FontWeight="Bold" Margin="0,0,12,0"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="匹配任意值"/>
-            
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="?" FontFamily="Consolas" FontWeight="Bold" Margin="0,0,12,0"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="不指定值（仅用于日和周字段）"/>
-            
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="," FontFamily="Consolas" FontWeight="Bold" Margin="0,0,12,0"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="分隔多个值，如：1,3,5"/>
-            
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="-" FontFamily="Consolas" FontWeight="Bold" Margin="0,0,12,0"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="指定范围，如：1-5"/>
-            
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="/" FontFamily="Consolas" FontWeight="Bold" Margin="0,0,12,0"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="指定间隔，如：*/5（每5个单位）"/>
-          </Grid>
+          <TextBlock Text="下次执行时间" FontWeight="Bold" FontSize="16"/>
+          
+          <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+            <TextBlock Text="{Binding NextExecutions}" 
+                       FontFamily="Consolas" 
+                       FontSize="12"
+                       TextWrapping="Wrap"/>
+          </ScrollViewer>
+          
+          <Button Content="刷新执行时间" 
+                  Command="{Binding RefreshExecutionsCommand}"
+                  Classes="accent"
+                  Margin="0,0,10,0"
+                  HorizontalAlignment="Left"/>
         </StackPanel>
       </Border>
-      
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="12" Margin="10">
+          <TextBlock Text="Cron表达式格式" FontWeight="SemiBold"/>
+          <Border Background="#F8F9FA" 
+                  CornerRadius="4" 
+                  Padding="8">
+            <TextBlock Text="格式：秒 分 时 日 月 周" 
+                       FontFamily="Consolas"/>
+          </Border>
+          
+          <TextBlock Text="字段说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" 
+                ColumnDefinitions="60,*" 
+                Margin="10,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="秒" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="0-59的整数"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="分" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="0-59的整数"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="时" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="0-23的整数"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="日" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="1-31的整数（需要考虑月份）"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="月" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="1-12的整数或JAN-DEC"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="周" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="1-7的整数或SUN-SAT（1=SUN）"/>
+          </Grid>
+          
+          <TextBlock Text="特殊字符" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" 
+                ColumnDefinitions="40,*" 
+                Margin="10,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="*" FontWeight="SemiBold" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="匹配任意值"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="?" FontWeight="SemiBold" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="不指定值（仅用于日和周）"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="-" FontWeight="SemiBold" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="范围，如1-5表示1到5"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="," FontWeight="SemiBold" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="列举，如1,3,5表示135"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="/" FontWeight="SemiBold" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="步长，如*/5表示每5个单位"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="L" FontWeight="SemiBold" FontFamily="Consolas"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="最后，如L表示月的最后一天"/>
+          </Grid>
+          
+          <TextBlock Text="示例" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 0 0 12 * * ? - 每天中午12点执行"/>
+            <TextBlock Text="• 0 */15 * * * ? - 每15分钟执行一次"/>
+            <TextBlock Text="• 0 0 9 ? * MON-FRI - 工作日上午9点执行"/>
+            <TextBlock Text="• 0 0 0 1 * ? - 每月1号午夜执行"/>
+            <TextBlock Text="• 0 0 0 L * ? - 每月最后一天午夜执行"/>
+          </StackPanel>
+        </StackPanel>
+      </Expander>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

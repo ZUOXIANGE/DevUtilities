@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,213 +6,308 @@
              xmlns:converters="using:DevUtilities.Converters"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="DevUtilities.Views.Base64EncoderView"
              x:DataType="vm:Base64EncoderViewModel">
 
-  <ScrollViewer>
-    <StackPanel Margin="24" Spacing="20">
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*">
       
-      <!-- Control Panel -->
-      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
-        <StackPanel Spacing="16">
-          <!-- Mode Selection -->
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+      <!-- Header Section -->
+      <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="20" 
+              BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,16">
+        <Border.Effect>
+          <DropShadowEffect BlurRadius="8" OffsetX="0" OffsetY="2" Color="#10000000"/>
+        </Border.Effect>
+        
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*">
+          
+          <!-- Title and Mode Selection -->
+          <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="🔄" FontSize="20" VerticalAlignment="Center"/>
+              <TextBlock Text="Base64 编码工具" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
             
             <!-- Input Type Selection -->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
-              <RadioButton Content="文本" IsChecked="{Binding !IsImageMode}" GroupName="InputType"/>
-              <RadioButton Content="图片" IsChecked="{Binding IsImageMode}" GroupName="InputType"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+              <Border Background="#F8F9FA" CornerRadius="8" Padding="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <RadioButton Content="📝 文本模式" IsChecked="{Binding !IsImageMode}" GroupName="InputType" 
+                               Padding="12,8" FontWeight="Medium"/>
+                  <RadioButton Content="🖼️ 图片模式" IsChecked="{Binding IsImageMode}" GroupName="InputType" 
+                               Padding="12,8" FontWeight="Medium"/>
+                </StackPanel>
+              </Border>
             </StackPanel>
             
-            <!-- Encoding Selection (only for text mode) -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"
-                        IsVisible="{Binding !IsImageMode}">
-              <TextBlock Text="字符编码:" VerticalAlignment="Center"/>
-              <ComboBox ItemsSource="{Binding AvailableEncodings}" 
-                        SelectedItem="{Binding SelectedEncoding}"
-                        Width="120"/>
-            </StackPanel>
-            
-            <!-- Action Buttons -->
+            <!-- Quick Actions -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
-              <Button Content="交换" Classes="secondary-button" Command="{Binding SwapInputOutputCommand}"
-                      IsVisible="{Binding !IsImageMode}"/>
-              <Button Content="清空" Classes="secondary-button" Command="{Binding ClearCommand}"/>
+              <Button Classes="secondary-button" Command="{Binding SwapInputOutputCommand}"
+                      IsVisible="{Binding !IsImageMode}" ToolTip.Tip="交换输入输出内容">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="⇄" FontSize="14"/>
+                  <TextBlock Text="交换"/>
+                </StackPanel>
+              </Button>
+              <Button Classes="secondary-button" Command="{Binding ClearCommand}" ToolTip.Tip="清空所有内容">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="🗑️" FontSize="12"/>
+                  <TextBlock Text="清空"/>
+                </StackPanel>
+              </Button>
             </StackPanel>
           </Grid>
           
-          <!-- Text Mode Controls -->
-          <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding !IsImageMode}">
-            <RadioButton Content="编码" IsChecked="{Binding IsEncodeMode}" GroupName="Mode"/>
-            <RadioButton Content="解码" IsChecked="{Binding !IsEncodeMode}" GroupName="Mode"/>
-          </StackPanel>
-          
-          <!-- Image Mode Controls -->
-          <StackPanel IsVisible="{Binding IsImageMode}" Spacing="12">
-            <!-- 图片模式选择 -->
-            <StackPanel Orientation="Horizontal" Spacing="16">
-              <TextBlock Text="转换方向:" VerticalAlignment="Center" FontWeight="SemiBold"/>
-              <RadioButton Content="图片 → Base64" IsChecked="{Binding IsImageToBase64Mode}" GroupName="ImageMode"/>
-              <RadioButton Content="Base64 → 图片" IsChecked="{Binding !IsImageToBase64Mode}" GroupName="ImageMode"/>
-            </StackPanel>
-            
-            <!-- 图片转Base64控件 -->
-            <Grid IsVisible="{Binding IsImageToBase64Mode}">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
+          <!-- Text Mode Settings -->
+          <Border Grid.Row="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,16,0,0"
+                  IsVisible="{Binding !IsImageMode}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <!-- Operation Mode -->
+              <Border Grid.Column="0" Background="White" CornerRadius="6" Padding="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <RadioButton Content="🔒 编码" IsChecked="{Binding IsEncodeMode}" GroupName="Mode" 
+                               Padding="12,6" FontWeight="Medium"/>
+                  <RadioButton Content="🔓 解码" IsChecked="{Binding !IsEncodeMode}" GroupName="Mode" 
+                               Padding="12,6" FontWeight="Medium"/>
+                </StackPanel>
+              </Border>
               
-              <Button Grid.Column="0" Content="选择图片" Classes="primary-button" Command="{Binding SelectImageForBase64Command}"/>
-              <TextBlock Grid.Column="1" Text="{Binding SelectedImagePath}" VerticalAlignment="Center" Margin="12,0"
-                         TextTrimming="CharacterEllipsis"/>
-              <Button Grid.Column="2" Content="清除" Classes="secondary-button" Command="{Binding ClearImageCommand}"
-                      IsVisible="{Binding SelectedImagePath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-            </Grid>
-            
-            <!-- Base64转图片控件 -->
-            <StackPanel IsVisible="{Binding !IsImageToBase64Mode}" Spacing="8">
-              <TextBlock Text="Base64输入:" FontWeight="SemiBold"/>
-              <TextBox Text="{Binding Base64Input}" 
-                       AcceptsReturn="True" 
-                       TextWrapping="Wrap"
-                       MinHeight="80"
-                       MaxHeight="120"
-                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                       Watermark="请粘贴Base64编码的图片数据..."/>
-              <Button Content="保存图片" Classes="primary-button" Command="{Binding SaveImageFromBase64Command}"
-                      IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}"
-                      HorizontalAlignment="Left"/>
-            </StackPanel>
-          </StackPanel>
-        </StackPanel>
-      </Border>
-
-      <!-- Content Area -->
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Text Mode Content -->
-        <Grid IsVisible="{Binding !IsImageMode}">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          
-          <!-- Input -->
-          <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,8,0">
-            <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-              </Grid.RowDefinitions>
-              
-              <TextBlock Grid.Row="0" Text="输入" FontWeight="SemiBold" Margin="0,0,0,8"/>
-              <TextBox Grid.Row="1" Text="{Binding InputText}" 
-                       AcceptsReturn="True" 
-                       TextWrapping="Wrap"
-                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                       MinHeight="200"/>
+              <!-- Encoding Selection -->
+              <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="字符编码:" VerticalAlignment="Center" FontWeight="Medium"/>
+                <ComboBox ItemsSource="{Binding AvailableEncodings}" 
+                          SelectedItem="{Binding SelectedEncoding}"
+                          Width="100" Padding="8,6"/>
+              </StackPanel>
             </Grid>
           </Border>
           
-          <!-- Output -->
-          <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1" Margin="8,0,0,0">
-            <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-              </Grid.RowDefinitions>
+          <!-- Image Mode Settings -->
+          <Border Grid.Row="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,16,0,0"
+                  IsVisible="{Binding IsImageMode}">
+            <StackPanel Spacing="12">
+              <!-- Image Mode Selection -->
+              <Border Background="White" CornerRadius="6" Padding="4" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <RadioButton Content="🖼️ → 📝 图片转Base64" IsChecked="{Binding IsImageToBase64Mode}" GroupName="ImageMode" 
+                               Padding="12,6" FontWeight="Medium"/>
+                  <RadioButton Content="📝 → 🖼️ Base64转图片" IsChecked="{Binding !IsImageToBase64Mode}" GroupName="ImageMode" 
+                               Padding="12,6" FontWeight="Medium"/>
+                </StackPanel>
+              </Border>
               
-              <TextBlock Grid.Row="0" Text="输出" FontWeight="SemiBold" Margin="0,0,0,8"/>
-              <TextBox Grid.Row="1" Text="{Binding OutputText}" 
-                       IsReadOnly="True"
-                       AcceptsReturn="True" 
-                       TextWrapping="Wrap"
-                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                       MinHeight="200"/>
+              <!-- Image to Base64 Controls -->
+              <Grid IsVisible="{Binding IsImageToBase64Mode}" ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0" Classes="primary-button" Command="{Binding SelectImageForBase64Command}">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="📁" FontSize="14"/>
+                    <TextBlock Text="选择图片"/>
+                  </StackPanel>
+                </Button>
+                <TextBlock Grid.Column="1" Text="{Binding SelectedImagePath}" VerticalAlignment="Center" 
+                           Margin="12,0" TextTrimming="CharacterEllipsis" FontStyle="Italic"/>
+                <Button Grid.Column="2" Classes="secondary-button" Command="{Binding ClearImageCommand}"
+                        IsVisible="{Binding SelectedImagePath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="✖️" FontSize="10"/>
+                    <TextBlock Text="清除"/>
+                  </StackPanel>
+                </Button>
+              </Grid>
+              
+              <!-- Base64 to Image Controls -->
+              <StackPanel IsVisible="{Binding !IsImageToBase64Mode}" Spacing="8">
+                <TextBlock Text="Base64 输入:" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding Base64Input}" 
+                         AcceptsReturn="True" 
+                         TextWrapping="Wrap"
+                         MinHeight="80"
+                         MaxHeight="120"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Watermark="请粘贴Base64编码的图片数据..."
+                         CornerRadius="6"/>
+                <Button Classes="primary-button" Command="{Binding SaveImageFromBase64Command}"
+                        IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        HorizontalAlignment="Left">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="💾" FontSize="14"/>
+                    <TextBlock Text="保存图片"/>
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+
+      <!-- Main Content Area -->
+      <Grid Grid.Row="1" ColumnDefinitions="*" RowDefinitions="*">
+        
+        <!-- Text Mode Content -->
+        <Grid IsVisible="{Binding !IsImageMode}" ColumnDefinitions="*,12,*">
+          
+          <!-- Input Panel -->
+          <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" 
+                  BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border.Effect>
+              <DropShadowEffect BlurRadius="6" OffsetX="0" OffsetY="2" Color="#08000000"/>
+            </Border.Effect>
+            
+            <Grid RowDefinitions="Auto,*,Auto">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+                <TextBlock Text="📝" FontSize="16"/>
+                <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='原始文本|Base64数据'}" 
+                           FontSize="16" FontWeight="SemiBold"/>
+                <Border Background="#E3F2FD" CornerRadius="12" Padding="6,2" Margin="8,0,0,0">
+                  <TextBlock Text="{Binding InputText.Length, StringFormat='{}{0} 字符'}" 
+                             FontSize="11" Foreground="#1976D2"/>
+                </Border>
+              </StackPanel>
+              
+              <Border Grid.Row="1" Background="#FAFAFA" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                <TextBox Text="{Binding InputText}" 
+                         AcceptsReturn="True" 
+                         TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         MinHeight="280"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="12"
+                         FontFamily="Consolas,Monaco,monospace"
+                         FontSize="13"
+                         Watermark="请输入要转换的内容..."/>
+              </Border>
+              
+              <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,12,0,0">
+                <Button Classes="primary-button" Command="{Binding ProcessCommand}" 
+                        IsEnabled="{Binding InputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='🔒|🔓'}" FontSize="14"/>
+                    <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='编码|解码'}"/>
+                  </StackPanel>
+                </Button>
+                <Button Classes="secondary-button" Command="{Binding ClearInputCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="🗑️" FontSize="12"/>
+                    <TextBlock Text="清空"/>
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+            </Grid>
+          </Border>
+          
+          <!-- Output Panel -->
+          <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="20" 
+                  BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border.Effect>
+              <DropShadowEffect BlurRadius="6" OffsetX="0" OffsetY="2" Color="#08000000"/>
+            </Border.Effect>
+            
+            <Grid RowDefinitions="Auto,*,Auto">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+                <TextBlock Text="📋" FontSize="16"/>
+                <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|解码结果'}" 
+                           FontSize="16" FontWeight="SemiBold"/>
+                <Border Background="#E8F5E8" CornerRadius="12" Padding="6,2" Margin="8,0,0,0"
+                        IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding OutputText.Length, StringFormat='{}{0} 字符'}" 
+                             FontSize="11" Foreground="#2E7D32"/>
+                </Border>
+              </StackPanel>
+              
+              <Border Grid.Row="1" Background="#FAFAFA" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                <TextBox Text="{Binding OutputText}" 
+                         IsReadOnly="True"
+                         AcceptsReturn="True" 
+                         TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         MinHeight="280"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="12"
+                         FontFamily="Consolas,Monaco,monospace"
+                         FontSize="13"
+                         Watermark="转换结果将在此显示..."/>
+              </Border>
+              
+              <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,12,0,0"
+                          IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <Button Classes="primary-button" Command="{Binding CopyToClipboardCommand}" 
+                        CommandParameter="{Binding OutputText}">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="📋" FontSize="14"/>
+                    <TextBlock Text="复制"/>
+                  </StackPanel>
+                </Button>
+                <Button Classes="secondary-button" Command="{Binding ClearOutputCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="🗑️" FontSize="12"/>
+                    <TextBlock Text="清空"/>
+                  </StackPanel>
+                </Button>
+              </StackPanel>
             </Grid>
           </Border>
         </Grid>
         
         <!-- Image Mode Content -->
-        <Grid IsVisible="{Binding IsImageMode}">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
+        <Grid IsVisible="{Binding IsImageMode}" ColumnDefinitions="*,12,*">
           
-          <!-- Image Preview -->
-          <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,8,0">
-            <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-              </Grid.RowDefinitions>
+          <!-- Image Preview Panel -->
+          <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" 
+                  BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border.Effect>
+              <DropShadowEffect BlurRadius="6" OffsetX="0" OffsetY="2" Color="#08000000"/>
+            </Border.Effect>
+            
+            <Grid RowDefinitions="Auto,*">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+                <TextBlock Text="🖼️" FontSize="16"/>
+                <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='图片预览|解码预览'}" 
+                           FontSize="16" FontWeight="SemiBold"/>
+                <Border Background="#FFF3E0" CornerRadius="12" Padding="6,2" Margin="8,0,0,0"
+                        IsVisible="{Binding ImageInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding ImageInfo}" FontSize="11" Foreground="#F57C00"/>
+                </Border>
+              </StackPanel>
               
-              <TextBlock Grid.Row="0" Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='图片预览|解码预览'}" 
-                         FontWeight="SemiBold" Margin="0,0,0,8"/>
-              <TextBlock Grid.Row="1" Text="{Binding ImageInfo}" Foreground="Gray" Margin="0,0,0,8"
-                         IsVisible="{Binding ImageInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-              
-              <!-- 图片预览区域 -->
-              <Border Grid.Row="1" Background="#F5F5F5" BorderBrush="#E0E0E0" BorderThickness="1" 
-                        CornerRadius="8" Padding="20" Margin="0,10,0,0" MinHeight="200"
-                        DragDrop.AllowDrop="True">
+              <!-- Image Display Area -->
+              <Border Grid.Row="1" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="2" 
+                      CornerRadius="12" Padding="20" MinHeight="320"
+                      DragDrop.AllowDrop="True">
                 <Border.Styles>
                   <Style Selector="Border:dragover">
                     <Setter Property="Background" Value="#E3F2FD"/>
                     <Setter Property="BorderBrush" Value="#2196F3"/>
-                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="BorderThickness" Value="3"/>
                   </Style>
                 </Border.Styles>
+                
                 <Grid>
-                  <!-- 图片显示 -->
+                  <!-- Image Display -->
                   <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                                 IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}">
-                    <Image Source="{Binding ImagePreview}" Stretch="Uniform" MaxWidth="400" MaxHeight="300"/>
+                    <Border Background="White" CornerRadius="8" Padding="8">
+                      <Image Source="{Binding ImagePreview}" Stretch="Uniform" MaxWidth="500" MaxHeight="400"/>
+                    </Border>
                   </ScrollViewer>
                   
-                  <!-- 拖拽提示区域 -->
-                  <Border Background="#F8F9FA" CornerRadius="4" 
+                  <!-- Drop Zone -->
+                  <Border Background="Transparent" CornerRadius="8" 
                           IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNull}}">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
-                      <TextBlock Text="📁" FontSize="48" HorizontalAlignment="Center" Opacity="0.5"/>
-                      <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='点击选择图片或拖拽图片到此处|粘贴Base64数据后图片将在此显示'}" 
-                                 FontSize="14" Foreground="Gray" HorizontalAlignment="Center" TextAlignment="Center"/>
-                    </StackPanel>
-                  </Border>
-                </Grid>
-              </Border>
-              
-              <!-- Base64转图片模式的预览区域 -->
-              <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" MinHeight="200"
-                      IsVisible="{Binding !IsImageToBase64Mode}">
-                <Grid>
-                  <!-- 图片显示 -->
-                  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}">
-                    <Image Source="{Binding ImagePreview}" Stretch="Uniform" MaxWidth="400" MaxHeight="300"/>
-                  </ScrollViewer>
-                  
-                  <!-- 提示区域 -->
-                  <Border Background="#F8F9FA" CornerRadius="4" 
-                          IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNull}}">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
-                      <TextBlock Text="🖼️" FontSize="48" HorizontalAlignment="Center" Opacity="0.5"/>
-                      <TextBlock Text="输入Base64数据后图片将在此显示" 
-                                 FontSize="14" Foreground="Gray" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
+                      <TextBlock Text="🖼️" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
+                      <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='拖拽图片到此处或点击选择|输入Base64数据后图片将在此显示'}" 
+                                 FontSize="16" Foreground="#666" HorizontalAlignment="Center" TextAlignment="Center" 
+                                 FontWeight="Medium"/>
+                      <Button Classes="primary-button" Command="{Binding SelectImageForBase64Command}"
+                              IsVisible="{Binding IsImageToBase64Mode}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <TextBlock Text="📁" FontSize="16"/>
+                          <TextBlock Text="选择图片文件"/>
+                        </StackPanel>
+                      </Button>
                     </StackPanel>
                   </Border>
                 </Grid>
@@ -220,33 +315,77 @@
             </Grid>
           </Border>
           
-          <!-- Base64 Output -->
-          <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1" Margin="8,0,0,0">
-            <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-              </Grid.RowDefinitions>
+          <!-- Base64 Output Panel -->
+          <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="20" 
+                  BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border.Effect>
+              <DropShadowEffect BlurRadius="6" OffsetX="0" OffsetY="2" Color="#08000000"/>
+            </Border.Effect>
+            
+            <Grid RowDefinitions="Auto,*,Auto">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+                <TextBlock Text="📝" FontSize="16"/>
+                <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|操作面板'}" 
+                           FontSize="16" FontWeight="SemiBold"/>
+                <Border Background="#E8F5E8" CornerRadius="12" Padding="6,2" Margin="8,0,0,0"
+                        IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding OutputText.Length, StringFormat='{}{0} 字符'}" 
+                             FontSize="11" Foreground="#2E7D32"/>
+                </Border>
+              </StackPanel>
               
-              <TextBlock Grid.Row="0" Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|操作结果'}" 
-                         FontWeight="SemiBold" Margin="0,0,0,8"/>
-              <TextBox Grid.Row="1" Text="{Binding OutputText}" 
-                       IsReadOnly="True"
-                       AcceptsReturn="True" 
-                       TextWrapping="Wrap"
-                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                       MinHeight="200"/>
+              <Border Grid.Row="1" Background="#FAFAFA" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                <TextBox Text="{Binding OutputText}" 
+                         IsReadOnly="{Binding IsImageToBase64Mode}"
+                         AcceptsReturn="True" 
+                         TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         MinHeight="320"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="12"
+                         FontFamily="Consolas,Monaco,monospace"
+                         FontSize="12"
+                         Watermark="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码结果将在此显示...|请粘贴Base64数据...'}"/>
+              </Border>
               
-              <!-- 操作按钮区域 -->
-              <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0"
+              <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,12,0,0">
+                <!-- Image to Base64 Mode Buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsImageToBase64Mode}">
+                  <Button Classes="primary-button" Command="{Binding CopyToClipboardCommand}" 
+                          CommandParameter="{Binding OutputText}"
                           IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                <Button Content="复制" Classes="secondary-button" 
-                        Command="{Binding CopyToClipboardCommand}" 
-                        CommandParameter="{Binding OutputText}"
-                        IsVisible="{Binding IsImageToBase64Mode}"/>
-                <Button Content="清空" Classes="secondary-button" 
-                         Command="{Binding ClearAllCommand}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <TextBlock Text="📋" FontSize="14"/>
+                      <TextBlock Text="复制Base64"/>
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+                
+                <!-- Base64 to Image Mode Buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding !IsImageToBase64Mode}">
+                  <Button Classes="primary-button" Command="{Binding ConvertBase64ToImageCommand}"
+                          IsEnabled="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <TextBlock Text="🔄" FontSize="14"/>
+                      <TextBlock Text="转换为图片"/>
+                    </StackPanel>
+                  </Button>
+                  <Button Classes="secondary-button" Command="{Binding SaveImageFromBase64Command}"
+                          IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <TextBlock Text="💾" FontSize="14"/>
+                      <TextBlock Text="保存图片"/>
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+                
+                <Button Classes="secondary-button" Command="{Binding ClearAllCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="🗑️" FontSize="12"/>
+                    <TextBlock Text="清空"/>
+                  </StackPanel>
+                </Button>
               </StackPanel>
             </Grid>
           </Border>
@@ -254,21 +393,45 @@
       </Grid>
 
       <!-- Usage Instructions -->
-      <Border Background="#FFF9E6" CornerRadius="8" Padding="16" BorderBrush="#FFE066" BorderThickness="1">
-        <StackPanel Spacing="8">
-          <TextBlock Text="💡 使用说明" FontSize="14" FontWeight="SemiBold"/>
-          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666666">
-            • 选择"编码"模式将普通文本转换为Base64格式
-            • 选择"解码"模式将Base64字符串还原为原始文本
-            • 支持多种字符编码：UTF-8、UTF-16、ASCII、GBK
-            • 输入内容会自动进行转换
-            • 点击"交换"按钮可以快速切换输入输出内容
-            • Base64编码常用于数据传输和存储
-          </TextBlock>
-        </StackPanel>
+      <Border Grid.Row="2" Background="#F8F9FA" CornerRadius="12" Padding="20" Margin="0,16,0,0"
+              BorderBrush="#E0E0E0" BorderThickness="1">
+        <Expander Header="使用说明" IsExpanded="False">
+          <Expander.HeaderTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="💡" FontSize="16"/>
+                <TextBlock Text="{Binding}" FontSize="14" FontWeight="SemiBold"/>
+              </StackPanel>
+            </DataTemplate>
+          </Expander.HeaderTemplate>
+          
+          <StackPanel Spacing="12" Margin="0,12,0,0">
+            <TextBlock Text="文本模式：" FontWeight="SemiBold" FontSize="14"/>
+            <StackPanel Spacing="6" Margin="16,0,0,0">
+              <TextBlock Text="• 编码：输入原始文本，点击编码按钮生成Base64字符串" FontSize="13"/>
+              <TextBlock Text="• 解码：输入Base64字符串，点击解码按钮还原原始文本" FontSize="13"/>
+              <TextBlock Text="• 支持多种字符编码：UTF-8、ASCII、Unicode等" FontSize="13"/>
+            </StackPanel>
+            
+            <TextBlock Text="图片模式：" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,0"/>
+            <StackPanel Spacing="6" Margin="16,0,0,0">
+              <TextBlock Text="• 图片转Base64：拖拽图片文件或点击选择，自动生成Base64编码" FontSize="13"/>
+              <TextBlock Text="• Base64转图片：粘贴Base64数据，点击转换预览图片并可保存" FontSize="13"/>
+              <TextBlock Text="• 支持常见图片格式：PNG、JPG、GIF、BMP等" FontSize="13"/>
+            </StackPanel>
+            
+            <Border Background="#E3F2FD" CornerRadius="8" Padding="12" Margin="0,8,0,0">
+              <StackPanel Spacing="4">
+                <TextBlock Text="💡 小贴士：" FontWeight="SemiBold" FontSize="13" Foreground="#1976D2"/>
+                <TextBlock Text="• 使用等宽字体显示Base64数据，便于查看和复制" FontSize="12" Foreground="#1976D2"/>
+                <TextBlock Text="• 支持拖拽操作，提升使用体验" FontSize="12" Foreground="#1976D2"/>
+                <TextBlock Text="• 实时显示字符数量，方便数据管理" FontSize="12" Foreground="#1976D2"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Expander>
       </Border>
-
-    </StackPanel>
+    </Grid>
   </ScrollViewer>
 
 </UserControl>

@@ -119,10 +119,10 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
     #region 字段和属性
 
     private readonly ObservableCollection<HistoryItem> history = new();
-    private readonly DevUtilities.Core.Services.StreamProcessingService streamProcessor;
+    private readonly DevUtilities.Core.Services.StreamProcessingService? streamProcessor;
     private CancellationTokenSource? cancellationTokenSource;
-    private readonly DevUtilities.Core.Services.KeyboardShortcutService shortcutService;
-    private readonly DevUtilities.Core.Services.UserSettingsService settingsService;
+    private readonly DevUtilities.Core.Services.KeyboardShortcutService? shortcutService;
+    private readonly DevUtilities.Core.Services.UserSettingsService? settingsService;
 
     #endregion
 
@@ -457,7 +457,7 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
                 ValidationMessage = $"文件较大（{inputSize / (1024 * 1024):F1}MB），使用流式处理...";
                 OnPropertyChanged(nameof(ValidationMessage));
 
-                var result = await streamProcessor.ProcessInChunksAsync(
+                var result = await streamProcessor!.ProcessInChunksAsync(
                     input,
                     FormatContentAsync,
                     progress: (percentage, status) =>
@@ -679,15 +679,15 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
         try
         {
             // 加载格式化选项设置
-            IndentSize = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.IndentSize, 2);
-            UseTabsForIndent = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.UseTabsForIndent, false);
-            AutoFormat = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.AutoFormat, false);
-            CompactOutput = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.CompactOutput, false);
+            IndentSize = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.IndentSize, 2);
+            UseTabsForIndent = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.UseTabsForIndent, false);
+            AutoFormat = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.AutoFormat, false);
+            CompactOutput = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.CompactOutput, false);
 
             // 加载性能设置
-            var maxFileSize = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Performance.MaxFileSize, 10);
-            var maxProcessingTime = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Performance.MaxProcessingTime, 30);
-            var enableMemoryMonitoring = settingsService.GetSetting(DevUtilities.Core.Services.SettingsKeys.Performance.EnableMemoryMonitoring, true);
+            var maxFileSize = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Performance.MaxFileSize, 10);
+            var maxProcessingTime = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Performance.MaxProcessingTime, 30);
+            var enableMemoryMonitoring = settingsService!.GetSetting(DevUtilities.Core.Services.SettingsKeys.Performance.EnableMemoryMonitoring, true);
 
             // 应用性能设置到流处理服务
             if (streamProcessor != null)
@@ -710,10 +710,10 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
         try
         {
             // 保存格式化选项设置
-            settingsService.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.IndentSize, IndentSize);
-            settingsService.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.UseTabsForIndent, UseTabsForIndent);
-            settingsService.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.AutoFormat, AutoFormat);
-            settingsService.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.CompactOutput, CompactOutput);
+            settingsService!.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.IndentSize, IndentSize);
+            settingsService!.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.UseTabsForIndent, UseTabsForIndent);
+            settingsService!.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.AutoFormat, AutoFormat);
+            settingsService!.SetSetting(DevUtilities.Core.Services.SettingsKeys.Formatter.CompactOutput, CompactOutput);
 
             // 异步保存设置到文件
             _ = Task.Run(async () =>
@@ -741,7 +741,7 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
     {
         try
         {
-            settingsService.ResetToDefaults();
+            settingsService!.ResetToDefaults();
             LoadUserSettings();
             SetSuccess("设置已重置为默认值");
         }
@@ -758,7 +758,7 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
     {
         try
         {
-            await settingsService.ExportSettingsAsync(filePath);
+            await settingsService!.ExportSettingsAsync(filePath);
             SetSuccess("设置已导出");
             return true;
         }
@@ -776,7 +776,7 @@ public abstract partial class BaseFormatterViewModel : BaseToolViewModel
     {
         try
         {
-            await settingsService.ImportSettingsAsync(filePath);
+            await settingsService!.ImportSettingsAsync(filePath);
             LoadUserSettings();
             SetSuccess("设置已导入");
             return true;

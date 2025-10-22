@@ -75,7 +75,10 @@ public partial class XmlFormatterViewModel : BaseFormatterViewModel
             var doc = XDocument.Parse(input);
             
             // 移除所有空白节点
-            RemoveWhitespaceNodes(doc.Root);
+            if (doc.Root != null)
+            {
+                RemoveWhitespaceNodes(doc.Root);
+            }
             
             // 移除注释
             if (RemoveComments)
@@ -120,13 +123,13 @@ public partial class XmlFormatterViewModel : BaseFormatterViewModel
         }
 
         // 移除多余空白
-        if (RemoveWhitespace)
+        if (RemoveWhitespace && doc.Root != null)
         {
             RemoveWhitespaceNodes(doc.Root);
         }
 
         // 排序属性
-        if (SortAttributes)
+        if (SortAttributes && doc.Root != null)
         {
             SortElementAttributes(doc.Root);
         }

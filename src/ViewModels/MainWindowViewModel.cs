@@ -104,10 +104,13 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("十六进制", "十六进制", "🔢", "十六进制转换工具", ToolType.HexConverter));
         AllTools.Add(new ToolInfo("JWT编码", "JWT编码", "🔐", "JWT令牌编码解码", ToolType.JwtEncoder));
         AllTools.Add(new ToolInfo("单位转换", "单位转换", "📏", "各种单位转换工具", ToolType.UnitConverter));
-        AllTools.Add(new ToolInfo("Cron表达式", "Cron表达式", "⏱️", "Cron表达式生成和解析", ToolType.CronExpression));
+        AllTools.Add(new ToolInfo("Cron表达式", "Cron表达式", "⏰", "Cron表达式生成和解析", ToolType.CronExpression));
         AllTools.Add(new ToolInfo("Parquet查看", "Parquet查看", "📄", "Parquet文件查看器", ToolType.ParquetViewer));
         AllTools.Add(new ToolInfo("IP查询", "IP查询", "🌍", "IP地址查询工具", ToolType.IpQuery));
         AllTools.Add(new ToolInfo("JSON示例生成", "JSON示例生成", "📄", "根据类定义生成JSON示例", ToolType.JsonExampleGenerator));
+        AllTools.Add(new ToolInfo("哈希生成", "哈希生成", "🔐", "字符串哈希值生成工具", ToolType.HashGenerator));
+        AllTools.Add(new ToolInfo("文本加解密", "文本加解密", "🔒", "AES/DES/3DES文本加解密工具", ToolType.TextEncryption));
+        AllTools.Add(new ToolInfo("Docker Compose转换", "Docker Compose转换", "🐳", "Docker run命令转换为docker-compose文件", ToolType.DockerComposeConverter));
     }
 
     [RelayCommand]
@@ -136,12 +139,15 @@ public partial class MainWindowViewModel : ObservableObject
         // settingsDialog.ShowDialog(parentWindow);
         
         var mainWindow = GetMainWindow();
-        var result = await settingsDialog.ShowDialog<bool?>(mainWindow);
-        
-        if (result == true)
+        if (mainWindow != null)
         {
-            // 设置已保存，可以在这里处理设置更新后的逻辑
-            // 例如通知其他ViewModel设置已更改
+            var result = await settingsDialog.ShowDialog<bool?>(mainWindow);
+            
+            if (result == true)
+            {
+                // 设置已保存，可以在这里处理设置更新后的逻辑
+                // 例如通知其他ViewModel设置已更改
+            }
         }
     }
 
@@ -182,6 +188,9 @@ public partial class MainWindowViewModel : ObservableObject
             ToolType.ParquetViewer => new ParquetViewerViewModel(),
             ToolType.IpQuery => new IpQueryViewModel(),
             ToolType.JsonExampleGenerator => new JsonExampleGeneratorViewModel(),
+            ToolType.HashGenerator => new HashGeneratorViewModel(),
+            ToolType.TextEncryption => new TextEncryptionViewModel(),
+            ToolType.DockerComposeConverter => new DockerComposeConverterViewModel(),
             _ => new object()
         };
     }

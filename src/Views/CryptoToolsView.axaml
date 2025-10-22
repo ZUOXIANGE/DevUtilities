@@ -1,219 +1,260 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
-             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DevUtilities.Views.CryptoToolsView"
              x:DataType="vm:CryptoToolsViewModel">
-
-  <UserControl.Resources>
-    <converters:BooleanToColorConverter x:Key="BoolToColorConverter" />
-    <converters:StringIsNotNullOrEmptyConverter x:Key="StringToBoolConverter" />
-  </UserControl.Resources>
-
-  <ScrollViewer>
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="20" Spacing="20">
-      
       <!-- 标题 -->
-      <TextBlock Text="加密工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
-      
-      <!-- 对称加密区域 -->
-      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
-        <StackPanel Spacing="12">
-          <TextBlock Text="对称加密" FontSize="18" FontWeight="SemiBold" />
+      <TextBlock Text="加密解密工具" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"/>
+
+      <!-- 错误信息 -->
+      <Border Background="#FFEBEE" CornerRadius="4" Padding="12" 
+              IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <TextBlock Text="{Binding ValidationMessage}" 
+                   Foreground="#C62828" 
+                   TextWrapping="Wrap"/>
+      </Border>
+
+      <!-- 算法选择 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="加密算法设置" FontWeight="Bold" FontSize="16"/>
           
-          <!-- 算法选择 -->
-          <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto" Margin="0,8">
-            <StackPanel Grid.Column="0" Spacing="4">
-              <TextBlock Text="加密算法:" FontWeight="Medium" />
-              <ComboBox ItemsSource="{Binding AvailableAlgorithms}" 
-                       SelectedItem="{Binding SelectedAlgorithm}" 
-                       Width="120" />
-            </StackPanel>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             
-            <StackPanel Grid.Column="1" Spacing="4">
-              <TextBlock Text="加密模式:" FontWeight="Medium" />
-              <ComboBox ItemsSource="{Binding AvailableModes}" 
-                       SelectedItem="{Binding SelectedMode}" 
-                       Width="120" />
-            </StackPanel>
+            <!-- Headers -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="算法" FontWeight="SemiBold" Margin="4"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="模式" FontWeight="SemiBold" Margin="4"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="填充" FontWeight="SemiBold" Margin="4"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="编码" FontWeight="SemiBold" Margin="4"/>
             
-            <StackPanel Grid.Column="2" Spacing="4">
-              <TextBlock Text="填充模式:" FontWeight="Medium" />
-              <ComboBox ItemsSource="{Binding AvailablePaddings}" 
-                       SelectedItem="{Binding SelectedPadding}" 
-                       Width="120" />
-            </StackPanel>
+            <!-- Dropdowns -->
+            <ComboBox Grid.Row="1" Grid.Column="0" 
+                      SelectedItem="{Binding SelectedAlgorithm}"
+                      Margin="4">
+              <ComboBoxItem Content="AES"/>
+              <ComboBoxItem Content="DES"/>
+              <ComboBoxItem Content="3DES"/>
+              <ComboBoxItem Content="RC4"/>
+            </ComboBox>
             
-            <StackPanel Grid.Column="3" Spacing="4">
-              <TextBlock Text="编码格式:" FontWeight="Medium" />
-              <ComboBox ItemsSource="{Binding AvailableEncodings}" 
-                       SelectedItem="{Binding SelectedEncoding}" 
-                       Width="120" />
-            </StackPanel>
-          </Grid>
-          
-          <!-- 密钥和IV -->
-          <Grid ColumnDefinitions="*,Auto,*,Auto" Margin="0,8">
-            <StackPanel Grid.Column="0" Spacing="4">
-              <TextBlock Text="密钥 (Hex):" FontWeight="Medium" />
-              <TextBox Text="{Binding KeyText}" 
-                      Watermark="输入十六进制密钥" 
-                      FontFamily="Consolas" />
-            </StackPanel>
+            <ComboBox Grid.Row="1" Grid.Column="1" 
+                      SelectedItem="{Binding SelectedMode}"
+                      Margin="4">
+              <ComboBoxItem Content="CBC"/>
+              <ComboBoxItem Content="ECB"/>
+              <ComboBoxItem Content="CFB"/>
+              <ComboBoxItem Content="OFB"/>
+            </ComboBox>
             
-            <Button Grid.Column="1" Content="生成" 
-                   Command="{Binding GenerateRandomKeyCommand}" 
-                   Margin="8,20,8,0" 
-                   VerticalAlignment="Top" />
+            <ComboBox Grid.Row="1" Grid.Column="2" 
+                      SelectedItem="{Binding SelectedPadding}"
+                      Margin="4">
+              <ComboBoxItem Content="PKCS7"/>
+              <ComboBoxItem Content="None"/>
+              <ComboBoxItem Content="Zeros"/>
+            </ComboBox>
             
-            <StackPanel Grid.Column="2" Spacing="4">
-              <TextBlock Text="初始向量 IV (Hex):" FontWeight="Medium" />
-              <TextBox Text="{Binding IvText}" 
-                      Watermark="输入十六进制IV" 
-                      FontFamily="Consolas" />
-            </StackPanel>
-            
-            <Button Grid.Column="3" Content="生成" 
-                   Command="{Binding GenerateRandomIVCommand}" 
-                   Margin="8,20,8,0" 
-                   VerticalAlignment="Top" />
-          </Grid>
-          
-          <!-- 输入输出区域 -->
-          <Grid ColumnDefinitions="*,Auto,*" Margin="0,8">
-            <StackPanel Grid.Column="0" Spacing="4">
-              <TextBlock Text="输入文本:" FontWeight="Medium" />
-              <TextBox Text="{Binding InputText}" 
-                      AcceptsReturn="True" 
-                      TextWrapping="Wrap" 
-                      Height="120" 
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      Watermark="输入要加密/解密的文本" />
-            </StackPanel>
-            
-            <StackPanel Grid.Column="1" Spacing="8" Margin="16,20,16,0" VerticalAlignment="Top">
-              <Button Content="加密 →" Command="{Binding EncryptCommand}" Width="80" />
-              <Button Content="解密 →" Command="{Binding DecryptCommand}" Width="80" />
-              <Button Content="交换" Command="{Binding SwapInputOutputCommand}" Width="80" />
-            </StackPanel>
-            
-            <StackPanel Grid.Column="2" Spacing="4">
-              <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="输出结果:" FontWeight="Medium" />
-                <Button Content="复制" Command="{Binding CopyOutputCommand}" 
-                       IsEnabled="{Binding OutputText, Converter={StaticResource StringToBoolConverter}}" />
-              </StackPanel>
-              <TextBox Text="{Binding OutputText}" 
-                      AcceptsReturn="True" 
-                      TextWrapping="Wrap" 
-                      Height="120" 
-                      IsReadOnly="True"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      FontFamily="Consolas" />
-            </StackPanel>
+            <ComboBox Grid.Row="1" Grid.Column="3" 
+                      SelectedItem="{Binding SelectedEncoding}"
+                      Margin="4">
+              <ComboBoxItem Content="UTF-8"/>
+              <ComboBoxItem Content="ASCII"/>
+              <ComboBoxItem Content="Unicode"/>
+              <ComboBoxItem Content="Base64"/>
+              <ComboBoxItem Content="Hex"/>
+            </ComboBox>
           </Grid>
         </StackPanel>
       </Border>
-      
-      <!-- 哈希计算区域 -->
-      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
-        <StackPanel Spacing="12">
-          <TextBlock Text="哈希计算" FontSize="18" FontWeight="SemiBold" />
+
+      <!-- 密钥和IV设置 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="密钥设置" FontWeight="Bold" FontSize="16"/>
           
-          <Grid ColumnDefinitions="*,Auto,*,Auto" Margin="0,8">
-            <StackPanel Grid.Column="0" Spacing="4">
-              <TextBlock Text="哈希算法:" FontWeight="Medium" />
-              <ComboBox ItemsSource="{Binding AvailableHashAlgorithms}" 
-                       SelectedItem="{Binding SelectedHashAlgorithm}" 
-                       Width="120" />
-            </StackPanel>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             
-            <Button Grid.Column="1" Content="计算哈希" 
-                   Command="{Binding ComputeHashCommand}" 
-                   Margin="16,20,16,0" 
-                   VerticalAlignment="Top" />
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="密钥 (Key)" FontWeight="SemiBold" Margin="0,0,0,4"/>
             
-            <StackPanel Grid.Column="2" Spacing="4">
-              <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="哈希值:" FontWeight="Medium" />
-                <Button Content="复制" Command="{Binding CopyHashCommand}" 
-                       IsEnabled="{Binding HashOutput, Converter={StaticResource StringToBoolConverter}}" />
-              </StackPanel>
-              <TextBox Text="{Binding HashOutput}" 
-                      IsReadOnly="True" 
-                      FontFamily="Consolas"
-                      Watermark="哈希值将显示在这里" />
-            </StackPanel>
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                     Text="{Binding KeyText}" 
+                     Watermark="输入密钥（十六进制格式）"
+                     FontFamily="Consolas"/>
+            
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="初始化向量 (IV)" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            
+            <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                     Text="{Binding IvText}" 
+                     Watermark="输入IV（十六进制格式，可选）"
+                     FontFamily="Consolas"/>
           </Grid>
         </StackPanel>
       </Border>
-      
-      <!-- HMAC计算区域 -->
-      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
-        <StackPanel Spacing="12">
-          <TextBlock Text="HMAC计算" FontSize="18" FontWeight="SemiBold" />
+
+      <!-- 输入输出区域 -->
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 输入区域 -->
+        <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
+            
+            <TextBox Text="{Binding InputText}" 
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap" 
+                     Height="200" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     Watermark="输入要加密或解密的文本" />
+            
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="从文件加载" Command="{Binding EncryptCommand}"/>
+              <Button Content="清空" Command="{Binding ClearAllCommand}"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        
+        <!-- 操作按钮 -->
+        <StackPanel Grid.Column="1" Spacing="12" Margin="16,20,16,0" VerticalAlignment="Center">
+          <Button Content="加密" 
+                  Command="{Binding EncryptCommand}" 
+                  Width="100"
+                  Height="40"
+                  FontWeight="Bold"/>
+          <Button Content="解密" 
+                  Command="{Binding DecryptCommand}" 
+                  Width="100"
+                  Height="40"
+                  FontWeight="Bold"/>
+          <Button Content="交换" 
+                  Command="{Binding SwapInputOutputCommand}" 
+                  Width="100"/>
+        </StackPanel>
+        
+        <!-- 输出区域 -->
+        <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="输出结果" FontWeight="Bold" FontSize="16"/>
+            
+            <TextBox Text="{Binding OutputText}" 
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap" 
+                     Height="200" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     Background="#F8F9FA"/>
+            
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="复制结果" Command="{Binding CopyOutputCommand}"/>
+              <Button Content="保存到文件" Command="{Binding ClearAllCommand}"/>
+              <Button Content="清空" Command="{Binding ClearAllCommand}"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 哈希工具 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="哈希工具" FontWeight="Bold" FontSize="16"/>
           
-          <Grid ColumnDefinitions="*,Auto,*,Auto" Margin="0,8">
-            <StackPanel Grid.Column="0" Spacing="4">
-              <TextBlock Text="HMAC密钥:" FontWeight="Medium" />
-              <TextBox Text="{Binding HmacKey}" 
-                      Watermark="输入HMAC密钥" />
-            </StackPanel>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             
-            <Button Grid.Column="1" Content="计算HMAC" 
-                   Command="{Binding ComputeHmacCommand}" 
-                   Margin="16,20,16,0" 
-                   VerticalAlignment="Top" />
+            <TextBlock Grid.Column="0" Text="算法：" VerticalAlignment="Center" Margin="0,0,8,0"/>
             
-            <StackPanel Grid.Column="2" Spacing="4">
-              <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="HMAC值:" FontWeight="Medium" />
-                <Button Content="复制" Command="{Binding CopyHmacCommand}" 
-                       IsEnabled="{Binding HmacOutput, Converter={StaticResource StringToBoolConverter}}" />
-              </StackPanel>
-              <TextBox Text="{Binding HmacOutput}" 
-                      IsReadOnly="True" 
-                      FontFamily="Consolas"
-                      Watermark="HMAC值将显示在这里" />
-            </StackPanel>
+            <ComboBox Grid.Column="1" 
+                      SelectedItem="{Binding SelectedHashAlgorithm}"
+                      Margin="0,0,8,0">
+              <ComboBoxItem Content="MD5"/>
+              <ComboBoxItem Content="SHA1"/>
+              <ComboBoxItem Content="SHA256"/>
+              <ComboBoxItem Content="SHA384"/>
+              <ComboBoxItem Content="SHA512"/>
+            </ComboBox>
+            
+            <Button Grid.Column="2" Content="计算哈希" Command="{Binding ComputeHashCommand}"/>
           </Grid>
+          
+          <TextBox Text="{Binding HashOutput}" 
+                   IsReadOnly="True"
+                   FontFamily="Consolas"
+                   Background="#F8F9FA"
+                   Watermark="哈希结果将显示在这里"/>
         </StackPanel>
       </Border>
-      
-      <!-- 控制按钮 -->
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
-        <Button Content="清空所有" Command="{Binding ClearAllCommand}" />
-      </StackPanel>
-      
-      <!-- 验证消息 -->
-      <TextBlock Text="{Binding ValidationMessage}" 
-                HorizontalAlignment="Center" 
-                FontWeight="Medium"
-                Foreground="{Binding IsValidInput, Converter={StaticResource BoolToColorConverter}}" />
-      
+
       <!-- 使用说明 -->
-      <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16" Background="#F9F9F9">
-        <StackPanel Spacing="8">
-          <TextBlock Text="使用说明:" FontWeight="SemiBold" />
-          <TextBlock TextWrapping="Wrap">
-            <Run Text="• 对称加密：支持AES、DES、TripleDES、RC2算法" />
-            <LineBreak />
-            <Run Text="• 加密模式：CBC、ECB、CFB、OFB" />
-            <LineBreak />
-            <Run Text="• 填充模式：PKCS7、Zeros、None" />
-            <LineBreak />
-            <Run Text="• 哈希算法：MD5、SHA1、SHA256、SHA384、SHA512" />
-            <LineBreak />
-            <Run Text="• HMAC：基于哈希的消息认证码" />
-            <LineBreak />
-            <Run Text="• 密钥和IV使用十六进制格式，可点击生成按钮自动生成" />
-            <LineBreak />
-            <Run Text="• 加密输出为十六进制格式，解密时请确保输入为十六进制" />
-          </TextBlock>
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="12" Margin="10">
+          <TextBlock Text="加密算法说明" FontWeight="SemiBold"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• AES：高级加密标准，安全性高，推荐使用"/>
+            <TextBlock Text="• DES：数据加密标准，安全性较低，不推荐"/>
+            <TextBlock Text="• 3DES：三重DES，安全性中等"/>
+            <TextBlock Text="• RC4：流加密算法，速度快但安全性有争议"/>
+          </StackPanel>
+          
+          <TextBlock Text="加密模式说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• CBC：密码块链接模式，需要IV，安全性高"/>
+            <TextBlock Text="• ECB：电子密码本模式，不需要IV，安全性低"/>
+            <TextBlock Text="• CFB：密码反馈模式，需要IV"/>
+            <TextBlock Text="• OFB：输出反馈模式，需要IV"/>
+          </StackPanel>
+          
+          <TextBlock Text="填充模式说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• PKCS7：标准填充模式，推荐使用"/>
+            <TextBlock Text="• None：无填充，数据长度必须是块大小的倍数"/>
+            <TextBlock Text="• Zeros：零填充"/>
+          </StackPanel>
+          
+          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 密钥长度：AES支持128/192/256位，DES为64位，3DES为192位"/>
+            <TextBlock Text="• IV长度：通常与算法块大小相同（AES为128位，DES为64位）"/>
+            <TextBlock Text="• 加密前请确保密钥和IV的长度正确"/>
+            <TextBlock Text="• 解密时必须使用相同的算法、模式、填充和密钥"/>
+          </StackPanel>
         </StackPanel>
-      </Border>
-      
+      </Expander>
     </StackPanel>
   </ScrollViewer>
-  
 </UserControl>

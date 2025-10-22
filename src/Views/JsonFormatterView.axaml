@@ -1,15 +1,15 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
-             xmlns:converters="using:DevUtilities.Converters"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="DevUtilities.Views.JsonFormatterView"
              x:DataType="vm:JsonFormatterViewModel">
 
+  <Design.DataContext>
+    <vm:JsonFormatterViewModel/>
+  </Design.DataContext>
+
   <ScrollViewer>
-    <StackPanel Spacing="20" Margin="20">
+    <StackPanel Margin="20" Spacing="20">
       
       <!-- 标题区域 -->
       <StackPanel Spacing="6">
@@ -17,260 +17,244 @@
                    FontSize="26" 
                    FontWeight="Bold" 
                    Foreground="{DynamicResource SystemAccentColor}"/>
-        <TextBlock Text="格式化、压缩和验证JSON数据" 
-                   FontSize="13" 
-                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        <TextBlock Text="JSON格式化、验证和美化工具" 
+                   FontSize="14" 
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
       </StackPanel>
-      
-      <!-- 控制面板 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="12"
-              Padding="20"
-              BoxShadow="0 2 8 0 #10000000">
-        <StackPanel Spacing="16">
-          <TextBlock Text="格式化选项与操作" FontWeight="SemiBold" FontSize="16"/>
-          
-          <!-- 选项设置 -->
-          <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
-            <!-- 缩进大小 -->
-            <StackPanel Grid.Column="0" Spacing="6">
-              <TextBlock Text="缩进大小" FontWeight="SemiBold" FontSize="13"/>
-              <NumericUpDown Value="{Binding IndentSize}" 
-                             Minimum="1" 
-                             Maximum="8" 
-                             Height="32"
-                             HorizontalAlignment="Stretch"/>
-            </StackPanel>
-            
-            <!-- 属性排序选项 -->
-            <StackPanel Grid.Column="1" Spacing="6">
-              <TextBlock Text="属性排序" FontWeight="SemiBold" FontSize="13"/>
-              <ToggleSwitch IsChecked="{Binding SortProperties}"
-                            OnContent="按字母排序"
-                            OffContent="保持原序"
-                            Height="32"
-                            HorizontalAlignment="Stretch"/>
-            </StackPanel>
-            
-            <!-- 输出格式 -->
-            <StackPanel Grid.Column="2" Spacing="6">
-              <TextBlock Text="输出格式" FontWeight="SemiBold" FontSize="13"/>
-              <ToggleSwitch IsChecked="{Binding CompactOutput}"
-                            OnContent="压缩格式"
-                            OffContent="格式化"
-                            Height="32"
-                            HorizontalAlignment="Stretch"/>
-            </StackPanel>
-          </Grid>
-          
-          <!-- 操作按钮 - 统一样式 -->
-          <Grid ColumnDefinitions="*,*,*,*,*,*" ColumnSpacing="8">
-            <Button Grid.Column="0" 
-                    Content="✨ 格式化" 
-                    Command="{Binding FormatCommand}"
-                    Classes="accent"
-                    Height="36"
-                    Padding="12,8"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="格式化JSON (Ctrl+F)"/>
-            <Button Grid.Column="1" 
-                    Content="🔍 验证" 
-                    Command="{Binding ValidateCommand}"
-                    Height="36"
-                    Padding="12,8"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="验证JSON (Ctrl+V)"/>
-            <Button Grid.Column="2" 
-                    Content="📋 复制" 
-                    Command="{Binding CopyCommand}"
-                    Height="36"
-                    Padding="12,8"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="复制输出 (Ctrl+C)"/>
-            <Button Grid.Column="3" 
-                    Content="🔄 交换" 
-                    Command="{Binding SwapInputOutputCommand}"
-                    Height="36"
-                    Padding="12,8"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="交换输入输出 (Ctrl+S)"/>
-            <Button Grid.Column="4" 
-                    Content="📝 示例" 
-                    Command="{Binding UseExampleCommand}"
-                    Height="36"
-                    Padding="12,8"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="使用示例 (Ctrl+E)"/>
-            <Button Grid.Column="5" 
-                    Content="🗑️ 清空" 
-                    Command="{Binding ClearCommand}"
-                    Height="36"
-                    Padding="12,8"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="清空所有内容 (Ctrl+L)"/>
-          </Grid>
-          
-          <!-- 快速操作按钮 -->
-          <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
-            <Button Grid.Column="0" 
-                    Content="🔤 排序属性" 
-                    Command="{Binding SortJsonPropertiesCommand}"
-                    Classes="tool-button"
-                    Height="32"
-                    Padding="10,6"
-                    FontSize="12"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="切换属性排序 (Alt+S)"/>
-            <Button Grid.Column="1" 
-                    Content="📐 美化格式" 
-                    Command="{Binding BeautifyJsonCommand}"
-                    Classes="tool-button"
-                    Height="32"
-                    Padding="10,6"
-                    FontSize="12"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="美化JSON格式 (Alt+F)"/>
-            <Button Grid.Column="2" 
-                    Content="📦 压缩格式" 
-                    Command="{Binding MinifyJsonCommand}"
-                    Classes="tool-button"
-                    Height="32"
-                    Padding="10,6"
-                    FontSize="12"
-                    FontWeight="SemiBold"
-                    ToolTip.Tip="压缩JSON (Alt+M)"/>
-          </Grid>
-        </StackPanel>
-      </Border>
 
-      <!-- 验证消息区域 -->
-      <Border Background="{Binding IsValid, Converter={x:Static converters:BooleanToColorConverter.Instance}}" 
-              CornerRadius="8"
-              Padding="12"
-              BoxShadow="0 1 4 0 #10000000"
-              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringIsNotNullOrEmptyConverter.Instance}}">
-        <StackPanel Orientation="Horizontal" Spacing="10">
-          <TextBlock Text="{Binding IsValid, Converter={x:Static converters:BooleanToIconConverter.Instance}}" 
-                     FontSize="14" 
-                     VerticalAlignment="Center"/>
-          <TextBlock Text="{Binding ValidationMessage}" 
-                     FontWeight="Medium"
-                     FontSize="13"
-                     VerticalAlignment="Center"
-                     TextWrapping="Wrap"/>
+      <!-- 格式化选项区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+              CornerRadius="8" 
+              Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+            <!-- 缩进设置 -->
+            <StackPanel Grid.Column="0" Grid.Row="0" Spacing="6" Margin="0,0,10,0">
+              <TextBlock Text="缩进大小"/>
+              <ComboBox SelectedIndex="1" HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="2个空格"/>
+                <ComboBoxItem Content="4个空格"/>
+                <ComboBoxItem Content="Tab缩进"/>
+              </ComboBox>
+            </StackPanel>
+            
+            <!-- 排序选项 -->
+            <StackPanel Grid.Column="1" Grid.Row="0" Spacing="8" Margin="10,0,10,0">
+              <CheckBox Content="排序属性" IsChecked="{Binding SortProperties}"/>
+              <CheckBox Content="移除空白字符"/>
+              <CheckBox Content="转义Unicode"/>
+            </StackPanel>
+            
+            <!-- 验证选项 -->
+            <StackPanel Grid.Column="2" Grid.Row="0" Spacing="8" Margin="10,0,0,0">
+              <CheckBox Content="严格验证"/>
+              <CheckBox Content="允许注释"/>
+              <CheckBox Content="允许尾随逗号"/>
+            </StackPanel>
+          </Grid>
         </StackPanel>
       </Border>
 
       <!-- 输入输出区域 -->
-      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,*" RowSpacing="12">
+      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,*">
         
-        <!-- 输入区域标题 -->
-        <StackPanel Grid.Column="0" Grid.Row="0" Spacing="6">
-          <TextBlock Text="输入JSON" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          <TextBlock Text="在此输入需要格式化的JSON数据" 
-                     FontSize="11" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-        
-        <!-- 输出区域标题 -->
-        <StackPanel Grid.Column="2" Grid.Row="0" Spacing="6">
-          <TextBlock Text="格式化结果" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          <TextBlock Text="格式化后的JSON将显示在这里" 
-                     FontSize="11" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        <!-- 输入区域 -->
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
+          <TextBlock Text="JSON输入" FontWeight="SemiBold" FontSize="16"/>
+          <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+                  CornerRadius="8" 
+                  Padding="12"
+                  Height="400">
+            <Grid RowDefinitions="*,Auto">
+              <TextBox Grid.Row="0"
+                      Text="{Binding InputText}" 
+                      AcceptsReturn="True" 
+                      TextWrapping="Wrap"
+                      FontFamily="Consolas"
+                      FontSize="13"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      Watermark="在此输入JSON数据..."/>
+              
+              <!-- 输入区域按钮 -->
+              <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+                <Button Content="粘贴" Command="{Binding CopyCommand}" Classes="accent"/>
+                <Button Content="清空" Command="{Binding ClearCommand}"/>
+                <Button Content="从文件加载" Command="{Binding FormatCommand}"/>
+                <Button Content="示例JSON" Command="{Binding ValidateCommand}"/>
+              </StackPanel>
+            </Grid>
+          </Border>
         </StackPanel>
 
-        <!-- 输入区域 -->
-        <Border Grid.Column="0" Grid.Row="1" 
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="16"
-                MinHeight="380"
-                BoxShadow="0 2 8 0 #10000000">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox Text="{Binding InputText}" 
-                     AcceptsReturn="True"
-                     TextWrapping="NoWrap"
-                     FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
-                     FontSize="13"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     LineHeight="18"
-                     Watermark="请输入JSON数据..."/>
-          </ScrollViewer>
-        </Border>
+        <!-- 分隔符 -->
+        <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" 
+                Background="{DynamicResource SystemControlForegroundBaseLowBrush}" 
+                Width="1" 
+                Margin="0,30,0,0"/>
 
         <!-- 输出区域 -->
-        <Border Grid.Column="2" Grid.Row="1" 
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="16"
-                MinHeight="380"
-                BoxShadow="0 2 8 0 #10000000">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <SelectableTextBlock Text="{Binding OutputText}" 
-                                 FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
-                                 FontSize="13"
-                                 TextWrapping="NoWrap"
-                                 LineHeight="18"/>
-          </ScrollViewer>
-        </Border>
-
+        <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
+          <TextBlock Text="格式化输出" FontWeight="SemiBold" FontSize="16"/>
+          <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+                  CornerRadius="8" 
+                  Padding="12"
+                  Height="400">
+            <Grid RowDefinitions="*,Auto">
+              <TextBox Grid.Row="0"
+                      Text="{Binding OutputText}" 
+                      AcceptsReturn="True" 
+                      TextWrapping="Wrap"
+                      FontFamily="Consolas"
+                      FontSize="13"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      IsReadOnly="True"
+                      Watermark="格式化结果将显示在这里..."/>
+              
+              <!-- 输出区域按钮 -->
+              <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+                <Button Content="复制" Command="{Binding CopyCommand}" Classes="accent"/>
+                <Button Content="保存" Command="{Binding FormatCommand}"/>
+                <Button Content="压缩" Command="{Binding MinifyJsonCommand}"/>
+                <Button Content="验证" Command="{Binding ValidateCommand}"/>
+              </StackPanel>
+            </Grid>
+          </Border>
+        </StackPanel>
       </Grid>
 
-          <!-- 使用说明区域 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="12"
-              Padding="20"
-              BoxShadow="0 2 8 0 #10000000">
+      <!-- 格式化按钮 -->
+      <Button Content="🚀 格式化JSON" 
+              Command="{Binding FormatCommand}" 
+              HorizontalAlignment="Center"
+              Classes="accent"
+              FontSize="16"
+              Padding="24,12"
+              ToolTip.Tip="格式化JSON (Ctrl+F)"/>
+
+      <!-- 快速操作区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+              CornerRadius="8" 
+              Padding="16">
         <StackPanel Spacing="12">
-          <StackPanel Orientation="Horizontal" Spacing="10">
-            <TextBlock Text="💡" FontSize="16" VerticalAlignment="Center"/>
-            <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center"/>
-          </StackPanel>
-          <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
-            <!-- 基本功能 -->
-            <StackPanel Grid.Column="0" Spacing="6">
-              <TextBlock Text="基本功能" FontWeight="SemiBold" FontSize="13"/>
-              <TextBlock TextWrapping="Wrap" 
-                         FontSize="12" 
-                         LineHeight="18"
-                         Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                • 在左侧输入框中粘贴或输入JSON数据<LineBreak/>
-                • 点击"格式化"按钮美化JSON格式<LineBreak/>
-                • 点击"验证"按钮检查JSON格式是否正确<LineBreak/>
-                • 支持大型JSON文件的处理和格式化
-              </TextBlock>
+          <TextBlock Text="快速操作" FontWeight="SemiBold" FontSize="16"/>
+          
+          <WrapPanel Orientation="Horizontal" ItemWidth="180" ItemHeight="40">
+            <Button Content="美化JSON" Command="{Binding BeautifyJsonCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="压缩JSON" Command="{Binding MinifyJsonCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="验证JSON" Command="{Binding ValidateCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="排序属性" Command="{Binding SortJsonPropertiesCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="移除注释" Command="{Binding MinifyJsonCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="转义字符" Command="{Binding BeautifyJsonCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- JSON工具区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+              CornerRadius="8" 
+              Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="JSON工具" FontWeight="SemiBold" FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+            <!-- 路径查询 -->
+            <StackPanel Grid.Column="0" Grid.Row="0" Spacing="6" Margin="0,0,10,0">
+              <TextBlock Text="JSONPath查询"/>
+              <TextBox Watermark="$.store.book[0].title" FontFamily="Consolas"/>
+              <Button Content="查询" HorizontalAlignment="Stretch"/>
             </StackPanel>
             
-            <!-- 高级选项 -->
-            <StackPanel Grid.Column="1" Spacing="6">
-              <TextBlock Text="高级选项" FontWeight="SemiBold" FontSize="13"/>
-              <TextBlock TextWrapping="Wrap" 
-                         FontSize="12" 
-                         LineHeight="18"
-                         Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                • 调整缩进大小（1-8个空格）<LineBreak/>
-                • 启用属性排序（按字母顺序）<LineBreak/>
-                • 切换压缩/格式化输出模式<LineBreak/>
-                • 输入内容会自动进行实时格式验证
-              </TextBlock>
+            <!-- 数据统计 -->
+            <StackPanel Grid.Column="1" Grid.Row="0" Spacing="6" Margin="10,0,10,0">
+              <TextBlock Text="数据统计"/>
+              <TextBlock Text="对象: 0 | 数组: 0" FontFamily="Consolas" FontSize="12"/>
+              <TextBlock Text="字符: 0 | 行数: 0" FontFamily="Consolas" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- 转换工具 -->
+            <StackPanel Grid.Column="2" Grid.Row="0" Spacing="6" Margin="10,0,0,0">
+              <TextBlock Text="格式转换"/>
+              <Button Content="转为XML" HorizontalAlignment="Stretch"/>
+              <Button Content="转为YAML" HorizontalAlignment="Stretch"/>
             </StackPanel>
           </Grid>
         </StackPanel>
       </Border>
 
+      <!-- 文件操作区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+              CornerRadius="8" 
+              Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="文件操作" FontWeight="SemiBold" FontSize="16"/>
+          
+          <WrapPanel Orientation="Horizontal" ItemWidth="150" ItemHeight="35">
+            <Button Content="选择文件" Command="{Binding ClearCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="加载文件" Command="{Binding FormatCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="保存文件" Command="{Binding CopyCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="批量处理" Command="{Binding ValidateCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="导出报告" Command="{Binding SortJsonPropertiesCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+            <Button Content="比较JSON" Command="{Binding MinifyJsonCommand}" 
+                   HorizontalAlignment="Stretch" Margin="4"/>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 错误信息显示 -->
+      <Border Background="{DynamicResource SystemFillColorCriticalBrush}" 
+              CornerRadius="8" 
+              Padding="12"
+              IsVisible="{Binding HasError}">
+        <StackPanel Spacing="8">
+          <TextBlock Text="错误信息" FontWeight="SemiBold" Foreground="White"/>
+          <TextBox Text="{Binding ErrorMessage}" 
+                  IsReadOnly="True" 
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Foreground="White"
+                  TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+                CornerRadius="8" 
+                Padding="16">
+          <StackPanel Spacing="8">
+            <TextBlock Text="基本功能：" FontWeight="SemiBold"/>
+            <TextBlock Text="• 格式化和美化JSON数据" TextWrapping="Wrap"/>
+            <TextBlock Text="• 验证JSON语法的正确性" TextWrapping="Wrap"/>
+            <TextBlock Text="• 压缩JSON以减少文件大小" TextWrapping="Wrap"/>
+            
+            <TextBlock Text="高级功能：" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <TextBlock Text="• JSONPath查询和数据提取" TextWrapping="Wrap"/>
+            <TextBlock Text="• 属性排序和结构优化" TextWrapping="Wrap"/>
+            <TextBlock Text="• 批量文件处理和格式转换" TextWrapping="Wrap"/>
+            
+            <TextBlock Text="快捷键：" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <TextBlock Text="• Ctrl+F: 格式化JSON" TextWrapping="Wrap"/>
+            <TextBlock Text="• Ctrl+V: 粘贴内容" TextWrapping="Wrap"/>
+            <TextBlock Text="• Ctrl+C: 复制结果" TextWrapping="Wrap"/>
+          </StackPanel>
+        </Border>
+      </Expander>
+
     </StackPanel>
   </ScrollViewer>
-
 </UserControl>

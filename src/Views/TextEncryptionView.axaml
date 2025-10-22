@@ -1,0 +1,128 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.TextEncryptionView"
+             x:DataType="vm:TextEncryptionViewModel">
+
+  <Design.DataContext>
+    <vm:TextEncryptionViewModel/>
+  </Design.DataContext>
+
+  <ScrollViewer>
+    <StackPanel Spacing="20">
+      
+      <!-- Title -->
+      <TextBlock Text="文本加解密工具" FontSize="24" FontWeight="Bold" Foreground="#333333"/>
+      
+      <!-- Mode Selection -->
+      <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="加密模式" FontSize="16" FontWeight="SemiBold"/>
+          <StackPanel Orientation="Horizontal" Spacing="20">
+            <RadioButton Content="加密" IsChecked="{Binding IsEncryptMode}" GroupName="Mode"/>
+            <RadioButton Content="解密" IsChecked="{Binding !IsEncryptMode}" GroupName="Mode"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Algorithm Settings -->
+      <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="算法设置" FontSize="16" FontWeight="SemiBold"/>
+          
+          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+            <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4" Margin="0,0,6,0">
+              <TextBlock Text="加密算法"/>
+              <ComboBox ItemsSource="{Binding EncryptionAlgorithms}" 
+                       SelectedItem="{Binding SelectedAlgorithm}"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4" Margin="6,0,6,0">
+              <TextBlock Text="加密模式"/>
+              <ComboBox ItemsSource="{Binding CipherModes}" 
+                       SelectedItem="{Binding SelectedMode}"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Grid.Row="0" Spacing="4" Margin="6,0,0,0">
+              <TextBlock Text="填充模式"/>
+              <ComboBox ItemsSource="{Binding PaddingModes}" 
+                       SelectedItem="{Binding SelectedPadding}"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Key and IV Settings -->
+      <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="密钥设置" FontSize="16" FontWeight="SemiBold"/>
+          
+          <StackPanel Spacing="8">
+            <TextBlock Text="加密密钥"/>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox Grid.Column="0" Text="{Binding EncryptionKey}" 
+                      Watermark="输入或生成加密密钥" Margin="0,0,8,0"/>
+              <Button Grid.Column="1" Content="生成密钥" 
+                     Command="{Binding GenerateKeyCommand}"/>
+            </Grid>
+          </StackPanel>
+          
+          <StackPanel Spacing="8">
+            <TextBlock Text="初始化向量 (IV)"/>
+            <TextBox Text="{Binding InitializationVector}" 
+                    Watermark="自动生成或手动输入"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Input Text -->
+      <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="输入文本" FontSize="16" FontWeight="SemiBold"/>
+          <TextBox Text="{Binding InputText}" 
+                  AcceptsReturn="True" 
+                  Height="120" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  Watermark="请输入要加密或解密的文本"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Action Buttons -->
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+        <Button Content="处理文本" Command="{Binding ProcessTextCommand}" 
+               Background="#007ACC" Foreground="White" Padding="16,8"/>
+        <Button Content="交换输入输出" Command="{Binding SwapInputOutputCommand}" 
+               Background="#28A745" Foreground="White" Padding="16,8"/>
+        <Button Content="清空所有" Command="{Binding ClearAllCommand}" 
+               Background="#DC3545" Foreground="White" Padding="16,8"/>
+      </StackPanel>
+
+      <!-- Output Text -->
+      <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="12">
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Text="输出结果" FontSize="16" FontWeight="SemiBold"/>
+            <Button Content="复制结果" 
+                   Command="{Binding CopyToClipboardCommand}" 
+                   CommandParameter="{Binding OutputText}"
+                   Background="#6C757D" Foreground="White" Padding="8,4"/>
+          </StackPanel>
+          <TextBox Text="{Binding OutputText}" 
+                  AcceptsReturn="True" 
+                  Height="120" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  IsReadOnly="True"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Status Message -->
+      <Border Background="#E9ECEF" CornerRadius="8" Padding="12" 
+             IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <TextBlock Text="{Binding StatusMessage}" 
+                  FontWeight="Medium" 
+                  Foreground="#495057"/>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

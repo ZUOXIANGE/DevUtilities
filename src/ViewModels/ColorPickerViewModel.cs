@@ -62,13 +62,17 @@ public partial class ColorPickerViewModel : ObservableObject
     [ObservableProperty]
     private bool hasError = false;
 
-    public ObservableCollection<string> ColorFormats { get; } = new()
+    [ObservableProperty]
+    private ObservableCollection<string> colorFormats = new()
     {
         "HEX", "RGB", "HSL", "HSV", "CMYK"
     };
 
-    public ObservableCollection<ColorSwatch> ColorHistory { get; } = new();
-    public ObservableCollection<ColorSwatch> PresetColors { get; } = new();
+    [ObservableProperty]
+    private ObservableCollection<ColorSwatch> colorHistory = new();
+    
+    [ObservableProperty]
+    private ObservableCollection<ColorSwatch> presetColors = new();
 
     private bool _isUpdating = false;
 
@@ -284,6 +288,21 @@ public partial class ColorPickerViewModel : ObservableObject
     private void ClearHistory()
     {
         ColorHistory.Clear();
+    }
+
+    [RelayCommand]
+    private void Copy(string format)
+    {
+        string textToCopy = format switch
+        {
+            "HEX" => HexColor,
+            "RGB" => RgbString,
+            "HSL" => HslString,
+            "HSV" => HsvString,
+            "CMYK" => CmykString,
+            _ => HexColor
+        };
+        CopyToClipboard(textToCopy);
     }
 
     private void UpdateFromRgb()

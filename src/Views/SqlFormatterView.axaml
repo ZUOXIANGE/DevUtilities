@@ -1,230 +1,147 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
-             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="DevUtilities.Views.SqlFormatterView"
              x:DataType="vm:SqlFormatterViewModel">
+  
+  <Design.DataContext>
+    <vm:SqlFormatterViewModel/>
+  </Design.DataContext>
 
-  <ScrollViewer>
-    <StackPanel Spacing="24" Margin="24">
-      
-      <!-- 标题区域 -->
+  <Grid RowDefinitions="Auto,*">
+    
+    <!-- 标题区域 -->
+    <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,16">
       <StackPanel Spacing="8">
-        <TextBlock Text="SQL格式化器" 
-                   FontSize="28" 
-                   FontWeight="Bold" 
-                   Foreground="{DynamicResource SystemAccentColor}"/>
-        <TextBlock Text="格式化、压缩和验证SQL查询语句" 
-                   FontSize="14" 
-                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        <TextBlock Text="SQL格式化器" FontSize="24" FontWeight="Bold" />
+        <TextBlock Text="格式化和美化SQL语句，支持多种数据库方言" FontSize="14" Foreground="#666666" />
       </StackPanel>
-      
-      <!-- 控制面板 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="12"
-              Padding="24"
-              BoxShadow="0 2 8 0 #10000000">
-        <StackPanel Spacing="20">
-          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="18"/>
-          
-          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="16" ColumnSpacing="20">
-            <!-- 第一行选项 -->
-            <StackPanel Grid.Column="0" Spacing="8">
-              <TextBlock Text="SQL方言" FontWeight="SemiBold"/>
-              <ComboBox ItemsSource="{Binding AvailableDialects}"
-                        SelectedItem="{Binding SelectedDialect}"
-                        HorizontalAlignment="Stretch"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="1" Spacing="8">
-              <TextBlock Text="缩进大小" FontWeight="SemiBold"/>
-              <NumericUpDown Value="{Binding IndentSize}" 
-                             Minimum="1" 
-                             Maximum="8" 
-                             HorizontalAlignment="Stretch"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="2" Spacing="8">
-              <TextBlock Text="格式选项" FontWeight="SemiBold"/>
-              <CheckBox Content="关键字大写" IsChecked="{Binding UppercaseKeywords}"/>
-            </StackPanel>
-
-            <!-- 第二行选项 -->
-            <CheckBox Grid.Row="1" Grid.Column="0" 
-                      Content="添加换行符" 
-                      IsChecked="{Binding AddLineBreaks}"/>
+    </Border>
+    
+    <!-- 主内容区域 -->
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+      <Grid RowDefinitions="Auto,*" Margin="20">
+        
+        <!-- 格式化选项 -->
+        <Border Grid.Row="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+          <Grid ColumnDefinitions="*,*,*,Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="12">
             
-            <CheckBox Grid.Row="1" Grid.Column="1" 
-                      Content="对齐列名" 
-                      IsChecked="{Binding AlignColumns}"/>
+            <!-- 第一行选项 -->
+            <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
+              <TextBlock Text="数据库方言:" FontWeight="Medium" />
+              <ComboBox ItemsSource="{Binding AvailableDialects}" 
+                       SelectedItem="{Binding SelectedDialect}" 
+                       MinWidth="120"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Row="0" Grid.Column="1" Spacing="8">
+              <TextBlock Text="格式选项:" FontWeight="Medium" />
+              <StackPanel Spacing="4">
+                <CheckBox Content="关键字大写" IsChecked="{Binding UppercaseKeywords}" />
+                <CheckBox Content="添加换行符" IsChecked="{Binding AddLineBreaks}" />
+              </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
+              <TextBlock Text="其他选项:" FontWeight="Medium" />
+              <StackPanel Spacing="4">
+                <CheckBox Content="对齐列名" IsChecked="{Binding AlignColumns}" />
+                <CheckBox Content="压缩输出" IsChecked="{Binding CompactOutput}" />
+              </StackPanel>
+            </StackPanel>
+            
+            <!-- 操作按钮 -->
+            <Button Grid.Row="0" Grid.Column="3" Content="格式化" Command="{Binding FormatCommand}" 
+                   Background="#007ACC" Foreground="White" Padding="12,6" Margin="16,0,8,0"/>
+            <Button Grid.Row="0" Grid.Column="4" Content="美化" Command="{Binding BeautifySqlCommand}" 
+                   Background="#28A745" Foreground="White" Padding="12,6" Margin="8,0"/>
+            <Button Grid.Row="0" Grid.Column="5" Content="压缩" Command="{Binding MinifySqlCommand}" 
+                   Background="#6C757D" Foreground="White" Padding="12,6" Margin="8,0,0,0"/>
+            
+            <!-- 第二行选项 -->
+            <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
+              <TextBlock Text="缩进设置:" FontWeight="Medium" />
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="大小:" VerticalAlignment="Center"/>
+                <NumericUpDown Value="{Binding IndentSize}" Minimum="1" Maximum="8" Width="60"/>
+                <CheckBox Content="使用Tab" IsChecked="{Binding UseTabsForIndent}" />
+              </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
+              <TextBlock Text="快速操作:" FontWeight="Medium" />
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="验证" Command="{Binding ValidateCommand}" 
+                       Background="#17A2B8" Foreground="White" Padding="8,4"/>
+                <Button Content="交换" Command="{Binding SwapInputOutputCommand}" 
+                       Background="#6C757D" Foreground="White" Padding="8,4"/>
+                <Button Content="清除" Command="{Binding ClearAll}" 
+                        Background="#DC3545" Foreground="White" Padding="8,4"/>
+              </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Grid.Row="1" Grid.Column="2" Spacing="8">
+              <TextBlock Text="示例:" FontWeight="Medium" />
+              <Button Content="加载示例" Command="{Binding UseExampleCommand}" 
+                     Background="#28A745" Foreground="White" Padding="8,4"/>
+            </StackPanel>
           </Grid>
-        </StackPanel>
-      </Border>
-
-      <!-- 操作按钮区域 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="12"
-              Padding="20"
-              BoxShadow="0 2 8 0 #10000000">
-        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
-          <Button Content="格式化" 
-                  Command="{Binding FormatCommand}"
-                  Classes="accent"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="格式化SQL (Ctrl+F)"/>
-          <Button Content="压缩" 
-                  Command="{Binding CompressCommand}"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="压缩SQL (Ctrl+M)"/>
-          <Button Content="验证" 
-                  Command="{Binding ValidateCommand}"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="验证SQL (Ctrl+V)"/>
-          <Button Content="交换" 
-                  Command="{Binding SwapInputOutputCommand}"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="交换输入输出 (Ctrl+S)"/>
-          <Button Content="示例" 
-                  Command="{Binding UseExampleCommand}"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="使用示例 (Ctrl+E)"/>
-          <Button Content="清空" 
-                  Command="{Binding ClearCommand}"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="清空所有内容 (Ctrl+L)"/>
-          <Button Content="复制" 
-                  Command="{Binding CopyCommand}"
-                  Classes="accent"
-                  Padding="24,12"
-                  FontWeight="SemiBold"
-                  ToolTip.Tip="复制输出 (Ctrl+C)"/>
-        </StackPanel>
-      </Border>
-
-      <!-- 验证消息区域 -->
-      <Border Background="{Binding IsValid, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
-              CornerRadius="8"
-              Padding="16"
-              BoxShadow="0 2 4 0 #10000000"
-              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringIsNotNullOrEmptyConverter.Instance}}">
-        <StackPanel Orientation="Horizontal" Spacing="12">
-          <TextBlock Text="🔍" FontSize="16" VerticalAlignment="Center"/>
-          <TextBlock Text="{Binding ValidationMessage}"
-                     FontWeight="Medium"
-                     VerticalAlignment="Center"
-                     TextWrapping="Wrap"/>
-        </StackPanel>
-      </Border>
-
-      <!-- 输入输出区域 -->
-      <Grid ColumnDefinitions="*,24,*" RowDefinitions="Auto,*" RowSpacing="16">
-        
-        <!-- 输入区域标题 -->
-        <StackPanel Grid.Column="0" Grid.Row="0" Spacing="8">
-          <TextBlock Text="输入SQL" 
-                     FontWeight="SemiBold" 
-                     FontSize="18"/>
-          <TextBlock Text="在此输入需要格式化的SQL语句" 
-                     FontSize="12" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-        
-        <!-- 输出区域标题 -->
-        <StackPanel Grid.Column="2" Grid.Row="0" Spacing="8">
-          <TextBlock Text="格式化结果" 
-                     FontWeight="SemiBold" 
-                     FontSize="18"/>
-          <TextBlock Text="格式化后的SQL将显示在这里" 
-                     FontSize="12" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-
-        <!-- 输入区域 -->
-        <Border Grid.Column="0" Grid.Row="1" 
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="20"
-                MinHeight="400"
-                BoxShadow="0 2 8 0 #10000000">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox Text="{Binding InputText}"
-                     AcceptsReturn="True"
-                     TextWrapping="NoWrap"
-                     FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
-                     FontSize="14"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     LineHeight="20"
-                     Watermark="请输入SQL语句..."/>
-          </ScrollViewer>
         </Border>
-
-        <!-- 输出区域 -->
-        <Border Grid.Column="2" Grid.Row="1" 
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="20"
-                MinHeight="400"
-                BoxShadow="0 2 8 0 #10000000">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <SelectableTextBlock Text="{Binding OutputText}"
-                                 FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
-                                 FontSize="14"
-                                 TextWrapping="NoWrap"
-                                 LineHeight="20"/>
-          </ScrollViewer>
+        
+        <!-- 输入输出区域 -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+          
+          <!-- 输入区域 -->
+          <Border Grid.Column="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,8,0">
+            <StackPanel Spacing="12">
+              <TextBlock Text="输入SQL" FontSize="16" FontWeight="SemiBold"/>
+              <TextBox Text="{Binding InputText}" 
+                      AcceptsReturn="True" 
+                      Height="400" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      FontFamily="Consolas,Monaco,monospace"
+                      FontSize="12"
+                      Watermark="请输入SQL语句..."/>
+            </StackPanel>
+          </Border>
+          
+          <!-- 输出区域 -->
+          <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="8,0,0,0">
+            <StackPanel Spacing="12">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" Text="格式化结果" FontSize="16" FontWeight="SemiBold"/>
+                <Button Grid.Column="1" Content="复制" Command="{Binding CopyCommand}" 
+                         Background="#28A745" Foreground="White" Padding="8,4"/>
+              </Grid>
+              <TextBox Text="{Binding OutputText}" 
+                      AcceptsReturn="True" 
+                      Height="400" 
+                      IsReadOnly="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      FontFamily="Consolas,Monaco,monospace"
+                      FontSize="12"
+                      Background="White"
+                      Watermark="格式化结果将显示在这里"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+        
+        <!-- 状态信息 -->
+        <Border Grid.Row="2" Background="#E8F4FD" BorderBrush="#BEE5EB" BorderThickness="1" 
+               CornerRadius="4" Padding="12" Margin="0,16,0,0"
+               IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <Grid ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Text="ℹ️" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBlock Grid.Column="1" Text="{Binding ValidationMessage}" TextWrapping="Wrap" VerticalAlignment="Center" />
+          </Grid>
         </Border>
+        
       </Grid>
-
-      <!-- 使用说明区域 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="12"
-              Padding="24"
-              BoxShadow="0 2 8 0 #10000000">
-        <StackPanel Spacing="16">
-          <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="💡" FontSize="20" VerticalAlignment="Center"/>
-            <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
-          </StackPanel>
-          <TextBlock TextWrapping="Wrap" 
-                     FontSize="14" 
-                     LineHeight="22"
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-            • 格式化：美化SQL语句，添加适当的缩进和换行，提高可读性
-            • 压缩：移除多余的空白字符，生成紧凑的SQL语句
-            • 验证：检查SQL语法的基本正确性和结构问题
-            • 支持多种SQL方言：Standard SQL、MySQL、PostgreSQL、SQL Server、Oracle、SQLite
-            • 可自定义缩进大小、关键字大小写、换行和列对齐选项
-            • 支持复杂查询语句的格式化，包括子查询、联接和函数
-          </TextBlock>
-        </StackPanel>
-      </Border>
-
-      <!-- 示例SQL -->
-      <Expander Header="SQL示例" IsExpanded="False">
-        <Border Background="{DynamicResource LayerFillColorDefaultBrush}"
-                CornerRadius="5"
-                Padding="15">
-          <StackPanel Spacing="10">
-            <TextBlock Text="📝 复杂查询示例" FontWeight="SemiBold"/>
-            <TextBox Text="SELECT u.id, u.name, u.email, p.title, p.content, c.name as category FROM users u LEFT JOIN posts p ON u.id = p.user_id INNER JOIN categories c ON p.category_id = c.id WHERE u.status = 'active' AND p.published_at > '2023-01-01' ORDER BY p.published_at DESC, u.name ASC LIMIT 10;"
-                     IsReadOnly="True"
-                     FontFamily="Consolas"
-                     FontSize="11"
-                     TextWrapping="Wrap"
-                     Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                     Padding="10"/>
-          </StackPanel>
-        </Border>
-      </Expander>
-
-    </StackPanel>
-  </ScrollViewer>
-
+    </ScrollViewer>
+  </Grid>
 </UserControl>

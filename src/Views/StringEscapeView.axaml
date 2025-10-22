@@ -1,157 +1,108 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
-             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="DevUtilities.Views.StringEscapeView"
              x:DataType="vm:StringEscapeViewModel">
+  
+  <Design.DataContext>
+    <vm:StringEscapeViewModel/>
+  </Design.DataContext>
 
-  <Grid RowDefinitions="Auto,*,Auto,*,Auto" Margin="20">
+  <Grid RowDefinitions="Auto,*">
     
-    <!-- 标题和控制区域 -->
-    <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="15" Margin="0,0,0,20">
-      <TextBlock Text="字符串转义/反转义工具" 
-                 FontSize="24" 
-                 FontWeight="Bold" 
-                 HorizontalAlignment="Center"/>
-      
-      <!-- 转义类型选择和模式切换 -->
-      <Grid ColumnDefinitions="*,Auto,Auto">
-        <ComboBox Grid.Column="0" 
-                  ItemsSource="{Binding EscapeTypes}"
-                  SelectedItem="{Binding SelectedEscapeType}"
-                  HorizontalAlignment="Stretch"
-                  Margin="0,0,10,0"/>
-        
-        <ToggleButton Grid.Column="1" 
-                      IsChecked="{Binding IsEscapeMode}"
-                      Content="{Binding IsEscapeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='转义|反转义'}"
-                      Margin="0,0,10,0"
-                      Padding="15,5"/>
-        
-        <Button Grid.Column="2" 
-                Content="交换输入输出"
-                Command="{Binding SwapInputOutputCommand}"
-                Padding="15,5"/>
-      </Grid>
-      
-      <!-- 快速示例按钮 -->
-      <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-        <Button Content="JSON示例" 
-                Command="{Binding UseExampleCommand}" 
-                CommandParameter="Hello &quot;World&quot;&#10;New Line&#9;Tab"
-                Classes="accent"/>
-        <Button Content="HTML示例" 
-                Command="{Binding UseExampleCommand}" 
-                CommandParameter="&lt;div class=&quot;test&quot;&gt;Hello &amp; Welcome&lt;/div&gt;"/>
-        <Button Content="URL示例" 
-                Command="{Binding UseExampleCommand}" 
-                CommandParameter="https://example.com/search?q=hello world&amp;type=text"/>
-        <Button Content="Unicode示例" 
-                Command="{Binding UseExampleCommand}" 
-                CommandParameter="你好世界 Hello 🌍"/>
+    <!-- 标题区域 -->
+    <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,16">
+      <StackPanel Spacing="8">
+        <TextBlock Text="字符串转义/反转义工具" FontSize="24" FontWeight="Bold" />
+        <TextBlock Text="支持多种编程语言和格式的字符串转义处理" FontSize="14" Foreground="#666666" />
       </StackPanel>
-    </StackPanel>
-
-    <!-- 输入区域 -->
-    <Border Grid.Row="1" 
-            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}" 
-            BorderThickness="1" 
-            CornerRadius="5"
-            Padding="10">
-      <Grid RowDefinitions="Auto,*">
-        <TextBlock Grid.Row="0" 
-                   Text="输入文本:" 
-                   FontWeight="SemiBold" 
-                   Margin="0,0,0,5"/>
-        <TextBox Grid.Row="1" 
-                 Text="{Binding InputText}"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 MinHeight="150"
-                 FontFamily="Consolas,Monaco,monospace"/>
-      </Grid>
     </Border>
-
-    <!-- 分隔符和操作按钮 -->
-    <StackPanel Grid.Row="2" 
-                Orientation="Horizontal" 
-                HorizontalAlignment="Center" 
-                Spacing="15" 
-                Margin="0,15">
-      <Button Content="处理字符串" 
-              Command="{Binding ProcessStringCommand}"
-              Classes="accent"
-              Padding="20,8"/>
-      <Button Content="清空所有" 
-              Command="{Binding ClearAllCommand}"
-              Padding="20,8"/>
-    </StackPanel>
-
-    <!-- 输出区域 -->
-    <Border Grid.Row="3" 
-            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}" 
-            BorderThickness="1" 
-            CornerRadius="5"
-            Padding="10">
-      <Grid RowDefinitions="Auto,*">
-        <TextBlock Grid.Row="0" 
-                   Text="输出结果:" 
-                   FontWeight="SemiBold" 
-                   Margin="0,0,0,5"/>
-        <TextBox Grid.Row="1" 
-                 Text="{Binding OutputText}"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 MinHeight="150"
-                 IsReadOnly="True"
-                 FontFamily="Consolas,Monaco,monospace"
-                 Background="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+    
+    <!-- 主内容区域 -->
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+      <Grid RowDefinitions="Auto,*" Margin="20">
+        
+        <!-- 工具栏 -->
+        <Border Grid.Row="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+          <Grid ColumnDefinitions="*,*,Auto,Auto,Auto">
+            
+            <!-- 转义类型选择 -->
+            <StackPanel Grid.Column="0" Spacing="8">
+              <TextBlock Text="转义类型:" FontWeight="Medium" />
+              <ComboBox ItemsSource="{Binding EscapeTypes}" 
+                       SelectedItem="{Binding SelectedEscapeType}" 
+                       MinWidth="150"/>
+            </StackPanel>
+            
+            <!-- 模式选择 -->
+            <StackPanel Grid.Column="1" Spacing="8" Margin="20,0,0,0">
+              <TextBlock Text="操作模式:" FontWeight="Medium" />
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <RadioButton Content="转义" IsChecked="{Binding IsEscapeMode}" />
+                <RadioButton Content="反转义" IsChecked="{Binding !IsEscapeMode}" />
+              </StackPanel>
+            </StackPanel>
+            
+            <!-- 操作按钮 -->
+            <Button Grid.Column="2" Content="处理" Command="{Binding ProcessStringCommand}" 
+                   Background="#007ACC" Foreground="White" Padding="12,6" Margin="20,0,8,0"/>
+            <Button Grid.Column="3" Content="交换" Command="{Binding SwapInputOutputCommand}" 
+                   Background="#6C757D" Foreground="White" Padding="12,6" Margin="8,0"/>
+            <Button Grid.Column="4" Content="清除" Command="{Binding ClearAllCommand}" 
+                   Background="#DC3545" Foreground="White" Padding="12,6" Margin="8,0,0,0"/>
+          </Grid>
+        </Border>
+        
+        <!-- 输入输出区域 -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+          
+          <!-- 输入区域 -->
+          <Border Grid.Column="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,8,0">
+            <StackPanel Spacing="12">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" Text="输入文本" FontSize="16" FontWeight="SemiBold"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                  <Button Content="示例1" Command="{Binding UseExampleCommand}" 
+                         CommandParameter="Hello &quot;World&quot;&#10;New Line&#9;Tab"
+                         Background="#28A745" Foreground="White" Padding="6,3" FontSize="12"/>
+                  <Button Content="示例2" Command="{Binding UseExampleCommand}" 
+                         CommandParameter="&lt;tag&gt;content&lt;/tag&gt;"
+                         Background="#28A745" Foreground="White" Padding="6,3" FontSize="12"/>
+                </StackPanel>
+              </Grid>
+              <TextBox Text="{Binding InputText}" 
+                      AcceptsReturn="True" 
+                      Height="400" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      FontFamily="Consolas,Monaco,monospace"
+                      FontSize="12"
+                      Watermark="请输入需要转义的文本"/>
+            </StackPanel>
+          </Border>
+          
+          <!-- 输出区域 -->
+          <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="8,0,0,0">
+            <StackPanel Spacing="12">
+              <TextBlock Text="输出结果" FontSize="16" FontWeight="SemiBold"/>
+              <TextBox Text="{Binding OutputText}" 
+                      AcceptsReturn="True" 
+                      Height="400" 
+                      IsReadOnly="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      FontFamily="Consolas,Monaco,monospace"
+                      FontSize="12"
+                      Background="White"
+                      Watermark="转义结果将显示在这里"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+        
       </Grid>
-    </Border>
-
-    <!-- 帮助信息 -->
-    <Expander Grid.Row="4" 
-              Header="转义类型说明" 
-              Margin="0,15,0,0">
-      <ScrollViewer MaxHeight="200">
-        <StackPanel Spacing="10" Margin="10">
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">JSON转义:</Run> 用于JSON字符串中的特殊字符转义
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">JavaScript转义:</Run> 用于JavaScript字符串字面量
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">C#字符串转义:</Run> 用于C#字符串字面量中的特殊字符
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">Java字符串转义:</Run> 用于Java字符串字面量
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">Python字符串转义:</Run> 用于Python字符串字面量
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">XML/HTML转义:</Run> 用于XML和HTML文档中的特殊字符
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">URL转义:</Run> 用于URL中的特殊字符编码
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">SQL转义:</Run> 用于SQL查询中的单引号转义
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">正则表达式转义:</Run> 转义正则表达式中的特殊字符
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">CSV转义:</Run> 用于CSV文件中包含逗号、引号的字段
-          </TextBlock>
-          <TextBlock TextWrapping="Wrap">
-            <Run FontWeight="Bold">Unicode转义:</Run> 将非ASCII字符转换为Unicode转义序列
-          </TextBlock>
-        </StackPanel>
-      </ScrollViewer>
-    </Expander>
+    </ScrollViewer>
   </Grid>
 </UserControl>

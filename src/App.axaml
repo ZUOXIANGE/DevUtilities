@@ -80,6 +80,15 @@
     <DataTemplate DataType="{x:Type vm:JsonExampleGeneratorViewModel}">
       <views:JsonExampleGeneratorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HashGeneratorViewModel}">
+      <views:HashGeneratorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TextEncryptionViewModel}">
+      <views:TextEncryptionView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DockerComposeConverterViewModel}">
+      <views:DockerComposeConverterView/>
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Styles>
@@ -90,17 +99,59 @@
       <Setter Property="Background" Value="#F5F5F5"/>
     </Style>
     
+    <!-- Modern Tool Button Styles -->
+    <Style Selector="Button.modern-tool-button">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="20"/>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    
+    <Style Selector="Button.modern-tool-button:pointerover">
+      <Setter Property="Opacity" Value="0.8"/>
+    </Style>
+    
+    <Style Selector="Button.modern-tool-button:pressed">
+      <Setter Property="Opacity" Value="0.6"/>
+    </Style>
+    
+    <Style Selector="TextBlock.modern-tool-title">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="#2D3748"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+      <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+    
+    <Style Selector="TextBlock.modern-tool-description">
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Foreground" Value="#718096"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="LineHeight" Value="18"/>
+      <Setter Property="MaxWidth" Value="180"/>
+    </Style>
+
+    <!-- Window Background -->
+    <Style Selector="Window">
+      <Setter Property="Background" Value="#F8FAFC"/>
+    </Style>
+    
     <Style Selector="Button.tool-button">
       <Setter Property="Background" Value="White"/>
       <Setter Property="BorderBrush" Value="#E0E0E0"/>
       <Setter Property="BorderThickness" Value="1"/>
       <Setter Property="CornerRadius" Value="8"/>
       <Setter Property="Padding" Value="16,16"/>
-      <Setter Property="Margin" Value="8"/>
+      <Setter Property="Margin" Value="16"/>
       <Setter Property="Height" Value="140"/>
       <Setter Property="Width" Value="160"/>
       <Setter Property="HorizontalContentAlignment" Value="Center"/>
       <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
     
     <Style Selector="Button.tool-button:pointerover">

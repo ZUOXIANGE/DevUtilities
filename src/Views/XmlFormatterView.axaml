@@ -1,177 +1,147 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
              xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DevUtilities.Views.XmlFormatterView"
              x:DataType="vm:XmlFormatterViewModel">
-
+  
   <ScrollViewer>
-    <StackPanel Spacing="20" Margin="20">
+    <StackPanel Margin="20" Spacing="20">
       
       <!-- 标题 -->
       <TextBlock Text="XML格式化器" 
                  FontSize="24" 
                  FontWeight="Bold" 
-                 Foreground="{DynamicResource SystemAccentColor}"/>
+                 HorizontalAlignment="Center"/>
       
-      <!-- 控制面板 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="8"
-              Padding="20">
-        <StackPanel Spacing="15">
-          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="16"/>
+      <!-- 输入区域 -->
+      <StackPanel Spacing="10">
+        <TextBlock Text="输入XML内容:" FontWeight="SemiBold"/>
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto,Auto">
+          <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                   Text="{Binding InputText}"
+                   Watermark="{Binding InputPlaceholder}"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   Height="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
           
-          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
-            <!-- 第一行选项 -->
-            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,10,0">
-              <TextBlock Text="缩进大小" FontWeight="SemiBold"/>
-              <NumericUpDown Value="{Binding IndentSize}" 
-                             Minimum="1" 
-                             Maximum="8" 
-                             HorizontalAlignment="Stretch"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="1" Spacing="8" Margin="10,0">
-              <TextBlock Text="XML选项" FontWeight="SemiBold"/>
-              <CheckBox Content="移除注释" IsChecked="{Binding RemoveComments}"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="2" Spacing="8" Margin="10,0,0,0">
-              <TextBlock Text="高级选项" FontWeight="SemiBold"/>
-              <CheckBox Content="移除空白" IsChecked="{Binding RemoveWhitespace}"/>
-            </StackPanel>
-
-            <!-- 第二行选项 -->
-            <CheckBox Grid.Row="1" Grid.Column="0" 
-                      Content="排序属性" 
-                      IsChecked="{Binding SortAttributes}"
-                      Margin="0,10,0,0"/>
-          </Grid>
-        </StackPanel>
-      </Border>
-
+          <Button Grid.Row="0" Grid.Column="1" 
+                  Content="清空" 
+                  Command="{Binding ClearCommand}"
+                  Margin="5,0,0,5"/>
+          
+          <Button Grid.Row="0" Grid.Column="2" 
+                  Content="示例" 
+                  Command="{Binding UseExampleCommand}"
+                  Margin="5,0,0,5"/>
+        </Grid>
+      </StackPanel>
+      
+      <!-- 格式化选项 -->
+      <StackPanel Spacing="10">
+        <TextBlock Text="格式化选项:" FontWeight="SemiBold"/>
+        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*">
+          <!-- 第一行选项 -->
+          <CheckBox Grid.Row="0" Grid.Column="0" 
+                    Content="移除注释" 
+                    IsChecked="{Binding RemoveComments}"/>
+          
+          <CheckBox Grid.Row="0" Grid.Column="1" 
+                    Content="移除空白字符" 
+                    IsChecked="{Binding RemoveWhitespace}"
+                    Margin="20,0,0,0"/>
+          
+          <CheckBox Grid.Row="0" Grid.Column="2" 
+                    Content="缩进大小" 
+                    Margin="20,0,0,0"/>
+          
+          <!-- 第二行选项 -->
+          <CheckBox Grid.Row="1" Grid.Column="0" 
+                    Content="排序属性" 
+                    IsChecked="{Binding SortAttributes}"
+                    Margin="0,10,0,0"/>
+          
+          <CheckBox Grid.Row="1" Grid.Column="1" 
+                    Content="验证XML" 
+                    Margin="20,10,0,0"/>
+          
+          <CheckBox Grid.Row="1" Grid.Column="2" 
+                    Content="显示行号" 
+                    Margin="20,10,0,0"/>
+        </Grid>
+      </StackPanel>
+      
       <!-- 操作按钮 -->
       <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
         <Button Content="格式化" 
                 Command="{Binding FormatCommand}"
-                Classes="accent"
-                Padding="20,8"
-                ToolTip.Tip="格式化XML (Ctrl+F)"/>
+                Background="DodgerBlue"
+                Foreground="White"
+                Padding="20,8"/>
+        
         <Button Content="压缩" 
                 Command="{Binding CompressCommand}"
-                Padding="20,8"
-                ToolTip.Tip="压缩XML (Ctrl+M)"/>
+                Padding="20,8"/>
+        
         <Button Content="验证" 
                 Command="{Binding ValidateCommand}"
-                Padding="20,8"
-                ToolTip.Tip="验证XML (Ctrl+V)"/>
+                Padding="20,8"/>
+        
         <Button Content="交换" 
                 Command="{Binding SwapInputOutputCommand}"
-                Padding="20,8"
-                ToolTip.Tip="交换输入输出 (Ctrl+S)"/>
-        <Button Content="示例" 
-                Command="{Binding UseExampleCommand}"
-                Padding="20,8"
-                ToolTip.Tip="使用示例 (Ctrl+E)"/>
-        <Button Content="清空" 
-                Command="{Binding ClearCommand}"
-                Padding="20,8"
-                ToolTip.Tip="清空所有内容 (Ctrl+L)"/>
+                Padding="20,8"/>
       </StackPanel>
-
-      <!-- 验证消息 -->
-      <Border Background="{DynamicResource InfoBarInformationalSeverityBackgroundBrush}"
-              BorderBrush="{DynamicResource InfoBarInformationalSeverityBorderBrush}"
-              BorderThickness="1"
-              CornerRadius="4"
-              Padding="12"
-              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}">
-        <StackPanel Orientation="Horizontal" Spacing="8">
-          <TextBlock Text="ℹ️" FontSize="16" VerticalAlignment="Center"/>
-          <TextBlock Text="{Binding ValidationMessage}" 
-                     TextWrapping="Wrap" 
-                     VerticalAlignment="Center"/>
-        </StackPanel>
-      </Border>
-
-      <!-- 输入输出区域 -->
-      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,*">
-        <!-- 输入区域标题 -->
-        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
-          <TextBlock Text="输入" FontWeight="SemiBold" FontSize="16"/>
-          <TextBlock Text="{Binding InputCharCount, StringFormat='({0} 字符)'}" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-
-        <!-- 输出区域标题 -->
-        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
-          <TextBlock Text="输出" FontWeight="SemiBold" FontSize="16"/>
-          <TextBlock Text="{Binding OutputCharCount, StringFormat='({0} 字符)'}" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-
-        <!-- 输入文本框 -->
-        <Border Grid.Row="1" Grid.Column="0" 
-                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="4">
-          <TextBox Text="{Binding InputText}"
-                   Watermark="{Binding InputPlaceholder}"
-                   AcceptsReturn="True"
-                   TextWrapping="Wrap"
-                   FontFamily="Consolas,Monaco,Courier New,monospace"
-                   FontSize="13"
-                   MinHeight="300"
-                   Padding="12"
-                   BorderThickness="0"
-                   Background="Transparent"/>
-        </Border>
-
-        <!-- 输出文本框 -->
-        <Border Grid.Row="1" Grid.Column="2" 
-                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="4">
-          <TextBox Text="{Binding OutputText}"
+      
+      <!-- 输出区域 -->
+      <StackPanel Spacing="10">
+        <TextBlock Text="格式化结果:" FontWeight="SemiBold"/>
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
+          <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding OutputText}"
                    Watermark="{Binding OutputPlaceholder}"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
-                   FontFamily="Consolas,Monaco,Courier New,monospace"
-                   FontSize="13"
-                   MinHeight="300"
-                   Padding="12"
-                   BorderThickness="0"
-                   Background="Transparent"
-                   IsReadOnly="True"/>
-        </Border>
-      </Grid>
-
-      <!-- 状态栏 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="4"
-              Padding="12">
-        <Grid ColumnDefinitions="Auto,*,Auto">
-          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
-            <TextBlock Text="处理完成" 
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-            <TextBlock Text="压缩完成" 
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                       IsVisible="{Binding CompactOutput}"/>
-          </StackPanel>
-
-          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
-            <Button Content="复制输出" 
-                    Command="{Binding CopyCommand}"
-                    Classes="subtle"
-                    Padding="12,6"
-                    ToolTip.Tip="复制输出到剪贴板 (Ctrl+C)"/>
-          </StackPanel>
+                   IsReadOnly="True"
+                   Height="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+          
+          <Button Grid.Row="0" Grid.Column="1" 
+                  Content="复制" 
+                  Command="{Binding CopyCommand}"
+                  Margin="5,0,0,5"/>
         </Grid>
+      </StackPanel>
+      
+      <!-- 验证消息显示 -->
+      <Border Background="LightBlue" 
+              CornerRadius="5" 
+              Padding="10"
+              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}">
+        <TextBlock Text="{Binding ValidationMessage}" 
+                   Foreground="DarkBlue" 
+                   TextWrapping="Wrap"/>
       </Border>
-
+      
+      <!-- 错误信息显示 -->
+      <Border Background="LightCoral" 
+              CornerRadius="5" 
+              Padding="10"
+              IsVisible="{Binding HasError}">
+        <TextBlock Text="{Binding ErrorMessage}" 
+                   Foreground="White" 
+                   TextWrapping="Wrap"/>
+      </Border>
+      
+      <!-- 加载指示器 -->
+      <ProgressBar IsIndeterminate="True" 
+                   IsVisible="{Binding IsLoading}"
+                   Height="4"/>
+      
     </StackPanel>
   </ScrollViewer>
-
+  
 </UserControl>

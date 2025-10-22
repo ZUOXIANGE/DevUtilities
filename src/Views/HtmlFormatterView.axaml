@@ -1,231 +1,249 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
-             xmlns:converters="using:DevUtilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DevUtilities.Views.HtmlFormatterView"
              x:DataType="vm:HtmlFormatterViewModel">
-
-  <ScrollViewer>
-    <StackPanel Spacing="20" Margin="20">
-      
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" Spacing="20">
       <!-- 标题 -->
       <TextBlock Text="HTML格式化器" 
                  FontSize="24" 
                  FontWeight="Bold" 
-                 Foreground="{DynamicResource SystemAccentColor}"/>
+                 HorizontalAlignment="Center"/>
       
-      <!-- 控制面板 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="8"
-              Padding="20">
-        <StackPanel Spacing="15">
-          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="16"/>
+      <TextBlock Text="HTML代码格式化、美化和验证工具" 
+                 FontSize="14" 
+                 HorizontalAlignment="Center"
+                 Foreground="Gray" 
+                 Margin="0,0,0,16"/>
+
+      <!-- 格式化选项 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="格式化选项" FontWeight="Bold" FontSize="16"/>
           
-          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
-            <!-- 第一行选项 -->
-            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,10,0">
-              <TextBlock Text="文档类型" FontWeight="SemiBold"/>
-              <ComboBox ItemsSource="{Binding AvailableDoctypes}"
-                        SelectedItem="{Binding SelectedDoctype}"
-                        HorizontalAlignment="Stretch"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="1" Spacing="8" Margin="10,0">
-              <TextBlock Text="缩进大小" FontWeight="SemiBold"/>
-              <NumericUpDown Value="{Binding IndentSize}" 
-                             Minimum="1" 
-                             Maximum="8" 
-                             HorizontalAlignment="Stretch"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="2" Spacing="8" Margin="10,0,0,0">
-              <TextBlock Text="基本选项" FontWeight="SemiBold"/>
-              <CheckBox Content="添加换行符" IsChecked="{Binding AddLineBreaks}"/>
-            </StackPanel>
-
-            <!-- 第二行选项 -->
-            <CheckBox Grid.Row="1" Grid.Column="0" 
-                      Content="格式化属性" 
-                      IsChecked="{Binding FormatAttributes}"
-                      Margin="0,10,0,0"/>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             
-            <CheckBox Grid.Row="1" Grid.Column="1" 
-                      Content="排序属性" 
-                      IsChecked="{Binding SortAttributes}"
-                      Margin="10,10,0,0"/>
-
-            <CheckBox Grid.Row="1" Grid.Column="2" 
-                      Content="保留空白" 
-                      IsChecked="{Binding PreserveWhitespace}"
-                      Margin="10,10,0,0"/>
-
-            <!-- 第三行选项 -->
-            <CheckBox Grid.Row="2" Grid.Column="0" 
-                      Content="移除注释" 
-                      IsChecked="{Binding RemoveComments}"
-                      Margin="0,10,0,0"/>
+            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,16,0">
+              <TextBlock Text="基本选项" FontWeight="SemiBold"/>
+              <CheckBox Content="格式化属性" IsChecked="{Binding FormatAttributes}"/>
+              <CheckBox Content="添加换行" IsChecked="{Binding AddLineBreaks}"/>
+              <CheckBox Content="保留空白" IsChecked="{Binding PreserveWhitespace}"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="8" Margin="0,0,16,0">
+              <TextBlock Text="高级选项" FontWeight="SemiBold"/>
+              <CheckBox Content="排序属性" IsChecked="{Binding SortAttributes}"/>
+              <CheckBox Content="移除注释" IsChecked="{Binding RemoveComments}"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Spacing="8">
+              <TextBlock Text="文档类型" FontWeight="SemiBold"/>
+              <ComboBox SelectedItem="{Binding SelectedDoctype}"
+                        ItemsSource="{Binding AvailableDoctypes}"
+                        Width="150"/>
+            </StackPanel>
           </Grid>
         </StackPanel>
       </Border>
 
-      <!-- 操作按钮 -->
-      <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-        <Button Content="格式化" 
-                Command="{Binding FormatCommand}"
-                Classes="accent"
-                Padding="20,8"
-                ToolTip.Tip="格式化HTML (Ctrl+F)"/>
-        <Button Content="压缩" 
-                Command="{Binding CompressCommand}"
-                Padding="20,8"
-                ToolTip.Tip="压缩HTML (Ctrl+M)"/>
-        <Button Content="验证" 
-                Command="{Binding ValidateCommand}"
-                Padding="20,8"
-                ToolTip.Tip="验证HTML (Ctrl+V)"/>
-        <Button Content="交换" 
-                Command="{Binding SwapInputOutputCommand}"
-                Padding="20,8"
-                ToolTip.Tip="交换输入输出 (Ctrl+S)"/>
-        <Button Content="示例" 
-                Command="{Binding UseExampleCommand}"
-                Padding="20,8"
-                ToolTip.Tip="使用示例 (Ctrl+E)"/>
-        <Button Content="清空" 
-                Command="{Binding ClearCommand}"
-                Padding="20,8"
-                ToolTip.Tip="清空所有内容 (Ctrl+L)"/>
-      </StackPanel>
-
-      <!-- 验证消息 -->
-      <Border Background="{Binding IsValid, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
-              CornerRadius="5"
-              Padding="10"
-              IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringIsNotNullOrEmptyConverter.Instance}}">
-        <TextBlock Text="{Binding ValidationMessage}"
-                   Foreground="{Binding IsValid, Converter={x:Static converters:BooleanToColorConverter.Instance}}"
-                   TextWrapping="Wrap"/>
-      </Border>
-
-      <!-- 输入输出区域 -->
-      <Grid ColumnDefinitions="*,24,*" RowDefinitions="Auto,*" RowSpacing="16">
-        
-        <!-- 输入区域标题 -->
-        <StackPanel Grid.Column="0" Grid.Row="0" Spacing="8">
-          <TextBlock Text="输入HTML" 
-                     FontWeight="SemiBold" 
-                     FontSize="18"/>
-          <TextBlock Text="在此输入需要格式化的HTML代码" 
-                     FontSize="12" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-        
-        <!-- 输出区域标题 -->
-        <StackPanel Grid.Column="2" Grid.Row="0" Spacing="8">
-          <TextBlock Text="格式化结果" 
-                     FontWeight="SemiBold" 
-                     FontSize="18"/>
-          <TextBlock Text="格式化后的HTML将显示在这里" 
-                     FontSize="12" 
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
-
-        <!-- 输入区域 -->
-        <Border Grid.Column="0" Grid.Row="1" 
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="20"
-                MinHeight="400"
-                BoxShadow="0 2 8 0 #10000000">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox Text="{Binding InputText}"
-                     AcceptsReturn="True"
-                     TextWrapping="NoWrap"
-                     FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
-                     FontSize="14"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     LineHeight="20"
-                     Watermark="请输入HTML代码..."/>
-          </ScrollViewer>
-        </Border>
-
-        <!-- 输出区域 -->
-        <Border Grid.Column="2" Grid.Row="1" 
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="20"
-                MinHeight="400"
-                BoxShadow="0 2 8 0 #10000000">
-          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <SelectableTextBlock Text="{Binding OutputText}"
-                                 FontFamily="JetBrains Mono,Consolas,Monaco,monospace"
-                                 FontSize="14"
-                                 TextWrapping="NoWrap"
-                                 LineHeight="20"/>
-          </ScrollViewer>
-        </Border>
-      </Grid>
-
-      <!-- 使用说明区域 -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="12"
-              Padding="24"
-              BoxShadow="0 2 8 0 #10000000">
-        <StackPanel Spacing="16">
-          <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="💡" FontSize="20" VerticalAlignment="Center"/>
-            <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
+      <!-- 输入区域 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="HTML输入" FontWeight="Bold" FontSize="16"/>
+          
+          <TextBox Text="{Binding InputText}" 
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap" 
+                   Height="200" 
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   FontFamily="Consolas"
+                   Watermark="输入要格式化的HTML代码" />
+          
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="格式化" Command="{Binding FormatCommand}"/>
+            <Button Content="压缩" Command="{Binding ValidateCommand}"/>
+            <Button Content="验证" Command="{Binding ValidateCommand}"/>
+            <Button Content="清空" Command="{Binding ClearCommand}"/>
+            <Button Content="从剪贴板粘贴" Command="{Binding FormatCommand}"/>
           </StackPanel>
-          <TextBlock TextWrapping="Wrap" 
-                     FontSize="14" 
-                     LineHeight="22"
-                     Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-            • 格式化：美化HTML代码，添加适当的缩进和换行，提高可读性
-            • 压缩：移除多余的空白字符和注释，生成紧凑的HTML代码
-            • 验证：检查HTML标签的基本正确性和结构问题
-            • 支持多种文档类型：HTML5、XHTML、HTML4等
-            • 可自定义缩进大小、属性格式化、空白处理和注释移除选项
-            • 支持复杂HTML结构的格式化，包括嵌套标签和内联样式
-          </TextBlock>
+          
+          <TextBlock Text="{Binding ValidationMessage}" 
+                     Foreground="Red" 
+                     IsVisible="False"
+                     FontWeight="SemiBold"/>
         </StackPanel>
       </Border>
 
-      <!-- 示例HTML -->
-      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              CornerRadius="8"
-              Padding="20">
-        <StackPanel Spacing="10">
-          <TextBlock Text="📝 示例HTML结构" FontWeight="SemiBold" FontSize="16"/>
-          <ScrollViewer MaxHeight="200" HorizontalScrollBarVisibility="Auto">
-            <SelectableTextBlock FontFamily="Consolas,Monaco,monospace" FontSize="11" TextWrapping="NoWrap">
-              <Run Text="&lt;!DOCTYPE html&gt;"/>
-              <LineBreak/>
-              <Run Text="&lt;html lang=&quot;zh-CN&quot;&gt;"/>
-              <LineBreak/>
-              <Run Text="  &lt;head&gt;"/>
-              <LineBreak/>
-              <Run Text="    &lt;meta charset=&quot;UTF-8&quot;&gt;"/>
-              <LineBreak/>
-              <Run Text="    &lt;title&gt;页面标题&lt;/title&gt;"/>
-              <LineBreak/>
-              <Run Text="  &lt;/head&gt;"/>
-              <LineBreak/>
-              <Run Text="  &lt;body&gt;"/>
-              <LineBreak/>
-              <Run Text="    &lt;h1&gt;主标题&lt;/h1&gt;"/>
-              <LineBreak/>
-              <Run Text="    &lt;p&gt;段落内容&lt;/p&gt;"/>
-              <LineBreak/>
-              <Run Text="  &lt;/body&gt;"/>
-              <LineBreak/>
-              <Run Text="&lt;/html&gt;"/>
-            </SelectableTextBlock>
-          </ScrollViewer>
+      <!-- 输出区域 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="格式化输出" FontWeight="Bold" FontSize="16"/>
+          
+          <TextBox Text="{Binding OutputText}" 
+                   IsReadOnly="True"
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap" 
+                   Height="200" 
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   FontFamily="Consolas"
+                   Background="#F8F9FA" />
+          
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="复制结果" Command="{Binding FormatCommand}"/>
+            <Button Content="保存到文件" Command="{Binding ValidateCommand}"/>
+            <Button Content="预览HTML" Command="{Binding ClearCommand}"/>
+          </StackPanel>
         </StackPanel>
       </Border>
 
+      <!-- HTML标签工具 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="HTML标签工具" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,16,0">
+              <TextBlock Text="常用标签" FontWeight="SemiBold"/>
+              <WrapPanel>
+                <Button Content="&lt;div&gt;" Command="{Binding FormatCommand}" CommandParameter="div" Margin="2"/>
+                <Button Content="&lt;span&gt;" Command="{Binding FormatCommand}" CommandParameter="span" Margin="2"/>
+                <Button Content="&lt;p&gt;" Command="{Binding FormatCommand}" CommandParameter="p" Margin="2"/>
+                <Button Content="&lt;a&gt;" Command="{Binding ValidateCommand}" CommandParameter="a" Margin="2"/>
+                <Button Content="&lt;img&gt;" Command="{Binding ValidateCommand}" CommandParameter="img" Margin="2"/>
+                <Button Content="&lt;table&gt;" Command="{Binding ClearCommand}" CommandParameter="table" Margin="2"/>
+              </WrapPanel>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="8">
+              <TextBlock Text="HTML实体" FontWeight="SemiBold"/>
+              <WrapPanel>
+                <Button Content="&amp;lt;" Command="{Binding FormatCommand}" CommandParameter="&lt;" Margin="2"/>
+                <Button Content="&amp;gt;" Command="{Binding FormatCommand}" CommandParameter="&gt;" Margin="2"/>
+                <Button Content="&amp;amp;" Command="{Binding ValidateCommand}" CommandParameter="&amp;" Margin="2"/>
+                <Button Content="&amp;quot;" Command="{Binding ValidateCommand}" CommandParameter="&quot;" Margin="2"/>
+                <Button Content="&amp;#160;" Command="{Binding ClearCommand}" CommandParameter="&#160;" Margin="2"/>
+              </WrapPanel>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- HTML分析 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="HTML分析" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,16,0">
+              <TextBlock Text="统计信息" FontWeight="SemiBold"/>
+              <TextBlock Text="标签数量: 0" FontSize="12"/>
+              <TextBlock Text="属性数量: 0" FontSize="12"/>
+              <TextBlock Text="行数: 0" FontSize="12"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,16,0">
+              <TextBlock Text="验证结果" FontWeight="SemiBold"/>
+              <TextBlock Text="等待验证" FontSize="12" Foreground="Gray"/>
+              <TextBlock Text="错误: 0" FontSize="12" Foreground="Red"/>
+              <TextBlock Text="警告: 0" FontSize="12" Foreground="Orange"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Spacing="4">
+              <TextBlock Text="操作" FontWeight="SemiBold"/>
+              <Button Content="提取链接" Command="{Binding FormatCommand}" HorizontalAlignment="Left"/>
+              <Button Content="提取图片" Command="{Binding ValidateCommand}" HorizontalAlignment="Left"/>
+              <Button Content="生成大纲" Command="{Binding ClearCommand}" HorizontalAlignment="Left"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 文件操作 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="文件操作" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Grid.Column="0" 
+                     Text="未选择文件" 
+                     IsReadOnly="True"
+                     Watermark="选择HTML文件"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="1" Content="选择文件" Command="{Binding FormatCommand}" Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="加载文件" Command="{Binding ValidateCommand}"/>
+          </Grid>
+          
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <Button Content="批量格式化" Command="{Binding FormatCommand}"/>
+            <Button Content="导出为PDF" Command="{Binding ValidateCommand}"/>
+            <Button Content="生成缩略图" Command="{Binding ClearCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="12" Margin="10">
+          <TextBlock Text="格式化选项说明" FontWeight="SemiBold"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 格式化属性：自动整理HTML标签属性的格式"/>
+            <TextBlock Text="• 添加换行：在适当位置添加换行符提高可读性"/>
+            <TextBlock Text="• 保留空白：保持原有的空白字符和缩进"/>
+            <TextBlock Text="• 排序属性：按字母顺序排列标签属性"/>
+            <TextBlock Text="• 移除注释：删除HTML注释内容"/>
+          </StackPanel>
+          
+          <TextBlock Text="验证功能" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 语法检查：检查HTML标签是否正确闭合"/>
+            <TextBlock Text="• 属性验证：验证HTML属性是否符合规范"/>
+            <TextBlock Text="• 嵌套检查：检查标签嵌套是否合理"/>
+            <TextBlock Text="• 可访问性：检查是否符合无障碍访问标准"/>
+          </StackPanel>
+          
+          <TextBlock Text="使用场景" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 代码美化：整理混乱的HTML代码"/>
+            <TextBlock Text="• 代码压缩：减少文件大小提高加载速度"/>
+            <TextBlock Text="• 代码验证：检查HTML代码的正确性"/>
+            <TextBlock Text="• 学习辅助：帮助理解HTML结构"/>
+          </StackPanel>
+          
+          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 支持HTML5、XHTML等多种文档类型"/>
+            <TextBlock Text="• 可以处理包含CSS和JavaScript的HTML文件"/>
+            <TextBlock Text="• 提供实时预览功能"/>
+            <TextBlock Text="• 支持批量处理多个文件"/>
+          </StackPanel>
+        </StackPanel>
+      </Expander>
     </StackPanel>
   </ScrollViewer>
-
 </UserControl>

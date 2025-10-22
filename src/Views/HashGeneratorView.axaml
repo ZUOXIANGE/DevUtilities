@@ -1,0 +1,284 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DevUtilities.Views.HashGeneratorView"
+             x:DataType="vm:HashGeneratorViewModel">
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" Spacing="20">
+      <!-- 标题 -->
+      <TextBlock Text="哈希生成器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center"/>
+      
+      <TextBlock Text="支持多种哈希算法，包括MD5、SHA1、SHA256、SHA384、SHA512" 
+                 FontSize="14" 
+                 HorizontalAlignment="Center"
+                 Foreground="Gray" 
+                 Margin="0,0,0,16"/>
+
+      <!-- 输入设置 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="输入设置" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="编码格式：" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            
+            <ComboBox Grid.Column="1" 
+                      SelectedItem="{Binding SelectedEncoding}"
+                      ItemsSource="{Binding EncodingOptions}"
+                      Width="120"
+                      Margin="0,0,16,0"/>
+            
+            <CheckBox Grid.Column="2" 
+                      Content="大写输出" 
+                      IsChecked="{Binding IsUpperCase}"
+                      VerticalAlignment="Center"
+                      Margin="0,0,16,0"/>
+            
+            <Button Grid.Column="3" 
+                    Content="计算哈希" 
+                    Command="{Binding GenerateAllHashesCommand}"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 输入文本 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
+          
+          <TextBox Text="{Binding InputText}" 
+                   AcceptsReturn="True" 
+                   TextWrapping="Wrap" 
+                   Height="150" 
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   Watermark="输入要计算哈希值的文本内容" />
+          
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="从文件加载" Command="{Binding GenerateAllHashesCommand}"/>
+            <Button Content="从剪贴板粘贴" Command="{Binding ClearAllCommand}"/>
+            <Button Content="清空" Command="{Binding ClearAllCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 哈希结果 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="哈希结果" FontWeight="Bold" FontSize="16"/>
+          
+          <!-- MD5 -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="MD5：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <TextBox Grid.Column="1" 
+                     Text="{Binding Md5Hash}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="复制" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Md5Hash}"/>
+          </Grid>
+          
+          <!-- SHA1 -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="SHA1：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <TextBox Grid.Column="1" 
+                     Text="{Binding Sha1Hash}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="复制" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Sha1Hash}"/>
+          </Grid>
+          
+          <!-- SHA256 -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="SHA256：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <TextBox Grid.Column="1" 
+                     Text="{Binding Sha256Hash}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="复制" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Sha256Hash}"/>
+          </Grid>
+          
+          <!-- SHA384 -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="SHA384：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <TextBox Grid.Column="1" 
+                     Text="{Binding Sha384Hash}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="复制" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Sha384Hash}"/>
+          </Grid>
+          
+          <!-- SHA512 -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="SHA512：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <TextBox Grid.Column="1" 
+                     Text="{Binding Sha512Hash}" 
+                     IsReadOnly="True"
+                     FontFamily="Consolas"
+                     Background="#F8F9FA"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="复制" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Sha512Hash}"/>
+          </Grid>
+          
+          <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,16,0,0">
+            <Button Content="复制全部" Command="{Binding GenerateAllHashesCommand}"/>
+            <Button Content="保存到文件" Command="{Binding ClearAllCommand}"/>
+            <Button Content="清空结果" Command="{Binding ClearAllCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 文件哈希 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="文件哈希计算" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Grid.Column="0" 
+                     Text="未选择文件" 
+                     IsReadOnly="True"
+                     Watermark="选择要计算哈希值的文件"
+                     Margin="0,0,8,0"/>
+            <Button Grid.Column="1" Content="选择文件" Command="{Binding GenerateAllHashesCommand}" Margin="0,0,8,0"/>
+            <Button Grid.Column="2" Content="计算文件哈希" Command="{Binding ClearAllCommand}"/>
+          </Grid>
+          
+          <TextBlock Text="处理中..." 
+                     IsVisible="False"
+                     HorizontalAlignment="Center"
+                     Foreground="Blue"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 哈希比较 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="16">
+          <TextBlock Text="哈希值比较" FontWeight="Bold" FontSize="16"/>
+          
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="哈希值1：" Margin="0,0,0,4"/>
+            <TextBox Grid.Row="1" Grid.Column="0" 
+                     Text="哈希值1" 
+                     Watermark="输入第一个哈希值"
+                     FontFamily="Consolas"
+                     Margin="0,0,8,8"/>
+            
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="哈希值2：" Margin="0,0,0,4"/>
+            <TextBox Grid.Row="1" Grid.Column="1" 
+                     Text="哈希值2" 
+                     Watermark="输入第二个哈希值"
+                     FontFamily="Consolas"
+                     Margin="0,0,0,8"/>
+            
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
+                        Orientation="Horizontal" 
+                        Spacing="8" 
+                        HorizontalAlignment="Center">
+              <Button Content="比较" Command="{Binding GenerateAllHashesCommand}"/>
+              <TextBlock Text="比较结果" 
+                         VerticalAlignment="Center"
+                         FontWeight="Bold"
+                         Foreground="Green"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 使用说明 -->
+      <Expander Header="使用说明" IsExpanded="False">
+        <StackPanel Spacing="12" Margin="10">
+          <TextBlock Text="哈希算法说明" FontWeight="SemiBold"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• MD5：128位哈希值，速度快但安全性较低，不推荐用于安全场景"/>
+            <TextBlock Text="• SHA1：160位哈希值，安全性中等，已被部分场景弃用"/>
+            <TextBlock Text="• SHA256：256位哈希值，安全性高，广泛使用"/>
+            <TextBlock Text="• SHA384：384位哈希值，安全性很高"/>
+            <TextBlock Text="• SHA512：512位哈希值，安全性最高，计算稍慢"/>
+          </StackPanel>
+          
+          <TextBlock Text="使用场景" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 文件完整性校验：比较文件哈希值确认文件是否被修改"/>
+            <TextBlock Text="• 密码存储：将密码哈希后存储（建议加盐）"/>
+            <TextBlock Text="• 数字签名：作为数字签名的基础"/>
+            <TextBlock Text="• 数据去重：通过哈希值快速识别重复数据"/>
+          </StackPanel>
+          
+          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <StackPanel Spacing="4" Margin="10,0">
+            <TextBlock Text="• 支持多种文本编码格式"/>
+            <TextBlock Text="• 可选择大写或小写输出"/>
+            <TextBlock Text="• 支持大文件哈希计算"/>
+            <TextBlock Text="• 提供哈希值比较功能"/>
+            <TextBlock Text="• 所有计算结果可一键复制或保存"/>
+          </StackPanel>
+        </StackPanel>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

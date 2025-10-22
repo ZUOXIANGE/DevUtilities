@@ -1,7 +1,7 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
-  <!-- 这是一个UI模板文件，用于确保所有格式化工具的视觉一致性 -->
+  <!-- 这是一个UI模板文件用于确保所有格式化工具的视觉一致性 -->
   
   <ScrollViewer>
     <StackPanel Spacing="24" Margin="24">
@@ -69,7 +69,7 @@
               Padding="16"
               BoxShadow="0 2 4 0 #10000000">
         <StackPanel Orientation="Horizontal" Spacing="12">
-          <TextBlock Text="🔍" FontSize="16" VerticalAlignment="Center"/>
+          <TextBlock Text="" FontSize="16" VerticalAlignment="Center"/>
           <TextBlock TextWrapping="Wrap" 
                      FontWeight="Medium"
                      VerticalAlignment="Center"/>
@@ -141,7 +141,7 @@
               BoxShadow="0 2 8 0 #10000000">
         <StackPanel Spacing="16">
           <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="💡" FontSize="20" VerticalAlignment="Center"/>
+            <TextBlock Text="" FontSize="20" VerticalAlignment="Center"/>
             <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
           </StackPanel>
           <TextBlock TextWrapping="Wrap" 

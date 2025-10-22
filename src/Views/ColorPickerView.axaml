@@ -1,421 +1,327 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:DevUtilities.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
              x:Class="DevUtilities.Views.ColorPickerView"
              x:DataType="vm:ColorPickerViewModel">
-
-  <ScrollViewer>
-    <StackPanel Margin="20" Spacing="20">
+  <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="2*,*" ColumnSpacing="20" RowSpacing="20">
+      
       <!-- 标题 -->
-      <TextBlock Text="颜色选择器" 
+      <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                 Text="颜色选择器" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
 
       <!-- 错误信息 -->
-      <Border Background="#FFEBEE" 
-              CornerRadius="5" 
-              Padding="10"
+      <Border Grid.Row="1" Grid.ColumnSpan="2" 
+              Background="#FFEBEE" CornerRadius="4" Padding="12" 
               IsVisible="{Binding HasError}">
         <TextBlock Text="{Binding ErrorMessage}" 
-                   Foreground="Red" 
+                   Foreground="#C62828" 
                    TextWrapping="Wrap"/>
       </Border>
 
-      <!-- 颜色预览 -->
-      <Border Background="#F5F5F5" 
-              CornerRadius="8" 
-              Padding="15">
-        <StackPanel Spacing="15">
-          <TextBlock Text="颜色预览" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          
-          <Grid ColumnDefinitions="*,Auto">
-            <Border Grid.Column="0" 
-                    Height="100" 
-                    CornerRadius="8"
-                    BorderBrush="Gray"
-                    BorderThickness="1">
-              <Border.Background>
-                <SolidColorBrush>
-                  <SolidColorBrush.Color>
-                    <MultiBinding Converter="{x:Static vm:RgbToColorConverter.Instance}">
-                      <Binding Path="Red"/>
-                      <Binding Path="Green"/>
-                      <Binding Path="Blue"/>
-                    </MultiBinding>
-                  </SolidColorBrush.Color>
-                </SolidColorBrush>
-              </Border.Background>
+      <!-- 左侧：主要颜色显示和控制区域 -->
+      <StackPanel Grid.Row="2" Grid.Column="0" Spacing="20">
+        
+        <!-- 颜色预览区域 -->
+        <Border Background="White" CornerRadius="12" Padding="20" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+          <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="15">
+            
+            <!-- 大颜色预览 -->
+            <Border Grid.Row="0" Height="120" CornerRadius="12" 
+                    Background="{Binding HexColor}" 
+                    BorderBrush="#CCCCCC" BorderThickness="1">
+              <Border.Effect>
+                <DropShadowEffect BlurRadius="8" OffsetX="0" OffsetY="2" Opacity="0.1"/>
+              </Border.Effect>
             </Border>
             
-            <StackPanel Grid.Column="1" 
-                        Margin="15,0,0,0" 
-                        Spacing="5">
-              <TextBlock Text="{Binding ColorName}" 
-                         FontWeight="SemiBold"/>
-              <Button Content="随机颜色" 
-                      Command="{Binding RandomColorCommand}"/>
-              <Button Content="添加到历史" 
-                      Command="{Binding AddToHistoryCommand}"/>
-            </StackPanel>
+            <!-- 操作按钮 -->
+            <UniformGrid Grid.Row="1" Columns="2" ColumnSpacing="10">
+              <Button Content="🎲 随机颜色" 
+                      Command="{Binding RandomColorCommand}"
+                      HorizontalAlignment="Stretch"
+                      Padding="12,8"/>
+              <Button Content="📌 添加到历史" 
+                      Command="{Binding AddToHistoryCommand}"
+                      HorizontalAlignment="Stretch"
+                      Padding="12,8"/>
+            </UniformGrid>
+            
+            <!-- 颜色名称显示 -->
+            <TextBlock Grid.Row="2" 
+                       Text="{Binding ColorName}" 
+                       FontSize="16" 
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       Foreground="#666666"/>
           </Grid>
-        </StackPanel>
-      </Border>
+        </Border>
 
-      <!-- RGB 控制 -->
-      <Border Background="#FFF0F0" 
-              CornerRadius="8" 
-              Padding="15">
-        <StackPanel Spacing="10">
-          <TextBlock Text="RGB 颜色" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          
-          <Grid RowDefinitions="Auto,Auto,Auto" 
-                ColumnDefinitions="50,*,80,Auto">
+        <!-- RGB 控制 -->
+        <Border Background="White" CornerRadius="8" Padding="16" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="RGB 控制" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            
             <!-- Red -->
-            <TextBlock Grid.Row="0" Grid.Column="0" 
-                       Text="R:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="0" Grid.Column="1" 
-                    Value="{Binding Red}" 
-                    Minimum="0" 
-                    Maximum="255"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="0" Grid.Column="2" 
-                           Value="{Binding Red}" 
-                           Minimum="0" 
-                           Maximum="255"
-                           Margin="5,0"/>
-            <Button Grid.Row="0" Grid.Column="3" 
-                    Content="复制" 
-                    Command="{Binding CopyColorCommand}"
-                    CommandParameter="RGB"
-                    FontSize="10"
-                    Padding="5,2"/>
-
+            <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
+              <TextBlock Grid.Column="0" Text="R" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#E53E3E"/>
+              <Slider Grid.Column="1" Minimum="0" Maximum="255" 
+                      Value="{Binding Red}" 
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+              <TextBox Grid.Column="2" Text="{Binding Red}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Center"/>
+            </Grid>
+            
             <!-- Green -->
-            <TextBlock Grid.Row="1" Grid.Column="0" 
-                       Text="G:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="1" Grid.Column="1" 
-                    Value="{Binding Green}" 
-                    Minimum="0" 
-                    Maximum="255"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="1" Grid.Column="2" 
-                           Value="{Binding Green}" 
-                           Minimum="0" 
-                           Maximum="255"
-                           Margin="5,0"/>
-
+            <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
+              <TextBlock Grid.Column="0" Text="G" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#38A169"/>
+              <Slider Grid.Column="1" Minimum="0" Maximum="255" 
+                      Value="{Binding Green}" 
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+              <TextBox Grid.Column="2" Text="{Binding Green}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Center"/>
+            </Grid>
+            
             <!-- Blue -->
-            <TextBlock Grid.Row="2" Grid.Column="0" 
-                       Text="B:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="2" Grid.Column="1" 
-                    Value="{Binding Blue}" 
-                    Minimum="0" 
-                    Maximum="255"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="2" Grid.Column="2" 
-                           Value="{Binding Blue}" 
-                           Minimum="0" 
-                           Maximum="255"
-                           Margin="5,0"/>
-          </Grid>
+            <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
+              <TextBlock Grid.Column="0" Text="B" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#3182CE"/>
+              <Slider Grid.Column="1" Minimum="0" Maximum="255" 
+                      Value="{Binding Blue}" 
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+              <TextBox Grid.Column="2" Text="{Binding Blue}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Center"/>
+            </Grid>
+          </StackPanel>
+        </Border>
 
-          <TextBox Text="{Binding RgbString}" 
-                   IsReadOnly="True" 
-                   FontFamily="Consolas"/>
-        </StackPanel>
-      </Border>
-
-      <!-- HSL 控制 -->
-      <Border Background="#F0F8FF" 
-              CornerRadius="8" 
-              Padding="15">
-        <StackPanel Spacing="10">
-          <TextBlock Text="HSL 颜色" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          
-          <Grid RowDefinitions="Auto,Auto,Auto" 
-                ColumnDefinitions="50,*,80,Auto">
+        <!-- HSL 控制 -->
+        <Border Background="White" CornerRadius="8" Padding="16" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="HSL 控制" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            
             <!-- Hue -->
-            <TextBlock Grid.Row="0" Grid.Column="0" 
-                       Text="H:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="0" Grid.Column="1" 
-                    Value="{Binding Hue}" 
-                    Minimum="0" 
-                    Maximum="360"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="0" Grid.Column="2" 
-                           Value="{Binding Hue}" 
-                           Minimum="0" 
-                           Maximum="360"
-                           Margin="5,0"/>
-            <Button Grid.Row="0" Grid.Column="3" 
-                    Content="复制" 
-                    Command="{Binding CopyColorCommand}"
-                    CommandParameter="HSL"
-                    FontSize="10"
-                    Padding="5,2"/>
-
+            <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
+              <TextBlock Grid.Column="0" Text="H" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#9F7AEA"/>
+              <Slider Grid.Column="1" Minimum="0" Maximum="360" 
+                      Value="{Binding Hue}" 
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+              <TextBox Grid.Column="2" Text="{Binding Hue, StringFormat=F0}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Center"/>
+            </Grid>
+            
             <!-- Saturation -->
-            <TextBlock Grid.Row="1" Grid.Column="0" 
-                       Text="S:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="1" Grid.Column="1" 
-                    Value="{Binding Saturation}" 
-                    Minimum="0" 
-                    Maximum="100"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="1" Grid.Column="2" 
-                           Value="{Binding Saturation}" 
-                           Minimum="0" 
-                           Maximum="100"
-                           Margin="5,0"/>
-
+            <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
+              <TextBlock Grid.Column="0" Text="S" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#ED8936"/>
+              <Slider Grid.Column="1" Minimum="0" Maximum="100" 
+                      Value="{Binding Saturation}" 
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+              <TextBox Grid.Column="2" Text="{Binding Saturation, StringFormat=F0}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Center"/>
+            </Grid>
+            
             <!-- Lightness -->
-            <TextBlock Grid.Row="2" Grid.Column="0" 
-                       Text="L:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="2" Grid.Column="1" 
-                    Value="{Binding Lightness}" 
-                    Minimum="0" 
-                    Maximum="100"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="2" Grid.Column="2" 
-                           Value="{Binding Lightness}" 
-                           Minimum="0" 
-                           Maximum="100"
-                           Margin="5,0"/>
-          </Grid>
+            <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
+              <TextBlock Grid.Column="0" Text="L" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#48BB78"/>
+              <Slider Grid.Column="1" Minimum="0" Maximum="100" 
+                      Value="{Binding Lightness}" 
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+              <TextBox Grid.Column="2" Text="{Binding Lightness, StringFormat=F0}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Center"/>
+            </Grid>
+          </StackPanel>
+        </Border>
+      </StackPanel>
 
-          <TextBox Text="{Binding HslString}" 
-                   IsReadOnly="True" 
-                   FontFamily="Consolas"/>
-        </StackPanel>
-      </Border>
-
-      <!-- HSV 控制 -->
-      <Border Background="#F0FFF0" 
-              CornerRadius="8" 
-              Padding="15">
-        <StackPanel Spacing="10">
-          <TextBlock Text="HSV 颜色" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          
-          <Grid RowDefinitions="Auto,Auto,Auto" 
-                ColumnDefinitions="50,*,80,Auto">
-            <!-- Hue (共享) -->
-            <TextBlock Grid.Row="0" Grid.Column="0" 
-                       Text="H:" 
-                       VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" 
-                       Text="{Binding Hue, StringFormat='{}{0:F0}°'}" 
-                       VerticalAlignment="Center"
-                       Margin="5,0"/>
-            <Button Grid.Row="0" Grid.Column="3" 
-                    Content="复制" 
-                    Command="{Binding CopyColorCommand}"
-                    CommandParameter="HSV"
-                    FontSize="10"
-                    Padding="5,2"/>
-
-            <!-- HSV Saturation -->
-            <TextBlock Grid.Row="1" Grid.Column="0" 
-                       Text="S:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="1" Grid.Column="1" 
-                    Value="{Binding HsvSaturation}" 
-                    Minimum="0" 
-                    Maximum="100"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="1" Grid.Column="2" 
-                           Value="{Binding HsvSaturation}" 
-                           Minimum="0" 
-                           Maximum="100"
-                           Margin="5,0"/>
-
-            <!-- Value -->
-            <TextBlock Grid.Row="2" Grid.Column="0" 
-                       Text="V:" 
-                       VerticalAlignment="Center"/>
-            <Slider Grid.Row="2" Grid.Column="1" 
-                    Value="{Binding Value}" 
-                    Minimum="0" 
-                    Maximum="100"
-                    Margin="5,0"/>
-            <NumericUpDown Grid.Row="2" Grid.Column="2" 
-                           Value="{Binding Value}" 
-                           Minimum="0" 
-                           Maximum="100"
-                           Margin="5,0"/>
-          </Grid>
-
-          <TextBox Text="{Binding HsvString}" 
-                   IsReadOnly="True" 
-                   FontFamily="Consolas"/>
-        </StackPanel>
-      </Border>
-
-      <!-- 十六进制和其他格式 -->
-      <Border Background="#FFF8DC" 
-              CornerRadius="8" 
-              Padding="15">
-        <StackPanel Spacing="10">
-          <TextBlock Text="颜色格式" 
-                     FontWeight="SemiBold" 
-                     FontSize="16"/>
-          
-          <Grid RowDefinitions="Auto,Auto,Auto" 
-                ColumnDefinitions="80,*,Auto">
+      <!-- 右侧：颜色代码、历史和预设 -->
+      <StackPanel Grid.Row="2" Grid.Column="1" Spacing="20">
+        
+        <!-- 颜色代码输出 -->
+        <Border Background="White" CornerRadius="8" Padding="16" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="颜色代码" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            
             <!-- HEX -->
-            <TextBlock Grid.Row="0" Grid.Column="0" 
-                       Text="HEX:" 
-                       VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" 
-                     Text="{Binding HexColor}" 
-                     FontFamily="Consolas"
-                     Margin="5,0"/>
-            <Button Grid.Row="0" Grid.Column="2" 
-                    Content="复制" 
-                    Command="{Binding CopyColorCommand}"
-                    CommandParameter="HEX"
-                    FontSize="10"
-                    Padding="5,2"/>
-
+            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+              <TextBlock Grid.Column="0" Text="HEX" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#666666"/>
+              <TextBox Grid.Column="1" Text="{Binding HexColor}" 
+                       IsReadOnly="True" 
+                       FontFamily="Consolas"
+                       Background="#F8F9FA"/>
+              <Button Grid.Column="2" Content="📋" 
+                      Command="{Binding CopyColorCommand}"
+                      CommandParameter="{Binding HexColor}"
+                      ToolTip.Tip="复制HEX代码"
+                      Padding="8"/>
+            </Grid>
+            
+            <!-- RGB -->
+            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+              <TextBlock Grid.Column="0" Text="RGB" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#666666"/>
+              <TextBox Grid.Column="1" Text="{Binding RgbString}" 
+                       IsReadOnly="True" 
+                       FontFamily="Consolas"
+                       Background="#F8F9FA"/>
+              <Button Grid.Column="2" Content="📋" 
+                      Command="{Binding CopyColorCommand}"
+                      CommandParameter="{Binding RgbString}"
+                      ToolTip.Tip="复制RGB代码"
+                      Padding="8"/>
+            </Grid>
+            
+            <!-- HSL -->
+            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+              <TextBlock Grid.Column="0" Text="HSL" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#666666"/>
+              <TextBox Grid.Column="1" Text="{Binding HslString}" 
+                       IsReadOnly="True" 
+                       FontFamily="Consolas"
+                       Background="#F8F9FA"/>
+              <Button Grid.Column="2" Content="📋" 
+                      Command="{Binding CopyColorCommand}"
+                      CommandParameter="{Binding HslString}"
+                      ToolTip.Tip="复制HSL代码"
+                      Padding="8"/>
+            </Grid>
+            
+            <!-- HSV -->
+            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+              <TextBlock Grid.Column="0" Text="HSV" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#666666"/>
+              <TextBox Grid.Column="1" Text="{Binding HsvString}" 
+                       IsReadOnly="True" 
+                       FontFamily="Consolas"
+                       Background="#F8F9FA"/>
+              <Button Grid.Column="2" Content="📋" 
+                      Command="{Binding CopyColorCommand}"
+                      CommandParameter="{Binding HsvString}"
+                      ToolTip.Tip="复制HSV代码"
+                      Padding="8"/>
+            </Grid>
+            
             <!-- CMYK -->
-            <TextBlock Grid.Row="1" Grid.Column="0" 
-                       Text="CMYK:" 
-                       VerticalAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="1" 
-                     Text="{Binding CmykString}" 
-                     IsReadOnly="True"
-                     FontFamily="Consolas"
-                     Margin="5,0"/>
-            <Button Grid.Row="1" Grid.Column="2" 
-                    Content="复制" 
-                    Command="{Binding CopyColorCommand}"
-                    CommandParameter="CMYK"
-                    FontSize="10"
-                    Padding="5,2"/>
-          </Grid>
-        </StackPanel>
-      </Border>
+            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
+              <TextBlock Grid.Column="0" Text="CMYK" VerticalAlignment="Center" 
+                         FontWeight="SemiBold" Foreground="#666666"/>
+              <TextBox Grid.Column="1" Text="{Binding CmykString}" 
+                       IsReadOnly="True" 
+                       FontFamily="Consolas"
+                       Background="#F8F9FA"/>
+              <Button Grid.Column="2" Content="📋" 
+                      Command="{Binding CopyColorCommand}"
+                      CommandParameter="{Binding CmykString}"
+                      ToolTip.Tip="复制CMYK代码"
+                      Padding="8"/>
+            </Grid>
+          </StackPanel>
+        </Border>
 
-      <!-- 预设颜色 -->
-      <Expander Header="预设颜色" IsExpanded="True">
-        <StackPanel Spacing="10" Margin="10">
-          <ItemsControl ItemsSource="{Binding PresetColors}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"/>
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <Button Width="40" 
-                        Height="40" 
-                        Margin="2"
-                        Command="{Binding $parent[UserControl].((vm:ColorPickerViewModel)DataContext).UsePresetColorCommand}"
-                        CommandParameter="{Binding}"
-                        ToolTip.Tip="{Binding Name}">
-                  <Button.Background>
-                    <SolidColorBrush>
-                      <SolidColorBrush.Color>
-                        <MultiBinding Converter="{x:Static vm:RgbToColorConverter.Instance}">
-                          <Binding Path="Red"/>
-                          <Binding Path="Green"/>
-                          <Binding Path="Blue"/>
-                        </MultiBinding>
-                      </SolidColorBrush.Color>
-                    </SolidColorBrush>
-                  </Button.Background>
-                </Button>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </StackPanel>
-      </Expander>
+        <!-- 预设颜色 -->
+        <Border Background="White" CornerRadius="8" Padding="16" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <TextBlock Text="预设颜色" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            
+            <!-- 基础颜色 -->
+            <TextBlock Text="基础色彩" FontSize="12" Foreground="#666666" Margin="0,0,0,4"/>
+            <UniformGrid Columns="4" ColumnSpacing="6" RowSpacing="6">
+              <Border Width="35" Height="35" Background="Red" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="红色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Green" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="绿色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Blue" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="蓝色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Yellow" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="黄色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Cyan" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="青色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Magenta" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="品红" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Orange" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="橙色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="Purple" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="紫色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+            </UniformGrid>
+            
+            <!-- 灰度颜色 -->
+            <TextBlock Text="灰度色彩" FontSize="12" Foreground="#666666" Margin="0,8,0,4"/>
+            <UniformGrid Columns="4" ColumnSpacing="6" RowSpacing="6">
+              <Border Width="35" Height="35" Background="Black" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="黑色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="#333333" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="深灰" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="#666666" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="中灰" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="#999999" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="浅灰" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="#CCCCCC" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="淡灰" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="#EEEEEE" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="极淡灰" BorderBrush="#CCCCCC" BorderThickness="1"/>
+              <Border Width="35" Height="35" Background="White" CornerRadius="6" Cursor="Hand"
+                      ToolTip.Tip="白色" BorderBrush="#CCCCCC" BorderThickness="1"/>
+            </UniformGrid>
+          </StackPanel>
+        </Border>
 
-      <!-- 颜色历史 -->
-      <Expander Header="颜色历史" IsExpanded="False">
-        <StackPanel Spacing="10" Margin="10">
-          <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0" 
-                       Text="最近使用的颜色" 
-                       VerticalAlignment="Center"/>
-            <Button Grid.Column="1" 
-                    Content="清除历史" 
-                    Command="{Binding ClearHistoryCommand}"/>
-          </Grid>
-          
-          <ItemsControl ItemsSource="{Binding ColorHistory}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"/>
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <Button Width="40" 
-                        Height="40" 
-                        Margin="2"
-                        Command="{Binding $parent[UserControl].((vm:ColorPickerViewModel)DataContext).UsePresetColorCommand}"
-                        CommandParameter="{Binding}"
-                        ToolTip.Tip="{Binding Name}">
-                  <Button.Background>
-                    <SolidColorBrush>
-                      <SolidColorBrush.Color>
-                        <MultiBinding Converter="{x:Static vm:RgbToColorConverter.Instance}">
-                          <Binding Path="Red"/>
-                          <Binding Path="Green"/>
-                          <Binding Path="Blue"/>
-                        </MultiBinding>
-                      </SolidColorBrush.Color>
-                    </SolidColorBrush>
-                  </Button.Background>
-                </Button>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </StackPanel>
-      </Expander>
-
-      <!-- 使用说明 -->
-      <Expander Header="使用说明" IsExpanded="False">
-        <StackPanel Spacing="8" Margin="10">
-          <TextBlock Text="颜色模式说明：" FontWeight="SemiBold"/>
-          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
-                ColumnDefinitions="80,*" 
-                Margin="10,0">
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="RGB" FontWeight="SemiBold"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="红绿蓝三原色模式，每个分量范围 0-255"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="HSL" FontWeight="SemiBold"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="色相、饱和度、亮度模式，更符合人眼感知"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="HSV" FontWeight="SemiBold"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="色相、饱和度、明度模式，常用于颜色选择器"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="HEX" FontWeight="SemiBold"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="十六进制颜色代码，网页开发常用格式"/>
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="CMYK" FontWeight="SemiBold"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="青品黄黑四色模式，印刷行业标准"/>
-          </Grid>
-
-          <TextBlock Text="操作提示：" FontWeight="SemiBold" Margin="0,10,0,0"/>
-          <TextBlock Text="• 拖动滑块或输入数值来调整颜色" Margin="10,0"/>
-          <TextBlock Text="• 点击预设颜色快速选择常用颜色" Margin="10,0"/>
-          <TextBlock Text="• 使用随机颜色按钮获取灵感" Margin="10,0"/>
-          <TextBlock Text="• 复制按钮可将颜色值复制到剪贴板" Margin="10,0"/>
-          <TextBlock Text="• 添加到历史记录保存喜欢的颜色" Margin="10,0"/>
-        </StackPanel>
-      </Expander>
-    </StackPanel>
+        <!-- 颜色历史 -->
+        <Border Background="White" CornerRadius="8" Padding="16" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+          <StackPanel Spacing="12">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" Text="颜色历史" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+              <Button Grid.Column="1" Content="🗑️" 
+                      Command="{Binding ClearHistoryCommand}"
+                      ToolTip.Tip="清空历史"
+                      Padding="6"/>
+            </Grid>
+            
+            <ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto">
+              <ItemsControl ItemsSource="{Binding ColorHistory}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <UniformGrid Columns="4" ColumnSpacing="6" RowSpacing="6"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border Width="35" Height="35" 
+                            Background="{Binding}" 
+                            CornerRadius="6" 
+                            BorderBrush="#CCCCCC" 
+                            BorderThickness="1" 
+                            Cursor="Hand">
+                      <Border.Styles>
+                        <Style Selector="Border:pointerover">
+                          <Setter Property="BorderBrush" Value="#666666"/>
+                          <Setter Property="BorderThickness" Value="2"/>
+                        </Style>
+                      </Border.Styles>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Grid>
   </ScrollViewer>
 </UserControl>
