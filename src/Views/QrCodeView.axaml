@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -135,8 +135,8 @@
       <!-- 使用说明 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="8">
-          <TextBlock Text="使用说明" FontSize="16" FontWeight="SemiBold" />
-          <TextBlock TextWrapping="Wrap">
+          <SelectableTextBlock Text="使用说明" FontSize="16" FontWeight="SemiBold" />
+          <SelectableTextBlock TextWrapping="Wrap">
             <Run Text="1. 在文本框中输入要生成二维码的内容" />
             <LineBreak />
             <Run Text="2. 调整二维码尺寸、纠错级别和编码格式" />
@@ -148,7 +148,7 @@
             <Run Text="5. 选择图片文件或从剪贴板粘贴图片进行识别" />
             <LineBreak />
             <Run Text="6. 支持批量生成和识别功能" />
-          </TextBlock>
+          </SelectableTextBlock>
         </StackPanel>
       </Border>
       

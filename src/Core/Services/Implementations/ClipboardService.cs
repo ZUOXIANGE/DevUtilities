@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Input.Platform;
+using Avalonia.Input;
 using DevUtilities.Core.Services.Interfaces;
 
 namespace DevUtilities.Core.Services.Implementations;
@@ -54,7 +55,7 @@ public class ClipboardService : IClipboardService
     }
 
     /// <summary>
-    /// 从剪贴板获取文本
+    /// 获取剪贴板文本
     /// </summary>
     /// <returns>剪贴板中的文本</returns>
     public async Task<string> GetTextAsync()
@@ -65,7 +66,7 @@ public class ClipboardService : IClipboardService
             if (clipboard == null)
                 return string.Empty;
 
-            var text = await clipboard.GetTextAsync();
+            var text = await clipboard.TryGetTextAsync();
             return text ?? string.Empty;
         }
         catch (Exception)
@@ -86,8 +87,8 @@ public class ClipboardService : IClipboardService
             if (clipboard == null)
                 return false;
 
-            var formats = await clipboard.GetFormatsAsync();
-            return formats.Any(f => f == "text/plain" || f == "Text");
+            var formats = await clipboard.GetDataFormatsAsync();
+            return formats.Any(f => f.ToString() == "text/plain" || f.ToString() == "Text");
         }
         catch (Exception)
         {

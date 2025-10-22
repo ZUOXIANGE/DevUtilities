@@ -154,8 +154,8 @@
       <!-- 使用说明 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="8">
-          <TextBlock Text="使用说明" FontSize="16" FontWeight="SemiBold" />
-          <TextBlock TextWrapping="Wrap">
+          <SelectableTextBlock Text="使用说明" FontSize="16" FontWeight="SemiBold" />
+          <SelectableTextBlock TextWrapping="Wrap">
             <Run Text="1. 在正则表达式输入框中输入要测试的正则表达式" />
             <LineBreak />
             <Run Text="2. 选择合适的匹配选项（忽略大小写、多行模式等）" />
@@ -167,7 +167,7 @@
             <Run Text="5. 使用替换功能可以对匹配的内容进行替换" />
             <LineBreak />
             <Run Text="6. 可以使用常用正则表达式快速开始测试" />
-          </TextBlock>
+          </SelectableTextBlock>
         </StackPanel>
       </Border>
       

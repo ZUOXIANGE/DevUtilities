@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -159,12 +159,12 @@
               </StackPanel>
               
               <StackPanel Spacing="4">
-                <TextBlock Text="坐标" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock FontSize="14">
+                <SelectableTextBlock Text="坐标" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock FontSize="14">
                   <Run Text="{Binding IpInfo.Latitude}"/>
                   <Run Text=", "/>
                   <Run Text="{Binding IpInfo.Longitude}"/>
-                </TextBlock>
+                </SelectableTextBlock>
               </StackPanel>
             </StackPanel>
           </Grid>

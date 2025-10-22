@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
   <!-- 这是一个UI模板文件用于确保所有格式化工具的视觉一致性 -->
@@ -142,14 +142,14 @@
         <StackPanel Spacing="16">
           <StackPanel Orientation="Horizontal" Spacing="12">
             <TextBlock Text="" FontSize="20" VerticalAlignment="Center"/>
-            <TextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
+            <SelectableTextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
           </StackPanel>
-          <TextBlock TextWrapping="Wrap" 
+          <SelectableTextBlock TextWrapping="Wrap" 
                      FontSize="14" 
                      LineHeight="22"
                      Foreground="{DynamicResource TextFillColorSecondaryBrush}">
             <!-- 具体说明内容根据工具类型动态添加 -->
-          </TextBlock>
+          </SelectableTextBlock>
         </StackPanel>
       </Border>
 

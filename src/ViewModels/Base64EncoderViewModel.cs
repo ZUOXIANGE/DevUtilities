@@ -415,7 +415,7 @@ public partial class Base64EncoderViewModel : ObservableObject
             if (!IsImageMode || !IsImageToBase64Mode)
                 return;
 
-            var files = e.Data.GetFiles();
+            var files = e.DataTransfer.TryGetFiles();
             if (files == null) return;
 
             foreach (var file in files)

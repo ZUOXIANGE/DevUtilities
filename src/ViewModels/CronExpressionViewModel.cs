@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Serilog;
 
 namespace DevUtilities.ViewModels;
 
@@ -341,7 +342,7 @@ public partial class CronExpressionViewModel : ObservableObject
             // 添加调试信息
             if (string.IsNullOrWhiteSpace(CronExpression))
             {
-                System.Diagnostics.Debug.WriteLine("表达式为空，无法计算执行时间");
+                Log.Warning("Cron表达式为空，无法计算执行时间");
                 return "表达式为空，无法计算执行时间";
             }
 
@@ -350,8 +351,7 @@ public partial class CronExpressionViewModel : ObservableObject
             var executions = new List<DateTime>();
 
             // 添加调试信息
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] 当前表达式: {CronExpression}");
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] 当前时间: {now:yyyy-MM-dd HH:mm:ss}");
+            Log.Information("开始计算Cron执行时间 - 表达式: {Expression}, 当前时间: {CurrentTime}", CronExpression, now);
             
             sb.AppendLine($"当前表达式: {CronExpression}");
             sb.AppendLine($"当前时间: {now:yyyy-MM-dd HH:mm:ss}");
@@ -362,7 +362,8 @@ public partial class CronExpressionViewModel : ObservableObject
             for (int i = 0; i < 50 && executions.Count < 5; i++) // 最多检查50次，避免无限循环
             {
                 var nextTime = CalculateNextExecution(currentTime);
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] 第{i+1}次尝试，从 {currentTime:yyyy-MM-dd HH:mm:ss} 开始，结果: {nextTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "null"}");
+                Log.Debug("第{Attempt}次尝试计算执行时间 - 从 {StartTime} 开始，结果: {Result}", 
+                    i + 1, currentTime, nextTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "null");
                 
                 if (nextTime.HasValue && nextTime.Value > now)
                 {
@@ -377,7 +378,7 @@ public partial class CronExpressionViewModel : ObservableObject
 
             if (executions.Any())
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] 找到 {executions.Count} 个执行时间");
+                Log.Information("找到 {Count} 个执行时间", executions.Count);
                 sb.AppendLine("接下来的执行时间：");
                 foreach (var execution in executions)
                 {
@@ -386,7 +387,7 @@ public partial class CronExpressionViewModel : ObservableObject
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("[DEBUG] 没有找到任何执行时间");
+                Log.Warning("没有找到任何执行时间");
                 sb.AppendLine("无法计算下次执行时间，请检查表达式格式");
             }
 
@@ -394,9 +395,8 @@ public partial class CronExpressionViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] 异常: {ex.Message}");
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] 堆栈跟踪: {ex.StackTrace}");
-            return $"计算执行时间时出错：{ex.Message}\n堆栈跟踪：{ex.StackTrace}";
+            Log.Error(ex, "计算Cron执行时间时发生异常 - 表达式: {Expression}", CronExpression);
+            return $"计算执行时间时发生错误: {ex.Message}";
         }
     }
 
@@ -415,8 +415,17 @@ public partial class CronExpressionViewModel : ObservableObject
     {
         try
         {
+            Log.Debug("开始CalculateNextExecution - 输入时间: {FromTime}, 表达式: {Expression}", from, CronExpression);
+            
             var parts = CronExpression.Split(' ');
-            if (parts.Length != 6) return null;
+            if (parts.Length != 6) 
+            {
+                Log.Warning("Cron表达式格式错误 - 期望6个字段，实际{Count}个字段: {Parts}", parts.Length, string.Join(", ", parts));
+                return null;
+            }
+
+            Log.Debug("解析Cron字段 - 秒:{Sec} 分:{Min} 时:{Hour} 日:{Day} 月:{Month} 星期:{Week}", 
+                parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
 
             var secondValues = ParseField(parts[0], 0, 59);
             var minuteValues = ParseField(parts[1], 0, 59);
@@ -424,12 +433,17 @@ public partial class CronExpressionViewModel : ObservableObject
             var dayValues = ParseField(parts[3], 1, 31);
             var monthValues = ParseField(parts[4], 1, 12);
 
+            Log.Debug("解析结果 - 秒:{Sec} 分:{Min} 时:{Hour} 日:{Day} 月:{Month}", 
+                string.Join(",", secondValues), string.Join(",", minuteValues), 
+                string.Join(",", hourValues), string.Join(",", dayValues), string.Join(",", monthValues));
+
             // 优化搜索策略：从年开始逐级递减搜索
             var searchTime = new DateTime(from.Year, from.Month, from.Day, from.Hour, from.Minute, from.Second);
             
             // 如果当前时间已经匹配，则从下一秒开始搜索
             if (IsTimeMatch(searchTime, secondValues, minuteValues, hourValues, dayValues, monthValues, parts[5]))
             {
+                Log.Debug("当前时间已匹配，从下一秒开始搜索");
                 searchTime = searchTime.AddSeconds(1);
             }
 
@@ -438,6 +452,8 @@ public partial class CronExpressionViewModel : ObservableObject
             var maxIterations = 100000; // 最大迭代次数限制
             var iterations = 0;
 
+            Log.Debug("开始搜索 - 起始时间:{Start} 结束时间:{End}", searchTime, endTime);
+
             // 智能搜索：优先按分钟递增，然后按秒递增
             while (searchTime <= endTime && iterations < maxIterations)
             {
@@ -445,7 +461,14 @@ public partial class CronExpressionViewModel : ObservableObject
                 
                 if (IsTimeMatch(searchTime, secondValues, minuteValues, hourValues, dayValues, monthValues, parts[5]))
                 {
+                    Log.Information("找到匹配时间 - {MatchTime} (迭代{Iterations}次)", searchTime, iterations);
                     return searchTime;
+                }
+
+                // 每1000次迭代输出一次进度信息，避免日志过于频繁
+                if (iterations % 1000 == 0)
+                {
+                    Log.Debug("搜索进度 - 当前时间:{Current} 迭代次数:{Iterations}", searchTime, iterations);
                 }
 
                 // 优化搜索步长：如果秒字段是固定值或简单模式，可以跳过不匹配的秒
@@ -454,8 +477,18 @@ public partial class CronExpressionViewModel : ObservableObject
                     var nextValidSecond = GetNextValidSecond(parts[0], searchTime.Second);
                     if (nextValidSecond > searchTime.Second)
                     {
-                        searchTime = new DateTime(searchTime.Year, searchTime.Month, searchTime.Day, 
-                                                searchTime.Hour, searchTime.Minute, nextValidSecond);
+                        if (nextValidSecond >= 60)
+                        {
+                            // 需要进入下一分钟
+                            searchTime = searchTime.AddMinutes(1);
+                            searchTime = new DateTime(searchTime.Year, searchTime.Month, searchTime.Day, 
+                                                    searchTime.Hour, searchTime.Minute, 0);
+                        }
+                        else
+                        {
+                            searchTime = new DateTime(searchTime.Year, searchTime.Month, searchTime.Day, 
+                                                    searchTime.Hour, searchTime.Minute, nextValidSecond);
+                        }
                         continue;
                     }
                 }
@@ -466,19 +499,31 @@ public partial class CronExpressionViewModel : ObservableObject
                     var nextValidMinute = GetNextValidMinute(parts[1], searchTime.Minute);
                     if (nextValidMinute > searchTime.Minute)
                     {
-                        searchTime = new DateTime(searchTime.Year, searchTime.Month, searchTime.Day, 
-                                                searchTime.Hour, nextValidMinute, 0);
+                        if (nextValidMinute >= 60)
+                        {
+                            // 需要进入下一小时
+                            searchTime = searchTime.AddHours(1);
+                            searchTime = new DateTime(searchTime.Year, searchTime.Month, searchTime.Day, 
+                                                    searchTime.Hour, 0, 0);
+                        }
+                        else
+                        {
+                            searchTime = new DateTime(searchTime.Year, searchTime.Month, searchTime.Day, 
+                                                    searchTime.Hour, nextValidMinute, 0);
+                        }
                         continue;
                     }
                 }
 
+                // 确保时间始终递增，避免无限循环
                 searchTime = searchTime.AddSeconds(1);
             }
 
             return null;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Error(ex, "CalculateNextExecution异常 - 输入时间:{FromTime}", from);
             return null;
         }
     }
@@ -536,10 +581,12 @@ public partial class CronExpressionViewModel : ObservableObject
                            List<int> days, List<int> months, string weekField)
     {
         // 检查秒、分、时、月是否匹配
-        if (!seconds.Contains(time.Second) || 
-            !minutes.Contains(time.Minute) || 
-            !hours.Contains(time.Hour) || 
-            !months.Contains(time.Month))
+        var secondMatch = seconds.Contains(time.Second);
+        var minuteMatch = minutes.Contains(time.Minute);
+        var hourMatch = hours.Contains(time.Hour);
+        var monthMatch = months.Contains(time.Month);
+        
+        if (!secondMatch || !minuteMatch || !hourMatch || !monthMatch)
         {
             return false;
         }
@@ -560,7 +607,9 @@ public partial class CronExpressionViewModel : ObservableObject
         // 如果都不是 "?"，则需要日或周匹配其中之一
         else
         {
-            return days.Contains(time.Day) || IsWeekMatch(time, weekField);
+            var dayMatch = days.Contains(time.Day);
+            var weekMatch = IsWeekMatch(time, weekField);
+            return dayMatch || weekMatch;
         }
     }
 
