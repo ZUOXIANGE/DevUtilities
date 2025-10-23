@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -32,10 +32,10 @@
                        Foreground="#2196F3"
                        VerticalAlignment="Center"/>
             <Button Content="刷新" 
-                    Command="{Binding QueryIpCommand}" 
+                    Command="{Binding GetCurrentIpCommand}" 
                     FontSize="12"/>
             <Button Content="查询当前IP" 
-                    Command="{Binding QueryIpCommand}" 
+                    Command="{Binding GetCurrentIpCommand}" 
                     FontSize="12"/>
           </StackPanel>
         </StackPanel>
@@ -80,9 +80,9 @@
           <!-- 快速查询按钮 -->
           <StackPanel Orientation="Horizontal" Spacing="8">
             <SelectableTextBlock Text="快速查询：" VerticalAlignment="Center"/>
-            <Button Content="Google DNS (8.8.8.8)" Command="{Binding QueryIpCommand}" CommandParameter="8.8.8.8"/>
-            <Button Content="Cloudflare (1.1.1.1)" Command="{Binding QueryIpCommand}" CommandParameter="1.1.1.1"/>
-            <Button Content="百度 (220.181.38.148)" Command="{Binding QueryIpCommand}" CommandParameter="220.181.38.148"/>
+            <Button Content="Google DNS (8.8.8.8)" Click="OnQuickQueryClick" Tag="8.8.8.8"/>
+            <Button Content="Cloudflare (1.1.1.1)" Click="OnQuickQueryClick" Tag="1.1.1.1"/>
+            <Button Content="百度 (220.181.38.148)" Click="OnQuickQueryClick" Tag="220.181.38.148"/>
           </StackPanel>
         </StackPanel>
       </Border>

@@ -47,7 +47,18 @@ public partial class IpQueryViewModel : ObservableObject
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
         
         // 获取当前IP
-        _ = Task.Run(GetCurrentIpAsync);
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                CurrentIp = await GetCurrentIpAsync();
+            }
+            catch (Exception ex)
+            {
+                // 静默处理错误，不影响UI初始化
+                System.Diagnostics.Debug.WriteLine($"获取当前IP失败: {ex.Message}");
+            }
+        });
     }
 
     [RelayCommand]
@@ -216,7 +227,7 @@ public partial class IpQueryViewModel : ObservableObject
     {
         try
         {
-            // 使用免费的IP地理位置API
+            // 使用免费的IP地理位置API (使用HTTP协议，因为HTTPS需要付费)
             var url = $"http://ip-api.com/json/{ip}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query";
             
             var response = await _httpClient.GetStringAsync(url);

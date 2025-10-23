@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:DevUtilities.ViewModels"
              x:Class="DevUtilities.Views.TextEncryptionView"
@@ -28,7 +28,7 @@
       <!-- Algorithm Settings -->
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <SelectableTextBlock Text="算法设置" FontSize="16" FontWeight="SemiBold"/>
+          <TextBlock Text="算法设置" FontSize="16" FontWeight="SemiBold"/>
           
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
             <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4" Margin="0,0,6,0">
@@ -55,7 +55,7 @@
       <!-- Key and IV Settings -->
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <SelectableTextBlock Text="密钥设置" FontSize="16" FontWeight="SemiBold"/>
+          <TextBlock Text="密钥设置" FontSize="16" FontWeight="SemiBold"/>
           
           <StackPanel Spacing="8">
             <SelectableTextBlock Text="加密密钥"/>

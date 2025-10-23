@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -63,7 +63,7 @@
             
             <!-- 第二行选项 -->
             <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
-              <SelectableTextBlock Text="缩进设置:" FontWeight="Medium" />
+              <TextBlock Text="缩进设置:" FontWeight="Medium" />
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <SelectableTextBlock Text="大小:" VerticalAlignment="Center"/>
                 <NumericUpDown Value="{Binding IndentSize}" Minimum="1" Maximum="8" Width="60"/>

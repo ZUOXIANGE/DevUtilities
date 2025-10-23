@@ -27,7 +27,7 @@
               CornerRadius="8"
               Padding="16">
         <StackPanel Spacing="12">
-          <SelectableTextBlock Text="权限设置" FontWeight="SemiBold" FontSize="16"/>
+          <TextBlock Text="权限设置" FontWeight="SemiBold" FontSize="16"/>
 
           <!-- 三列：所有者、所属组、其他用户 -->
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="8">

@@ -6,6 +6,11 @@
              x:Class="DevUtilities.App"
              RequestedThemeVariant="Default">
 
+  <Application.Resources>
+    <!-- Converters -->
+    <converters:BooleanToColorConverter x:Key="BoolToColorConverter"/>
+  </Application.Resources>
+
   <Application.DataTemplates>
     <!-- Tool View Templates -->
     <DataTemplate DataType="{x:Type vm:TimestampConverterViewModel}">

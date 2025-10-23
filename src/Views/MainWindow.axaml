@@ -41,15 +41,25 @@
           
           <StackPanel Grid.Column="0" VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-              <SelectableTextBlock Text="⚡" FontSize="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
-              <SelectableTextBlock Text="DevUtilities" FontSize="28" FontWeight="Bold" Foreground="White"/>
+              <TextBlock Text="⚡" FontSize="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+              <TextBlock Text="DevUtilities" FontSize="28" FontWeight="Bold" Foreground="White"/>
             </StackPanel>
-            <SelectableTextBlock Text="开发者工具集 - 提升效率的实用工具" FontSize="15" Foreground="White" Opacity="0.9"/>
+            <TextBlock Text="开发者工具集 - 提升效率的实用工具" FontSize="15" Foreground="White" Opacity="0.9"/>
           </StackPanel>
           
           <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+            <!-- Settings Button for Home Page -->
+            <Button Command="{Binding OpenSettingsCommand}" 
+                    Background="White" CornerRadius="16" Padding="10,5" Opacity="0.9"
+                    BorderThickness="0" Margin="0,0,10,0"
+                    ToolTip.Tip="设置">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="⚙️" FontSize="11" Foreground="#4F46E5" FontWeight="SemiBold" Margin="0,0,4,0"/>
+                <TextBlock Text="设置" FontSize="11" Foreground="#4F46E5" FontWeight="SemiBold"/>
+              </StackPanel>
+            </Button>
             <Border Background="White" CornerRadius="16" Padding="10,5" Opacity="0.9">
-              <SelectableTextBlock Text="v1.0" FontSize="11" Foreground="#4F46E5" FontWeight="SemiBold"/>
+              <TextBlock Text="v1.0" FontSize="11" Foreground="#4F46E5" FontWeight="SemiBold"/>
             </Border>
           </StackPanel>
         </Grid>
@@ -166,10 +176,10 @@
           </Button>
           
           <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-            <SelectableTextBlock Text="{Binding SelectedTool.Icon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+            <TextBlock Text="{Binding SelectedTool.Icon}" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
             <StackPanel>
-              <SelectableTextBlock Text="{Binding SelectedTool.DisplayName}" FontSize="18" FontWeight="SemiBold" Foreground="#333333"/>
-              <SelectableTextBlock Text="{Binding SelectedTool.Description}" FontSize="12" Foreground="#666666"/>
+              <TextBlock Text="{Binding SelectedTool.DisplayName}" FontSize="18" FontWeight="SemiBold" Foreground="#333333"/>
+              <TextBlock Text="{Binding SelectedTool.Description}" FontSize="12" Foreground="#666666"/>
             </StackPanel>
           </StackPanel>
           
@@ -178,7 +188,7 @@
                   Command="{Binding OpenSettingsCommand}" 
                   Background="Transparent" BorderThickness="0" Padding="8"
                   ToolTip.Tip="设置">
-            <SelectableTextBlock Text="⚙️" FontSize="16"/>
+            <TextBlock Text="⚙️" FontSize="16"/>
           </Button>
         </Grid>
       </Border>

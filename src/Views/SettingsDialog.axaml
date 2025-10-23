@@ -56,7 +56,7 @@
         <!-- 性能设置 -->
         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <SelectableTextBlock Text="性能设置" FontSize="18" FontWeight="SemiBold" />
+            <TextBlock Text="性能设置" FontSize="18" FontWeight="SemiBold" />
             
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="12">
               
@@ -92,7 +92,7 @@
         <!-- 日志设置 -->
         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <SelectableTextBlock Text="日志设置" FontSize="18" FontWeight="SemiBold" />
+            <TextBlock Text="日志设置" FontSize="18" FontWeight="SemiBold" />
             
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="12">
               
@@ -119,7 +119,7 @@
         <!-- 设置管理 -->
         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <SelectableTextBlock Text="设置管理" FontSize="18" FontWeight="SemiBold" />
+            <TextBlock Text="设置管理" FontSize="18" FontWeight="SemiBold" />
             
             <StackPanel Orientation="Horizontal" Spacing="12">
               <Button Content="重置为默认值" Command="{Binding ResetToDefaultCommand}" 
