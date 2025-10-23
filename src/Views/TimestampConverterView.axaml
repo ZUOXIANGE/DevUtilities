@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:DevUtilities.ViewModels"
              x:Class="DevUtilities.Views.TimestampConverterView"
@@ -12,25 +12,25 @@
     <StackPanel Margin="24" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="时间戳转换工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      <SelectableTextBlock Text="时间戳转换工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
       
       <!-- 当前时间显示 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="当前时间" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="当前时间" FontSize="16" FontWeight="SemiBold"/>
           
           <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
              <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4" Margin="0,0,6,0">
-              <TextBlock Text="当前时间戳" FontSize="12" Foreground="#666666"/>
+              <SelectableTextBlock Text="当前时间戳" FontSize="12" Foreground="#666666"/>
               <Border Background="#E8F5E8" CornerRadius="4" Padding="10">
-                <TextBlock Text="{Binding CurrentTimestamp}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <SelectableTextBlock Text="{Binding CurrentTimestamp}" FontWeight="Bold" HorizontalAlignment="Center"/>
               </Border>
             </StackPanel>
             
             <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4" Margin="6,0,0,0">
-              <TextBlock Text="当前日期时间" FontSize="12" Foreground="#666666"/>
+              <SelectableTextBlock Text="当前日期时间" FontSize="12" Foreground="#666666"/>
               <Border Background="#E8F5E8" CornerRadius="4" Padding="10">
-                <TextBlock Text="{Binding CurrentDateTime}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <SelectableTextBlock Text="{Binding CurrentDateTime}" FontWeight="Bold" HorizontalAlignment="Center"/>
               </Border>
             </StackPanel>
           </Grid>
@@ -40,10 +40,10 @@
       <!-- 时间戳转日期时间 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="时间戳转日期时间" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="时间戳转日期时间" FontSize="16" FontWeight="SemiBold"/>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="输入时间戳" FontSize="12" Foreground="#666666"/>
+            <SelectableTextBlock Text="输入时间戳" FontSize="12" Foreground="#666666"/>
             <Grid ColumnDefinitions="*,Auto">
                <TextBox Grid.Column="0" 
                         Text="{Binding TimestampInput}" 
@@ -60,7 +60,7 @@
           </StackPanel>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="转换结果" FontSize="12" Foreground="#666666"/>
+            <SelectableTextBlock Text="转换结果" FontSize="12" Foreground="#666666"/>
             <TextBox Text="{Binding DateTimeResult}" 
                      IsReadOnly="True" 
                      AcceptsReturn="True" 
@@ -74,10 +74,10 @@
       <!-- 日期时间转时间戳 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="日期时间转时间戳" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="日期时间转时间戳" FontSize="16" FontWeight="SemiBold"/>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="输入日期时间" FontSize="12" Foreground="#666666"/>
+            <SelectableTextBlock Text="输入日期时间" FontSize="12" Foreground="#666666"/>
             <Grid ColumnDefinitions="*,Auto">
                <TextBox Grid.Column="0" 
                         Text="{Binding DateTimeInput}" 
@@ -94,7 +94,7 @@
           </StackPanel>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="转换结果" FontSize="12" Foreground="#666666"/>
+            <SelectableTextBlock Text="转换结果" FontSize="12" Foreground="#666666"/>
             <TextBox Text="{Binding TimestampResult}" 
                      IsReadOnly="True" 
                      AcceptsReturn="True" 
@@ -108,3 +108,4 @@
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,8 +16,8 @@
     <!-- 标题区域 -->
     <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,16">
       <StackPanel Spacing="8">
-        <TextBlock Text="文本差异对比工具" FontSize="24" FontWeight="Bold" />
-        <TextBlock Text="支持文件和文本的逐行、逐字符差异对比分析" FontSize="14" Foreground="#666666" />
+        <SelectableTextBlock Text="文本差异对比工具" FontSize="24" FontWeight="Bold" />
+        <SelectableTextBlock Text="支持文件和文本的逐行、逐字符差异对比分析" FontSize="14" Foreground="#666666" />
       </StackPanel>
     </Border>
     
@@ -56,7 +56,7 @@
           <Border Grid.Column="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,8,0">
             <StackPanel Spacing="12">
               <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Grid.Column="0" Text="左侧文本" FontSize="16" FontWeight="SemiBold"/>
+                <SelectableTextBlock Grid.Column="0" Text="左侧文本" FontSize="16" FontWeight="SemiBold"/>
                 <Button Grid.Column="1" Content="加载文件" Command="{Binding LoadLeftFileCommand}" 
                        Background="#6C757D" Foreground="White" Padding="8,4"/>
               </Grid>
@@ -74,7 +74,7 @@
           <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="8,0,0,0">
             <StackPanel Spacing="12">
               <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Grid.Column="0" Text="右侧文本" FontSize="16" FontWeight="SemiBold"/>
+                <SelectableTextBlock Grid.Column="0" Text="右侧文本" FontSize="16" FontWeight="SemiBold"/>
                 <Button Grid.Column="1" Content="加载文件" Command="{Binding LoadRightFileCommand}" 
                        Background="#6C757D" Foreground="White" Padding="8,4"/>
               </Grid>
@@ -92,11 +92,11 @@
         <!-- 对比结果区域 -->
         <Border Grid.Row="2" Background="#F8F9FA" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <TextBlock Text="对比结果" FontSize="16" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="对比结果" FontSize="16" FontWeight="SemiBold"/>
             
             <!-- 对比摘要 -->
              <Border Background="White" CornerRadius="4" Padding="12">
-               <TextBlock Text="{Binding DiffSummary}" 
+               <SelectableTextBlock Text="{Binding DiffSummary}" 
                           FontWeight="Medium"/>
              </Border>
             
@@ -110,7 +110,7 @@
                       <Grid ColumnDefinitions="Auto,*,*">
                         
                         <!-- 行号 -->
-                        <TextBlock Grid.Column="0" 
+                        <SelectableTextBlock Grid.Column="0" 
                                   Text="{Binding LineNumber}" 
                                   FontFamily="Consolas,Monaco,monospace"
                                   FontSize="12" 
@@ -121,7 +121,7 @@
                                   IsVisible="{Binding $parent[UserControl].((vm:TextDiffViewModel)DataContext).ShowLineNumbers}"/>
                         
                         <!-- 左侧内容 -->
-                        <TextBlock Grid.Column="1" 
+                        <SelectableTextBlock Grid.Column="1" 
                                   Text="{Binding LeftContent}" 
                                   FontFamily="Consolas,Monaco,monospace"
                                   FontSize="12" 
@@ -129,7 +129,7 @@
                                   Margin="0,0,8,0"/>
                         
                         <!-- 右侧内容 -->
-                        <TextBlock Grid.Column="2" 
+                        <SelectableTextBlock Grid.Column="2" 
                                   Text="{Binding RightContent}" 
                                   FontFamily="Consolas,Monaco,monospace"
                                   FontSize="12" 
@@ -147,3 +147,4 @@
     </ScrollViewer>
   </Grid>
 </UserControl>
+

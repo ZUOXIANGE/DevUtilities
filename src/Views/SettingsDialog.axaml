@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -25,11 +25,11 @@
         <!-- 格式化选项 -->
         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <TextBlock Text="格式化选项" FontSize="18" FontWeight="SemiBold" />
+            <SelectableTextBlock Text="格式化选项" FontSize="18" FontWeight="SemiBold" />
             
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" Margin="0,8,0,0">
               <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4" Margin="0,0,8,0">
-                <TextBlock Text="缩进大小:" FontWeight="Medium" />
+                <SelectableTextBlock Text="缩进大小:" FontWeight="Medium" />
                 <NumericUpDown Value="{Binding IndentSize}" 
                              Minimum="1" Maximum="8" 
                              Increment="1" />
@@ -56,19 +56,19 @@
         <!-- 性能设置 -->
         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <TextBlock Text="性能设置" FontSize="18" FontWeight="SemiBold" />
+            <SelectableTextBlock Text="性能设置" FontSize="18" FontWeight="SemiBold" />
             
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="12">
               
               <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4">
-                <TextBlock Text="最大文件大小 (MB):" FontWeight="Medium" />
+                <SelectableTextBlock Text="最大文件大小 (MB):" FontWeight="Medium" />
                 <NumericUpDown Value="{Binding MaxFileSize}" 
                              Minimum="1" Maximum="1000" 
                              Increment="1" />
               </StackPanel>
               
               <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4">
-                <TextBlock Text="最大处理时间 (秒):" FontWeight="Medium" />
+                <SelectableTextBlock Text="最大处理时间 (秒):" FontWeight="Medium" />
                 <NumericUpDown Value="{Binding MaxProcessingTime}" 
                              Minimum="5" Maximum="300" 
                              Increment="5" />
@@ -80,7 +80,7 @@
                        Margin="0,8,0,0" />
               
               <StackPanel Grid.Column="1" Grid.Row="1" Spacing="4" Margin="0,8,0,0">
-                <TextBlock Text="内存阈值 (MB):" FontWeight="Medium" />
+                <SelectableTextBlock Text="内存阈值 (MB):" FontWeight="Medium" />
                 <NumericUpDown Value="{Binding MemoryThreshold}" 
                              Minimum="50" Maximum="2000" 
                              Increment="10" />
@@ -92,7 +92,7 @@
         <!-- 设置管理 -->
         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="12">
-            <TextBlock Text="设置管理" FontSize="18" FontWeight="SemiBold" />
+            <SelectableTextBlock Text="设置管理" FontSize="18" FontWeight="SemiBold" />
             
             <StackPanel Orientation="Horizontal" Spacing="12">
               <Button Content="重置为默认值" Command="{Binding ResetToDefaultCommand}" 
@@ -120,3 +120,4 @@
     
   </Grid>
 </Window>
+

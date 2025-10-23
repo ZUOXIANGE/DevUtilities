@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,8 +16,8 @@
     <!-- 标题区域 -->
     <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,16">
       <StackPanel Spacing="8">
-        <TextBlock Text="SQL格式化器" FontSize="24" FontWeight="Bold" />
-        <TextBlock Text="格式化和美化SQL语句，支持多种数据库方言" FontSize="14" Foreground="#666666" />
+        <SelectableTextBlock Text="SQL格式化器" FontSize="24" FontWeight="Bold" />
+        <SelectableTextBlock Text="格式化和美化SQL语句，支持多种数据库方言" FontSize="14" Foreground="#666666" />
       </StackPanel>
     </Border>
     
@@ -31,14 +31,14 @@
             
             <!-- 第一行选项 -->
             <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
-              <TextBlock Text="数据库方言:" FontWeight="Medium" />
+              <SelectableTextBlock Text="数据库方言:" FontWeight="Medium" />
               <ComboBox ItemsSource="{Binding AvailableDialects}" 
                        SelectedItem="{Binding SelectedDialect}" 
                        MinWidth="120"/>
             </StackPanel>
             
             <StackPanel Grid.Row="0" Grid.Column="1" Spacing="8">
-              <TextBlock Text="格式选项:" FontWeight="Medium" />
+              <SelectableTextBlock Text="格式选项:" FontWeight="Medium" />
               <StackPanel Spacing="4">
                 <CheckBox Content="关键字大写" IsChecked="{Binding UppercaseKeywords}" />
                 <CheckBox Content="添加换行符" IsChecked="{Binding AddLineBreaks}" />
@@ -46,7 +46,7 @@
             </StackPanel>
             
             <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
-              <TextBlock Text="其他选项:" FontWeight="Medium" />
+              <SelectableTextBlock Text="其他选项:" FontWeight="Medium" />
               <StackPanel Spacing="4">
                 <CheckBox Content="对齐列名" IsChecked="{Binding AlignColumns}" />
                 <CheckBox Content="压缩输出" IsChecked="{Binding CompactOutput}" />
@@ -63,16 +63,16 @@
             
             <!-- 第二行选项 -->
             <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
-              <TextBlock Text="缩进设置:" FontWeight="Medium" />
+              <SelectableTextBlock Text="缩进设置:" FontWeight="Medium" />
               <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="大小:" VerticalAlignment="Center"/>
+                <SelectableTextBlock Text="大小:" VerticalAlignment="Center"/>
                 <NumericUpDown Value="{Binding IndentSize}" Minimum="1" Maximum="8" Width="60"/>
                 <CheckBox Content="使用Tab" IsChecked="{Binding UseTabsForIndent}" />
               </StackPanel>
             </StackPanel>
             
             <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
-              <TextBlock Text="快速操作:" FontWeight="Medium" />
+              <SelectableTextBlock Text="快速操作:" FontWeight="Medium" />
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <Button Content="验证" Command="{Binding ValidateCommand}" 
                        Background="#17A2B8" Foreground="White" Padding="8,4"/>
@@ -84,7 +84,7 @@
             </StackPanel>
             
             <StackPanel Grid.Row="1" Grid.Column="2" Spacing="8">
-              <TextBlock Text="示例:" FontWeight="Medium" />
+              <SelectableTextBlock Text="示例:" FontWeight="Medium" />
               <Button Content="加载示例" Command="{Binding UseExampleCommand}" 
                      Background="#28A745" Foreground="White" Padding="8,4"/>
             </StackPanel>
@@ -97,7 +97,7 @@
           <!-- 输入区域 -->
           <Border Grid.Column="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,8,0">
             <StackPanel Spacing="12">
-              <TextBlock Text="输入SQL" FontSize="16" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="输入SQL" FontSize="16" FontWeight="SemiBold"/>
               <TextBox Text="{Binding InputText}" 
                       AcceptsReturn="True" 
                       Height="400" 
@@ -113,7 +113,7 @@
           <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="8,0,0,0">
             <StackPanel Spacing="12">
               <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Grid.Column="0" Text="格式化结果" FontSize="16" FontWeight="SemiBold"/>
+                <SelectableTextBlock Grid.Column="0" Text="格式化结果" FontSize="16" FontWeight="SemiBold"/>
                 <Button Grid.Column="1" Content="复制" Command="{Binding CopyCommand}" 
                          Background="#28A745" Foreground="White" Padding="8,4"/>
               </Grid>
@@ -136,8 +136,8 @@
                CornerRadius="4" Padding="12" Margin="0,16,0,0"
                IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
           <Grid ColumnDefinitions="Auto,*">
-            <TextBlock Grid.Column="0" Text="ℹ️" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <TextBlock Grid.Column="1" Text="{Binding ValidationMessage}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            <SelectableTextBlock Grid.Column="0" Text="ℹ️" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <SelectableTextBlock Grid.Column="1" Text="{Binding ValidationMessage}" TextWrapping="Wrap" VerticalAlignment="Center" />
           </Grid>
         </Border>
         
@@ -145,3 +145,4 @@
     </ScrollViewer>
   </Grid>
 </UserControl>
+

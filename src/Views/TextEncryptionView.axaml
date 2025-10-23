@@ -12,12 +12,12 @@
     <StackPanel Spacing="20">
       
       <!-- Title -->
-      <TextBlock Text="文本加解密工具" FontSize="24" FontWeight="Bold" Foreground="#333333"/>
+      <SelectableTextBlock Text="文本加解密工具" FontSize="24" FontWeight="Bold" Foreground="#333333"/>
       
       <!-- Mode Selection -->
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="加密模式" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="加密模式" FontSize="16" FontWeight="SemiBold"/>
           <StackPanel Orientation="Horizontal" Spacing="20">
             <RadioButton Content="加密" IsChecked="{Binding IsEncryptMode}" GroupName="Mode"/>
             <RadioButton Content="解密" IsChecked="{Binding !IsEncryptMode}" GroupName="Mode"/>
@@ -28,23 +28,23 @@
       <!-- Algorithm Settings -->
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="算法设置" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="算法设置" FontSize="16" FontWeight="SemiBold"/>
           
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
             <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4" Margin="0,0,6,0">
-              <TextBlock Text="加密算法"/>
+              <SelectableTextBlock Text="加密算法"/>
               <ComboBox ItemsSource="{Binding EncryptionAlgorithms}" 
                        SelectedItem="{Binding SelectedAlgorithm}"/>
             </StackPanel>
             
             <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4" Margin="6,0,6,0">
-              <TextBlock Text="加密模式"/>
+              <SelectableTextBlock Text="加密模式"/>
               <ComboBox ItemsSource="{Binding CipherModes}" 
                        SelectedItem="{Binding SelectedMode}"/>
             </StackPanel>
             
             <StackPanel Grid.Column="2" Grid.Row="0" Spacing="4" Margin="6,0,0,0">
-              <TextBlock Text="填充模式"/>
+              <SelectableTextBlock Text="填充模式"/>
               <ComboBox ItemsSource="{Binding PaddingModes}" 
                        SelectedItem="{Binding SelectedPadding}"/>
             </StackPanel>
@@ -55,10 +55,10 @@
       <!-- Key and IV Settings -->
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="密钥设置" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="密钥设置" FontSize="16" FontWeight="SemiBold"/>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="加密密钥"/>
+            <SelectableTextBlock Text="加密密钥"/>
             <Grid ColumnDefinitions="*,Auto">
               <TextBox Grid.Column="0" Text="{Binding EncryptionKey}" 
                       Watermark="输入或生成加密密钥" Margin="0,0,8,0"/>
@@ -68,7 +68,7 @@
           </StackPanel>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="初始化向量 (IV)"/>
+            <SelectableTextBlock Text="初始化向量 (IV)"/>
             <TextBox Text="{Binding InitializationVector}" 
                     Watermark="自动生成或手动输入"/>
           </StackPanel>
@@ -78,7 +78,7 @@
       <!-- Input Text -->
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="输入文本" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="输入文本" FontSize="16" FontWeight="SemiBold"/>
           <TextBox Text="{Binding InputText}" 
                   AcceptsReturn="True" 
                   Height="120" 
@@ -101,7 +101,7 @@
       <Border Background="#F8F9FA" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
           <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="输出结果" FontSize="16" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="输出结果" FontSize="16" FontWeight="SemiBold"/>
             <Button Content="复制结果" 
                    Command="{Binding CopyToClipboardCommand}" 
                    CommandParameter="{Binding OutputText}"
@@ -118,7 +118,7 @@
       <!-- Status Message -->
       <Border Background="#E9ECEF" CornerRadius="8" Padding="12" 
              IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-        <TextBlock Text="{Binding StatusMessage}" 
+        <SelectableTextBlock Text="{Binding StatusMessage}" 
                   FontWeight="Medium" 
                   Foreground="#495057"/>
       </Border>

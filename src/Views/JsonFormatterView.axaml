@@ -13,11 +13,11 @@
       
       <!-- 标题区域 -->
       <StackPanel Spacing="6">
-        <TextBlock Text="JSON格式化器" 
+        <SelectableTextBlock Text="JSON格式化器" 
                    FontSize="26" 
                    FontWeight="Bold" 
                    Foreground="{DynamicResource SystemAccentColor}"/>
-        <TextBlock Text="JSON格式化、验证和美化工具" 
+        <SelectableTextBlock Text="JSON格式化、验证和美化工具" 
                    FontSize="14" 
                    Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
       </StackPanel>
@@ -27,12 +27,12 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="16"/>
           
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
             <!-- 缩进设置 -->
             <StackPanel Grid.Column="0" Grid.Row="0" Spacing="6" Margin="0,0,10,0">
-              <TextBlock Text="缩进大小"/>
+              <SelectableTextBlock Text="缩进大小"/>
               <ComboBox SelectedIndex="1" HorizontalAlignment="Stretch">
                 <ComboBoxItem Content="2个空格"/>
                 <ComboBoxItem Content="4个空格"/>
@@ -62,7 +62,7 @@
         
         <!-- 输入区域 -->
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-          <TextBlock Text="JSON输入" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="JSON输入" FontWeight="SemiBold" FontSize="16"/>
           <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
                   CornerRadius="8" 
                   Padding="12"
@@ -97,7 +97,7 @@
 
         <!-- 输出区域 -->
         <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-          <TextBlock Text="格式化输出" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="格式化输出" FontWeight="SemiBold" FontSize="16"/>
           <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
                   CornerRadius="8" 
                   Padding="12"
@@ -140,7 +140,7 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="快速操作" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="快速操作" FontWeight="SemiBold" FontSize="16"/>
           
           <WrapPanel Orientation="Horizontal" ItemWidth="180" ItemHeight="40">
             <Button Content="美化JSON" Command="{Binding BeautifyJsonCommand}" 
@@ -164,26 +164,26 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="JSON工具" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="JSON工具" FontWeight="SemiBold" FontSize="16"/>
           
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
             <!-- 路径查询 -->
             <StackPanel Grid.Column="0" Grid.Row="0" Spacing="6" Margin="0,0,10,0">
-              <TextBlock Text="JSONPath查询"/>
+              <SelectableTextBlock Text="JSONPath查询"/>
               <TextBox Watermark="$.store.book[0].title" FontFamily="Consolas"/>
               <Button Content="查询" HorizontalAlignment="Stretch"/>
             </StackPanel>
             
             <!-- 数据统计 -->
             <StackPanel Grid.Column="1" Grid.Row="0" Spacing="6" Margin="10,0,10,0">
-              <TextBlock Text="数据统计"/>
-              <TextBlock Text="对象: 0 | 数组: 0" FontFamily="Consolas" FontSize="12"/>
-              <TextBlock Text="字符: 0 | 行数: 0" FontFamily="Consolas" FontSize="12"/>
+              <SelectableTextBlock Text="数据统计"/>
+              <SelectableTextBlock Text="对象: 0 | 数组: 0" FontFamily="Consolas" FontSize="12"/>
+              <SelectableTextBlock Text="字符: 0 | 行数: 0" FontFamily="Consolas" FontSize="12"/>
             </StackPanel>
             
             <!-- 转换工具 -->
             <StackPanel Grid.Column="2" Grid.Row="0" Spacing="6" Margin="10,0,0,0">
-              <TextBlock Text="格式转换"/>
+              <SelectableTextBlock Text="格式转换"/>
               <Button Content="转为XML" HorizontalAlignment="Stretch"/>
               <Button Content="转为YAML" HorizontalAlignment="Stretch"/>
             </StackPanel>
@@ -196,7 +196,7 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="文件操作" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="文件操作" FontWeight="SemiBold" FontSize="16"/>
           
           <WrapPanel Orientation="Horizontal" ItemWidth="150" ItemHeight="35">
             <Button Content="选择文件" Command="{Binding ClearCommand}" 
@@ -221,7 +221,7 @@
               Padding="12"
               IsVisible="{Binding HasError}">
         <StackPanel Spacing="8">
-          <TextBlock Text="错误信息" FontWeight="SemiBold" Foreground="White"/>
+          <SelectableTextBlock Text="错误信息" FontWeight="SemiBold" Foreground="White"/>
           <TextBox Text="{Binding ErrorMessage}" 
                   IsReadOnly="True" 
                   Background="Transparent"
@@ -237,20 +237,20 @@
                 CornerRadius="8" 
                 Padding="16">
           <StackPanel Spacing="8">
-            <TextBlock Text="基本功能：" FontWeight="SemiBold"/>
-            <TextBlock Text="• 格式化和美化JSON数据" TextWrapping="Wrap"/>
-            <TextBlock Text="• 验证JSON语法的正确性" TextWrapping="Wrap"/>
-            <TextBlock Text="• 压缩JSON以减少文件大小" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="基本功能：" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="• 格式化和美化JSON数据" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 验证JSON语法的正确性" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 压缩JSON以减少文件大小" TextWrapping="Wrap"/>
             
-            <TextBlock Text="高级功能：" FontWeight="SemiBold" Margin="0,12,0,0"/>
-            <TextBlock Text="• JSONPath查询和数据提取" TextWrapping="Wrap"/>
-            <TextBlock Text="• 属性排序和结构优化" TextWrapping="Wrap"/>
-            <TextBlock Text="• 批量文件处理和格式转换" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="高级功能：" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <SelectableTextBlock Text="• JSONPath查询和数据提取" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 属性排序和结构优化" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 批量文件处理和格式转换" TextWrapping="Wrap"/>
             
-            <TextBlock Text="快捷键：" FontWeight="SemiBold" Margin="0,12,0,0"/>
-            <TextBlock Text="• Ctrl+F: 格式化JSON" TextWrapping="Wrap"/>
-            <TextBlock Text="• Ctrl+V: 粘贴内容" TextWrapping="Wrap"/>
-            <TextBlock Text="• Ctrl+C: 复制结果" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="快捷键：" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <SelectableTextBlock Text="• Ctrl+F: 格式化JSON" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• Ctrl+V: 粘贴内容" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• Ctrl+C: 复制结果" TextWrapping="Wrap"/>
           </StackPanel>
         </Border>
       </Expander>

@@ -9,12 +9,12 @@
   <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="20" Spacing="20">
       <!-- 标题 -->
-      <TextBlock Text="哈希生成器" 
+      <SelectableTextBlock Text="哈希生成器" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
       
-      <TextBlock Text="支持多种哈希算法，包括MD5、SHA1、SHA256、SHA384、SHA512" 
+      <SelectableTextBlock Text="支持多种哈希算法，包括MD5、SHA1、SHA256、SHA384、SHA512" 
                  FontSize="14" 
                  HorizontalAlignment="Center"
                  Foreground="Gray" 
@@ -23,7 +23,7 @@
       <!-- 输入设置 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="输入设置" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="输入设置" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -33,7 +33,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="编码格式：" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <SelectableTextBlock Grid.Column="0" Text="编码格式：" VerticalAlignment="Center" Margin="0,0,8,0"/>
             
             <ComboBox Grid.Column="1" 
                       SelectedItem="{Binding SelectedEncoding}"
@@ -57,7 +57,7 @@
       <!-- 输入文本 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
           
           <TextBox Text="{Binding InputText}" 
                    AcceptsReturn="True" 
@@ -77,7 +77,7 @@
       <!-- 哈希结果 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="哈希结果" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="哈希结果" FontWeight="Bold" FontSize="16"/>
           
           <!-- MD5 -->
           <Grid>
@@ -87,7 +87,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="MD5：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="MD5：" VerticalAlignment="Center" FontWeight="SemiBold"/>
             <TextBox Grid.Column="1" 
                      Text="{Binding Md5Hash}" 
                      IsReadOnly="True"
@@ -105,7 +105,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="SHA1：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="SHA1：" VerticalAlignment="Center" FontWeight="SemiBold"/>
             <TextBox Grid.Column="1" 
                      Text="{Binding Sha1Hash}" 
                      IsReadOnly="True"
@@ -123,7 +123,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="SHA256：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="SHA256：" VerticalAlignment="Center" FontWeight="SemiBold"/>
             <TextBox Grid.Column="1" 
                      Text="{Binding Sha256Hash}" 
                      IsReadOnly="True"
@@ -141,7 +141,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="SHA384：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="SHA384：" VerticalAlignment="Center" FontWeight="SemiBold"/>
             <TextBox Grid.Column="1" 
                      Text="{Binding Sha384Hash}" 
                      IsReadOnly="True"
@@ -159,7 +159,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="SHA512：" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="SHA512：" VerticalAlignment="Center" FontWeight="SemiBold"/>
             <TextBox Grid.Column="1" 
                      Text="{Binding Sha512Hash}" 
                      IsReadOnly="True"
@@ -180,7 +180,7 @@
       <!-- 文件哈希 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="文件哈希计算" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="文件哈希计算" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -198,7 +198,7 @@
             <Button Grid.Column="2" Content="计算文件哈希" Command="{Binding ClearAllCommand}"/>
           </Grid>
           
-          <TextBlock Text="处理中..." 
+          <SelectableTextBlock Text="处理中..." 
                      IsVisible="False"
                      HorizontalAlignment="Center"
                      Foreground="Blue"/>
@@ -208,7 +208,7 @@
       <!-- 哈希比较 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="哈希值比较" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="哈希值比较" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -221,14 +221,14 @@
               <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="哈希值1：" Margin="0,0,0,4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="0" Text="哈希值1：" Margin="0,0,0,4"/>
             <TextBox Grid.Row="1" Grid.Column="0" 
                      Text="哈希值1" 
                      Watermark="输入第一个哈希值"
                      FontFamily="Consolas"
                      Margin="0,0,8,8"/>
             
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="哈希值2：" Margin="0,0,0,4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="1" Text="哈希值2：" Margin="0,0,0,4"/>
             <TextBox Grid.Row="1" Grid.Column="1" 
                      Text="哈希值2" 
                      Watermark="输入第二个哈希值"
@@ -240,7 +240,7 @@
                         Spacing="8" 
                         HorizontalAlignment="Center">
               <Button Content="比较" Command="{Binding GenerateAllHashesCommand}"/>
-              <TextBlock Text="比较结果" 
+              <SelectableTextBlock Text="比较结果" 
                          VerticalAlignment="Center"
                          FontWeight="Bold"
                          Foreground="Green"/>
@@ -252,30 +252,30 @@
       <!-- 使用说明 -->
       <Expander Header="使用说明" IsExpanded="False">
         <StackPanel Spacing="12" Margin="10">
-          <TextBlock Text="哈希算法说明" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="哈希算法说明" FontWeight="SemiBold"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• MD5：128位哈希值，速度快但安全性较低，不推荐用于安全场景"/>
-            <TextBlock Text="• SHA1：160位哈希值，安全性中等，已被部分场景弃用"/>
-            <TextBlock Text="• SHA256：256位哈希值，安全性高，广泛使用"/>
-            <TextBlock Text="• SHA384：384位哈希值，安全性很高"/>
-            <TextBlock Text="• SHA512：512位哈希值，安全性最高，计算稍慢"/>
+            <SelectableTextBlock Text="• MD5：128位哈希值，速度快但安全性较低，不推荐用于安全场景"/>
+            <SelectableTextBlock Text="• SHA1：160位哈希值，安全性中等，已被部分场景弃用"/>
+            <SelectableTextBlock Text="• SHA256：256位哈希值，安全性高，广泛使用"/>
+            <SelectableTextBlock Text="• SHA384：384位哈希值，安全性很高"/>
+            <SelectableTextBlock Text="• SHA512：512位哈希值，安全性最高，计算稍慢"/>
           </StackPanel>
           
-          <TextBlock Text="使用场景" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="使用场景" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 文件完整性校验：比较文件哈希值确认文件是否被修改"/>
-            <TextBlock Text="• 密码存储：将密码哈希后存储（建议加盐）"/>
-            <TextBlock Text="• 数字签名：作为数字签名的基础"/>
-            <TextBlock Text="• 数据去重：通过哈希值快速识别重复数据"/>
+            <SelectableTextBlock Text="• 文件完整性校验：比较文件哈希值确认文件是否被修改"/>
+            <SelectableTextBlock Text="• 密码存储：将密码哈希后存储（建议加盐）"/>
+            <SelectableTextBlock Text="• 数字签名：作为数字签名的基础"/>
+            <SelectableTextBlock Text="• 数据去重：通过哈希值快速识别重复数据"/>
           </StackPanel>
           
-          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 支持多种文本编码格式"/>
-            <TextBlock Text="• 可选择大写或小写输出"/>
-            <TextBlock Text="• 支持大文件哈希计算"/>
-            <TextBlock Text="• 提供哈希值比较功能"/>
-            <TextBlock Text="• 所有计算结果可一键复制或保存"/>
+            <SelectableTextBlock Text="• 支持多种文本编码格式"/>
+            <SelectableTextBlock Text="• 可选择大写或小写输出"/>
+            <SelectableTextBlock Text="• 支持大文件哈希计算"/>
+            <SelectableTextBlock Text="• 提供哈希值比较功能"/>
+            <SelectableTextBlock Text="• 所有计算结果可一键复制或保存"/>
           </StackPanel>
         </StackPanel>
       </Expander>

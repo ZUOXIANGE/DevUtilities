@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
   <!-- 这是一个UI模板文件用于确保所有格式化工具的视觉一致性 -->
@@ -8,11 +8,11 @@
       
       <!-- 标题区域 - 统一样式 -->
       <StackPanel Spacing="8">
-        <TextBlock Text="工具标题" 
+        <SelectableTextBlock Text="工具标题" 
                    FontSize="28" 
                    FontWeight="Bold" 
                    Foreground="{DynamicResource SystemAccentColor}"/>
-        <TextBlock Text="工具描述" 
+        <SelectableTextBlock Text="工具描述" 
                    FontSize="14" 
                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
       </StackPanel>
@@ -23,7 +23,7 @@
               Padding="24"
               BoxShadow="0 2 8 0 #10000000">
         <StackPanel Spacing="20">
-          <TextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="18"/>
+          <SelectableTextBlock Text="格式化选项" FontWeight="SemiBold" FontSize="18"/>
           
           <!-- 选项区域 - 使用Grid布局确保对齐 -->
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="16" ColumnSpacing="20">
@@ -69,8 +69,8 @@
               Padding="16"
               BoxShadow="0 2 4 0 #10000000">
         <StackPanel Orientation="Horizontal" Spacing="12">
-          <TextBlock Text="" FontSize="16" VerticalAlignment="Center"/>
-          <TextBlock TextWrapping="Wrap" 
+          <SelectableTextBlock Text="" FontSize="16" VerticalAlignment="Center"/>
+          <SelectableTextBlock TextWrapping="Wrap" 
                      FontWeight="Medium"
                      VerticalAlignment="Center"/>
         </StackPanel>
@@ -81,20 +81,20 @@
         
         <!-- 输入区域标题 -->
         <StackPanel Grid.Column="0" Grid.Row="0" Spacing="8">
-          <TextBlock Text="输入内容" 
+          <SelectableTextBlock Text="输入内容" 
                      FontWeight="SemiBold" 
                      FontSize="18"/>
-          <TextBlock Text="在此输入需要格式化的代码" 
+          <SelectableTextBlock Text="在此输入需要格式化的代码" 
                      FontSize="12" 
                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
         </StackPanel>
         
         <!-- 输出区域标题 -->
         <StackPanel Grid.Column="2" Grid.Row="0" Spacing="8">
-          <TextBlock Text="格式化结果" 
+          <SelectableTextBlock Text="格式化结果" 
                      FontWeight="SemiBold" 
                      FontSize="18"/>
-          <TextBlock Text="格式化后的代码将显示在这里" 
+          <SelectableTextBlock Text="格式化后的代码将显示在这里" 
                      FontSize="12" 
                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
         </StackPanel>
@@ -141,7 +141,7 @@
               BoxShadow="0 2 8 0 #10000000">
         <StackPanel Spacing="16">
           <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="" FontSize="20" VerticalAlignment="Center"/>
+            <SelectableTextBlock Text="" FontSize="20" VerticalAlignment="Center"/>
             <SelectableTextBlock Text="使用说明" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center"/>
           </StackPanel>
           <SelectableTextBlock TextWrapping="Wrap" 

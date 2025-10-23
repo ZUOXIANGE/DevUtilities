@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,12 +11,12 @@
     <StackPanel Margin="24" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="单位转换工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      <SelectableTextBlock Text="单位转换工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
       
       <!-- 类别选择 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="转换类别" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="转换类别" FontSize="16" FontWeight="SemiBold"/>
           <ComboBox ItemsSource="{Binding Categories}" 
                     SelectedItem="{Binding SelectedCategory}"
                     HorizontalAlignment="Stretch"/>
@@ -29,7 +29,7 @@
           
           <!-- 从单位 -->
           <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
-            <TextBlock Text="从" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="从" FontWeight="SemiBold"/>
             <ComboBox ItemsSource="{Binding FromUnits}" 
                       SelectedItem="{Binding SelectedFromUnit}"
                       HorizontalAlignment="Stretch"/>
@@ -37,7 +37,7 @@
           
           <!-- 到单位 -->
           <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
-            <TextBlock Text="到" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="到" FontWeight="SemiBold"/>
             <ComboBox ItemsSource="{Binding ToUnits}" 
                       SelectedItem="{Binding SelectedToUnit}"
                       HorizontalAlignment="Stretch"/>
@@ -45,7 +45,7 @@
           
           <!-- 输入值 -->
           <StackPanel Grid.Row="2" Grid.Column="0" Spacing="8">
-            <TextBlock Text="输入值" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="输入值" FontWeight="SemiBold"/>
             <TextBox Text="{Binding InputValue}" 
                      Watermark="请输入数值"
                      HorizontalAlignment="Stretch"/>
@@ -62,7 +62,7 @@
           
           <!-- 输出值 -->
           <StackPanel Grid.Row="2" Grid.Column="2" Spacing="8">
-            <TextBlock Text="转换结果" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="转换结果" FontWeight="SemiBold"/>
             <TextBox Text="{Binding OutputValue}" 
                      IsReadOnly="True"
                      Background="#F5F5F5"
@@ -70,7 +70,7 @@
           </StackPanel>
           
           <!-- 转换公式 -->
-          <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+          <SelectableTextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
                      Text="{Binding ConversionFormula}"
                      FontStyle="Italic"
                      Foreground="Gray"
@@ -91,7 +91,7 @@
       <!-- 常用转换 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="常用转换" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="常用转换" FontSize="16" FontWeight="SemiBold"/>
           <WrapPanel Orientation="Horizontal" ItemWidth="120" ItemHeight="35">
             <Button Content="1米=100厘米" Margin="2"/>
             <Button Content="1千米=1000米" Margin="2"/>
@@ -108,12 +108,12 @@
       <!-- 批量转换 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="批量转换" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="批量转换" FontSize="16" FontWeight="SemiBold"/>
           <Grid RowDefinitions="Auto,10,Auto,10,Auto" ColumnDefinitions="*,10,*">
             
             <!-- 批量输入 -->
             <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
-              <TextBlock Text="批量输入（每行一个数值）" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="批量输入（每行一个数值）" FontWeight="SemiBold"/>
               <TextBox AcceptsReturn="True" 
                        Height="100"
                        TextWrapping="Wrap"
@@ -123,7 +123,7 @@
             
             <!-- 批量结果 -->
             <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
-              <TextBlock Text="批量结果" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="批量结果" FontWeight="SemiBold"/>
               <TextBox AcceptsReturn="True" 
                        Height="100"
                        IsReadOnly="True"
@@ -150,7 +150,7 @@
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
           <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0" Text="转换历史" FontSize="16" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="转换历史" FontSize="16" FontWeight="SemiBold"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
               <Button Content="清空历史" FontSize="12" Padding="8,4"/>
               <Button Content="导出历史" FontSize="12" Padding="8,4"/>
@@ -160,15 +160,15 @@
           <ListBox Height="150" Background="#FAFAFA">
             <ListBoxItem>
               <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="1 米 → 100 厘米" Width="200"/>
-                <TextBlock Text="2024-01-01 12:00" Foreground="Gray"/>
+                <SelectableTextBlock Text="1 米 → 100 厘米" Width="200"/>
+                <SelectableTextBlock Text="2024-01-01 12:00" Foreground="Gray"/>
                 <Button Content="重用" FontSize="10" Padding="4,2"/>
               </StackPanel>
             </ListBoxItem>
             <ListBoxItem>
               <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="100 千克 → 220.46 磅" Width="200"/>
-                <TextBlock Text="2024-01-01 11:30" Foreground="Gray"/>
+                <SelectableTextBlock Text="100 千克 → 220.46 磅" Width="200"/>
+                <SelectableTextBlock Text="2024-01-01 11:30" Foreground="Gray"/>
                 <Button Content="重用" FontSize="10" Padding="4,2"/>
               </StackPanel>
             </ListBoxItem>
@@ -179,16 +179,16 @@
       <!-- 精度设置 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="精度设置" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="精度设置" FontSize="16" FontWeight="SemiBold"/>
           <Grid ColumnDefinitions="Auto,10,*,10,Auto,10,*">
-            <TextBlock Grid.Column="0" Text="小数位数:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="0" Text="小数位数:" VerticalAlignment="Center"/>
             <Slider Grid.Column="2" 
                     Minimum="0" 
                     Maximum="10" 
                     Value="2"
                     TickFrequency="1"
                     IsSnapToTickEnabled="True"/>
-            <TextBlock Grid.Column="4" Text="科学计数法:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="4" Text="科学计数法:" VerticalAlignment="Center"/>
             <CheckBox Grid.Column="6" VerticalAlignment="Center"/>
           </Grid>
         </StackPanel>
@@ -197,7 +197,7 @@
       <!-- 自定义单位 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="自定义单位" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="自定义单位" FontSize="16" FontWeight="SemiBold"/>
           <Grid RowDefinitions="Auto,10,Auto" ColumnDefinitions="*,10,*,10,*,10,Auto">
             
             <TextBox Grid.Row="0" Grid.Column="0" 
@@ -221,9 +221,9 @@
                      Background="#FAFAFA">
               <ListBoxItem>
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                  <TextBlock Text="自定义单位1" Width="100"/>
-                  <TextBlock Text="系数: 1.5" Width="80"/>
-                  <TextBlock Text="类别: 长度" Width="80"/>
+                  <SelectableTextBlock Text="自定义单位1" Width="100"/>
+                  <SelectableTextBlock Text="系数: 1.5" Width="80"/>
+                  <SelectableTextBlock Text="类别: 长度" Width="80"/>
                   <Button Content="删除" FontSize="10" Padding="4,2"/>
                 </StackPanel>
               </ListBoxItem>
@@ -240,8 +240,8 @@
               BorderThickness="1"
               IsVisible="False">
         <StackPanel Orientation="Horizontal" Spacing="8">
-          <TextBlock Text="⚠" Foreground="#F44336" FontWeight="Bold"/>
-          <TextBlock Text="错误信息将在这里显示" Foreground="#F44336"/>
+          <SelectableTextBlock Text="⚠" Foreground="#F44336" FontWeight="Bold"/>
+          <SelectableTextBlock Text="错误信息将在这里显示" Foreground="#F44336"/>
         </StackPanel>
       </Border>
       
@@ -252,11 +252,12 @@
               HorizontalAlignment="Center"
               IsVisible="False">
         <StackPanel Orientation="Horizontal" Spacing="8">
-          <TextBlock Text="⟳" FontSize="16" Classes="rotating"/>
-          <TextBlock Text="正在转换..."/>
+          <SelectableTextBlock Text="⟳" FontSize="16" Classes="rotating"/>
+          <SelectableTextBlock Text="正在转换..."/>
         </StackPanel>
       </Border>
       
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

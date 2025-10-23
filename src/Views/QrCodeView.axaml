@@ -11,16 +11,16 @@
     <StackPanel Margin="20" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="二维码工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
+      <SelectableTextBlock Text="二维码工具" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
       
       <!-- 二维码生成区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="二维码生成" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="二维码生成" FontSize="18" FontWeight="SemiBold" />
           
           <!-- 输入文本 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="输入文本:" FontWeight="Medium" />
+            <SelectableTextBlock Text="输入文本:" FontWeight="Medium" />
             <TextBox Text="{Binding InputText}" 
                      Watermark="请输入要生成二维码的文本..."
                      AcceptsReturn="True"
@@ -31,14 +31,14 @@
           <!-- 生成设置 -->
           <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto" Margin="0,8,0,0">
             <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,8,0">
-              <TextBlock Text="尺寸:" FontWeight="Medium" />
+              <SelectableTextBlock Text="尺寸:" FontWeight="Medium" />
               <NumericUpDown Value="{Binding QrCodeSize}" 
                            Minimum="100" Maximum="800" 
                            Increment="50" />
             </StackPanel>
             
             <StackPanel Grid.Column="1" Spacing="4" Margin="8,0,8,0">
-              <TextBlock Text="纠错级别:" FontWeight="Medium" />
+              <SelectableTextBlock Text="纠错级别:" FontWeight="Medium" />
               <ComboBox SelectedItem="{Binding SelectedErrorCorrection}">
                 <ComboBoxItem Content="L (低)" />
                 <ComboBoxItem Content="M (中)" />
@@ -48,7 +48,7 @@
             </StackPanel>
             
             <StackPanel Grid.Column="2" Spacing="4" Margin="8,0,0,0">
-              <TextBlock Text="编码:" FontWeight="Medium" />
+              <SelectableTextBlock Text="编码:" FontWeight="Medium" />
               <ComboBox SelectedItem="{Binding SelectedEncoding}">
                 <ComboBoxItem Content="UTF-8" />
                 <ComboBoxItem Content="GBK" />
@@ -71,7 +71,7 @@
           </StackPanel>
           
           <!-- 验证消息 -->
-          <TextBlock Text="{Binding ValidationMessage}" 
+          <SelectableTextBlock Text="{Binding ValidationMessage}" 
                      Foreground="Red" 
                      IsVisible="{Binding !IsValidInput}" />
         </StackPanel>
@@ -80,7 +80,7 @@
       <!-- 二维码显示区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="生成的二维码" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="生成的二维码" FontSize="18" FontWeight="SemiBold" />
           
           <Border BorderBrush="#CCCCCC" BorderThickness="1" 
                   Background="White" 
@@ -98,7 +98,7 @@
       <!-- 二维码识别区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="二维码识别" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="二维码识别" FontSize="18" FontWeight="SemiBold" />
           
           <!-- 文件选择 -->
           <StackPanel Orientation="Horizontal" Spacing="8">
@@ -108,7 +108,7 @@
           
           <!-- 识别结果 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="识别结果:" FontWeight="Medium" />
+            <SelectableTextBlock Text="识别结果:" FontWeight="Medium" />
             <TextBox Text="{Binding DecodedText}" 
                      IsReadOnly="True"
                      AcceptsReturn="True"
@@ -124,7 +124,7 @@
       <!-- 批量处理 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="批量处理" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="批量处理" FontSize="18" FontWeight="SemiBold" />
           
           <StackPanel Orientation="Horizontal" Spacing="8">
             <!-- 批量处理功能暂时移除，因为ViewModel中没有对应的命令 -->
@@ -155,3 +155,4 @@
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

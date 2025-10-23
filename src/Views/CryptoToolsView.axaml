@@ -9,7 +9,7 @@
   <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="20" Spacing="20">
       <!-- 标题 -->
-      <TextBlock Text="加密解密工具" 
+      <SelectableTextBlock Text="加密解密工具" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
@@ -17,7 +17,7 @@
       <!-- 错误信息 -->
       <Border Background="#FFEBEE" CornerRadius="4" Padding="12" 
               IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-        <TextBlock Text="{Binding ValidationMessage}" 
+        <SelectableTextBlock Text="{Binding ValidationMessage}" 
                    Foreground="#C62828" 
                    TextWrapping="Wrap"/>
       </Border>
@@ -25,7 +25,7 @@
       <!-- 算法选择 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="加密算法设置" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="加密算法设置" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -40,10 +40,10 @@
             </Grid.RowDefinitions>
             
             <!-- Headers -->
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="算法" FontWeight="SemiBold" Margin="4"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="模式" FontWeight="SemiBold" Margin="4"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="填充" FontWeight="SemiBold" Margin="4"/>
-            <TextBlock Grid.Row="0" Grid.Column="3" Text="编码" FontWeight="SemiBold" Margin="4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="0" Text="算法" FontWeight="SemiBold" Margin="4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="1" Text="模式" FontWeight="SemiBold" Margin="4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="2" Text="填充" FontWeight="SemiBold" Margin="4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="3" Text="编码" FontWeight="SemiBold" Margin="4"/>
             
             <!-- Dropdowns -->
             <ComboBox Grid.Row="1" Grid.Column="0" 
@@ -88,7 +88,7 @@
       <!-- 密钥和IV设置 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="密钥设置" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="密钥设置" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -102,14 +102,14 @@
               <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="密钥 (Key)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <SelectableTextBlock Grid.Row="0" Grid.Column="0" Text="密钥 (Key)" FontWeight="SemiBold" Margin="0,0,0,4"/>
             
             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                      Text="{Binding KeyText}" 
                      Watermark="输入密钥（十六进制格式）"
                      FontFamily="Consolas"/>
             
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="初始化向量 (IV)" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            <SelectableTextBlock Grid.Row="2" Grid.Column="0" Text="初始化向量 (IV)" FontWeight="SemiBold" Margin="0,8,0,4"/>
             
             <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                      Text="{Binding IvText}" 
@@ -130,7 +130,7 @@
         <!-- 输入区域 -->
         <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
-            <TextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
+            <SelectableTextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
             
             <TextBox Text="{Binding InputText}" 
                      AcceptsReturn="True" 
@@ -166,7 +166,7 @@
         <!-- 输出区域 -->
         <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
-            <TextBlock Text="输出结果" FontWeight="Bold" FontSize="16"/>
+            <SelectableTextBlock Text="输出结果" FontWeight="Bold" FontSize="16"/>
             
             <TextBox Text="{Binding OutputText}" 
                      AcceptsReturn="True" 
@@ -188,7 +188,7 @@
       <!-- 哈希工具 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="哈希工具" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="哈希工具" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -197,7 +197,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="算法：" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <SelectableTextBlock Grid.Column="0" Text="算法：" VerticalAlignment="Center" Margin="0,0,8,0"/>
             
             <ComboBox Grid.Column="1" 
                       SelectedItem="{Binding SelectedHashAlgorithm}"
@@ -223,38 +223,39 @@
       <!-- 使用说明 -->
       <Expander Header="使用说明" IsExpanded="False">
         <StackPanel Spacing="12" Margin="10">
-          <TextBlock Text="加密算法说明" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="加密算法说明" FontWeight="SemiBold"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• AES：高级加密标准，安全性高，推荐使用"/>
-            <TextBlock Text="• DES：数据加密标准，安全性较低，不推荐"/>
-            <TextBlock Text="• 3DES：三重DES，安全性中等"/>
-            <TextBlock Text="• RC4：流加密算法，速度快但安全性有争议"/>
+            <SelectableTextBlock Text="• AES：高级加密标准，安全性高，推荐使用"/>
+            <SelectableTextBlock Text="• DES：数据加密标准，安全性较低，不推荐"/>
+            <SelectableTextBlock Text="• 3DES：三重DES，安全性中等"/>
+            <SelectableTextBlock Text="• RC4：流加密算法，速度快但安全性有争议"/>
           </StackPanel>
           
-          <TextBlock Text="加密模式说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="加密模式说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• CBC：密码块链接模式，需要IV，安全性高"/>
-            <TextBlock Text="• ECB：电子密码本模式，不需要IV，安全性低"/>
-            <TextBlock Text="• CFB：密码反馈模式，需要IV"/>
-            <TextBlock Text="• OFB：输出反馈模式，需要IV"/>
+            <SelectableTextBlock Text="• CBC：密码块链接模式，需要IV，安全性高"/>
+            <SelectableTextBlock Text="• ECB：电子密码本模式，不需要IV，安全性低"/>
+            <SelectableTextBlock Text="• CFB：密码反馈模式，需要IV"/>
+            <SelectableTextBlock Text="• OFB：输出反馈模式，需要IV"/>
           </StackPanel>
           
-          <TextBlock Text="填充模式说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="填充模式说明" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• PKCS7：标准填充模式，推荐使用"/>
-            <TextBlock Text="• None：无填充，数据长度必须是块大小的倍数"/>
-            <TextBlock Text="• Zeros：零填充"/>
+            <SelectableTextBlock Text="• PKCS7：标准填充模式，推荐使用"/>
+            <SelectableTextBlock Text="• None：无填充，数据长度必须是块大小的倍数"/>
+            <SelectableTextBlock Text="• Zeros：零填充"/>
           </StackPanel>
           
-          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 密钥长度：AES支持128/192/256位，DES为64位，3DES为192位"/>
-            <TextBlock Text="• IV长度：通常与算法块大小相同（AES为128位，DES为64位）"/>
-            <TextBlock Text="• 加密前请确保密钥和IV的长度正确"/>
-            <TextBlock Text="• 解密时必须使用相同的算法、模式、填充和密钥"/>
+            <SelectableTextBlock Text="• 密钥长度：AES支持128/192/256位，DES为64位，3DES为192位"/>
+            <SelectableTextBlock Text="• IV长度：通常与算法块大小相同（AES为128位，DES为64位）"/>
+            <SelectableTextBlock Text="• 加密前请确保密钥和IV的长度正确"/>
+            <SelectableTextBlock Text="• 解密时必须使用相同的算法、模式、填充和密钥"/>
           </StackPanel>
         </StackPanel>
       </Expander>
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

@@ -9,12 +9,12 @@
   <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="20" Spacing="20">
       <!-- 标题 -->
-      <TextBlock Text="IP地址查询工具" 
+      <SelectableTextBlock Text="IP地址查询工具" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
       
-      <TextBlock Text="查询IP地址的地理位置和详细信息" 
+      <SelectableTextBlock Text="查询IP地址的地理位置和详细信息" 
                  FontSize="14" 
                  HorizontalAlignment="Center"
                  Foreground="Gray" 
@@ -23,10 +23,10 @@
       <!-- 当前IP显示 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="当前IP地址" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="当前IP地址" FontWeight="Bold" FontSize="16"/>
           <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="您的IP地址：" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding CurrentIp}" 
+            <SelectableTextBlock Text="您的IP地址：" VerticalAlignment="Center"/>
+            <SelectableTextBlock Text="{Binding CurrentIp}" 
                        FontWeight="Bold" 
                        FontSize="16" 
                        Foreground="#2196F3"
@@ -44,7 +44,7 @@
       <!-- IP查询输入 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="IP地址查询" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="IP地址查询" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -72,14 +72,14 @@
           </Grid>
           
           <!-- 验证信息 -->
-          <TextBlock Text="{Binding ValidationMessage}" 
+          <SelectableTextBlock Text="{Binding ValidationMessage}" 
                      Foreground="Red" 
                      IsVisible="{Binding !IsValidIp}"
                      FontSize="12"/>
           
           <!-- 快速查询按钮 -->
           <StackPanel Orientation="Horizontal" Spacing="8">
-            <TextBlock Text="快速查询：" VerticalAlignment="Center"/>
+            <SelectableTextBlock Text="快速查询：" VerticalAlignment="Center"/>
             <Button Content="Google DNS (8.8.8.8)" Command="{Binding QueryIpCommand}" CommandParameter="8.8.8.8"/>
             <Button Content="Cloudflare (1.1.1.1)" Command="{Binding QueryIpCommand}" CommandParameter="1.1.1.1"/>
             <Button Content="百度 (220.181.38.148)" Command="{Binding QueryIpCommand}" CommandParameter="220.181.38.148"/>
@@ -96,7 +96,7 @@
               IsVisible="{Binding IsLoading}">
         <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
           <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
-          <TextBlock Text="正在查询IP信息..." VerticalAlignment="Center"/>
+          <SelectableTextBlock Text="正在查询IP信息..." VerticalAlignment="Center"/>
         </StackPanel>
       </Border>
 
@@ -108,7 +108,7 @@
               BorderThickness="1"
               IsVisible="{Binding IpInfo, Converter={x:Static ObjectConverters.IsNotNull}}">
         <StackPanel Spacing="16">
-          <TextBlock Text="查询结果" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="查询结果" FontWeight="Bold" FontSize="16"/>
           
           <!-- 基本信息 -->
           <Grid>
@@ -119,43 +119,43 @@
             
             <StackPanel Grid.Column="0" Spacing="12">
               <StackPanel Spacing="4">
-                <TextBlock Text="IP地址" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.Ip}" 
+                <SelectableTextBlock Text="IP地址" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.Ip}" 
                            FontSize="16" 
                            FontWeight="Bold" 
                            Foreground="#2196F3"/>
               </StackPanel>
               
               <StackPanel Spacing="4">
-                <TextBlock Text="国家" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.Country}" FontSize="14"/>
+                <SelectableTextBlock Text="国家" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.Country}" FontSize="14"/>
               </StackPanel>
               
               <StackPanel Spacing="4">
-                <TextBlock Text="地区" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.Region}" FontSize="14"/>
+                <SelectableTextBlock Text="地区" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.Region}" FontSize="14"/>
               </StackPanel>
               
               <StackPanel Spacing="4">
-                <TextBlock Text="城市" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.City}" FontSize="14"/>
+                <SelectableTextBlock Text="城市" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.City}" FontSize="14"/>
               </StackPanel>
             </StackPanel>
             
             <StackPanel Grid.Column="1" Spacing="12">
               <StackPanel Spacing="4">
-                <TextBlock Text="ISP" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.Isp}" FontSize="14"/>
+                <SelectableTextBlock Text="ISP" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.Isp}" FontSize="14"/>
               </StackPanel>
               
               <StackPanel Spacing="4">
-                <TextBlock Text="组织" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.Organization}" FontSize="14"/>
+                <SelectableTextBlock Text="组织" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.Organization}" FontSize="14"/>
               </StackPanel>
               
               <StackPanel Spacing="4">
-                <TextBlock Text="时区" FontWeight="SemiBold" FontSize="12"/>
-                <TextBlock Text="{Binding IpInfo.Timezone}" FontSize="14"/>
+                <SelectableTextBlock Text="时区" FontWeight="SemiBold" FontSize="12"/>
+                <SelectableTextBlock Text="{Binding IpInfo.Timezone}" FontSize="14"/>
               </StackPanel>
               
               <StackPanel Spacing="4">
@@ -183,7 +183,7 @@
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
           <StackPanel Orientation="Horizontal" Spacing="8">
-            <TextBlock Text="查询历史" FontWeight="Bold" FontSize="16"/>
+            <SelectableTextBlock Text="查询历史" FontWeight="Bold" FontSize="16"/>
             <Button Content="清空历史" Command="{Binding ClearHistoryCommand}" FontSize="12"/>
             <Button Content="导出历史" Command="{Binding ClearAllCommand}" FontSize="12"/>
           </StackPanel>
@@ -227,7 +227,7 @@
       <!-- IP工具 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="IP工具" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="IP工具" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -237,19 +237,19 @@
             </Grid.ColumnDefinitions>
             
             <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,16,0">
-              <TextBlock Text="IP格式转换" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="IP格式转换" FontWeight="SemiBold"/>
               <Button Content="转换为数字" Command="{Binding QueryIpCommand}" HorizontalAlignment="Stretch"/>
               <Button Content="转换为IP" Command="{Binding ClearAllCommand}" HorizontalAlignment="Stretch"/>
             </StackPanel>
             
             <StackPanel Grid.Column="1" Spacing="8" Margin="0,0,16,0">
-              <TextBlock Text="网络工具" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="网络工具" FontWeight="SemiBold"/>
               <Button Content="Ping测试" Command="{Binding QueryIpCommand}" HorizontalAlignment="Stretch"/>
               <Button Content="端口扫描" Command="{Binding ClearHistoryCommand}" HorizontalAlignment="Stretch"/>
             </StackPanel>
             
             <StackPanel Grid.Column="2" Spacing="8">
-              <TextBlock Text="批量操作" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="批量操作" FontWeight="SemiBold"/>
               <Button Content="批量查询" Command="{Binding QueryIpCommand}" HorizontalAlignment="Stretch"/>
               <Button Content="导入IP列表" Command="{Binding ClearAllCommand}" HorizontalAlignment="Stretch"/>
             </StackPanel>
@@ -265,8 +265,8 @@
               BorderThickness="1"
               IsVisible="{Binding HasError}">
         <StackPanel Spacing="8">
-          <TextBlock Text="错误信息" FontWeight="Bold" Foreground="#D32F2F"/>
-          <TextBlock Text="{Binding ErrorMessage}" 
+          <SelectableTextBlock Text="错误信息" FontWeight="Bold" Foreground="#D32F2F"/>
+          <SelectableTextBlock Text="{Binding ErrorMessage}" 
                      TextWrapping="Wrap" 
                      Foreground="#D32F2F"/>
         </StackPanel>
@@ -275,33 +275,34 @@
       <!-- 使用说明 -->
       <Expander Header="使用说明" IsExpanded="False">
         <StackPanel Spacing="12" Margin="10">
-          <TextBlock Text="基本功能" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="基本功能" FontWeight="SemiBold"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 查询任意IP地址的地理位置信息"/>
-            <TextBlock Text="• 显示国家、地区、城市、ISP等详细信息"/>
-            <TextBlock Text="• 自动获取并显示当前设备的公网IP"/>
-            <TextBlock Text="• 支持IPv4和IPv6地址查询"/>
-            <TextBlock Text="• 提供常用DNS服务器IP的快速查询"/>
+            <SelectableTextBlock Text="• 查询任意IP地址的地理位置信息"/>
+            <SelectableTextBlock Text="• 显示国家、地区、城市、ISP等详细信息"/>
+            <SelectableTextBlock Text="• 自动获取并显示当前设备的公网IP"/>
+            <SelectableTextBlock Text="• 支持IPv4和IPv6地址查询"/>
+            <SelectableTextBlock Text="• 提供常用DNS服务器IP的快速查询"/>
           </StackPanel>
           
-          <TextBlock Text="高级功能" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="高级功能" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• IP地址格式转换（IP与数字互转）"/>
-            <TextBlock Text="• Ping测试和端口扫描"/>
-            <TextBlock Text="• 批量IP查询和导入功能"/>
-            <TextBlock Text="• 查询历史记录和导出"/>
-            <TextBlock Text="• 在地图中查看IP位置"/>
+            <SelectableTextBlock Text="• IP地址格式转换（IP与数字互转）"/>
+            <SelectableTextBlock Text="• Ping测试和端口扫描"/>
+            <SelectableTextBlock Text="• 批量IP查询和导入功能"/>
+            <SelectableTextBlock Text="• 查询历史记录和导出"/>
+            <SelectableTextBlock Text="• 在地图中查看IP位置"/>
           </StackPanel>
           
-          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 支持输入域名自动解析为IP地址"/>
-            <TextBlock Text="• 可以保存查询结果到文件"/>
-            <TextBlock Text="• 提供多个IP查询服务源"/>
-            <TextBlock Text="• 支持代理设置和超时配置"/>
+            <SelectableTextBlock Text="• 支持输入域名自动解析为IP地址"/>
+            <SelectableTextBlock Text="• 可以保存查询结果到文件"/>
+            <SelectableTextBlock Text="• 提供多个IP查询服务源"/>
+            <SelectableTextBlock Text="• 支持代理设置和超时配置"/>
           </StackPanel>
         </StackPanel>
       </Expander>
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

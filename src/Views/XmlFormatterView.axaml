@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -12,14 +12,14 @@
     <StackPanel Margin="20" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="XML格式化器" 
+      <SelectableTextBlock Text="XML格式化器" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
       
       <!-- 输入区域 -->
       <StackPanel Spacing="10">
-        <TextBlock Text="输入XML内容:" FontWeight="SemiBold"/>
+        <SelectableTextBlock Text="输入XML内容:" FontWeight="SemiBold"/>
         <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto,Auto">
           <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                    Text="{Binding InputText}"
@@ -43,7 +43,7 @@
       
       <!-- 格式化选项 -->
       <StackPanel Spacing="10">
-        <TextBlock Text="格式化选项:" FontWeight="SemiBold"/>
+        <SelectableTextBlock Text="格式化选项:" FontWeight="SemiBold"/>
         <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*">
           <!-- 第一行选项 -->
           <CheckBox Grid.Row="0" Grid.Column="0" 
@@ -98,7 +98,7 @@
       
       <!-- 输出区域 -->
       <StackPanel Spacing="10">
-        <TextBlock Text="格式化结果:" FontWeight="SemiBold"/>
+        <SelectableTextBlock Text="格式化结果:" FontWeight="SemiBold"/>
         <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
           <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                    Text="{Binding OutputText}"
@@ -121,7 +121,7 @@
               CornerRadius="5" 
               Padding="10"
               IsVisible="{Binding ValidationMessage, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}">
-        <TextBlock Text="{Binding ValidationMessage}" 
+        <SelectableTextBlock Text="{Binding ValidationMessage}" 
                    Foreground="DarkBlue" 
                    TextWrapping="Wrap"/>
       </Border>
@@ -131,7 +131,7 @@
               CornerRadius="5" 
               Padding="10"
               IsVisible="{Binding HasError}">
-        <TextBlock Text="{Binding ErrorMessage}" 
+        <SelectableTextBlock Text="{Binding ErrorMessage}" 
                    Foreground="White" 
                    TextWrapping="Wrap"/>
       </Border>
@@ -145,3 +145,4 @@
   </ScrollViewer>
   
 </UserControl>
+

@@ -9,7 +9,7 @@
   <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="20" Spacing="20">
       <!-- 标题 -->
-      <TextBlock Text="进制转换器" 
+      <SelectableTextBlock Text="进制转换器" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
@@ -17,7 +17,7 @@
       <!-- 错误信息 -->
       <Border Background="#FFEBEE" CornerRadius="4" Padding="12" 
               IsVisible="{Binding HasError}">
-        <TextBlock Text="{Binding ErrorMessage}" 
+        <SelectableTextBlock Text="{Binding ErrorMessage}" 
                    Foreground="#C62828" 
                    TextWrapping="Wrap"/>
       </Border>
@@ -26,7 +26,7 @@
       <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
         <!-- 二进制 -->
         <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
-          <TextBlock Text="二进制 (Binary)" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="二进制 (Binary)" FontWeight="SemiBold"/>
           <TextBox Text="{Binding BinaryValue}" 
                    Watermark="输入二进制数值 (例如: 1010)"
                    FontFamily="Consolas"/>
@@ -39,7 +39,7 @@
 
         <!-- 八进制 -->
         <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8" Margin="0,20,0,0">
-          <TextBlock Text="八进制 (Octal)" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="八进制 (Octal)" FontWeight="SemiBold"/>
           <TextBox Text="{Binding OctalValue}" 
                    Watermark="输入八进制数值 (例如: 12)"
                    FontFamily="Consolas"/>
@@ -52,7 +52,7 @@
 
         <!-- 十进制 -->
         <StackPanel Grid.Row="2" Grid.Column="0" Spacing="8" Margin="0,20,0,0">
-          <TextBlock Text="十进制 (Decimal)" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="十进制 (Decimal)" FontWeight="SemiBold"/>
           <TextBox Text="{Binding DecimalValue}" 
                    Watermark="输入十进制数值 (例如: 10)"
                    FontFamily="Consolas"/>
@@ -65,7 +65,7 @@
 
         <!-- 十六进制 -->
         <StackPanel Grid.Row="3" Grid.Column="0" Spacing="8" Margin="0,20,0,0">
-          <TextBlock Text="十六进制 (Hexadecimal)" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="十六进制 (Hexadecimal)" FontWeight="SemiBold"/>
           <TextBox Text="{Binding HexValue}" 
                    Watermark="输入十六进制数值 (例如: A 或 0xA)"
                    FontFamily="Consolas"/>
@@ -88,12 +88,12 @@
       <!-- 使用说明 -->
       <Expander Header="使用说明" IsExpanded="False">
         <StackPanel Spacing="10" Margin="10">
-          <TextBlock Text=" 在任意一个输入框中输入数值其他进制会自动转换" TextWrapping="Wrap"/>
-          <TextBlock Text=" 二进制只能包含0和1" TextWrapping="Wrap"/>
-          <TextBlock Text=" 八进制只能包含0-7的数字" TextWrapping="Wrap"/>
-          <TextBlock Text=" 十进制标准的十进制数字" TextWrapping="Wrap"/>
-          <TextBlock Text=" 十六进制包含0-9和A-F可以带0x前缀" TextWrapping="Wrap"/>
-          <TextBlock Text=" 点击复制按钮可以将对应进制的值复制到剪贴板" TextWrapping="Wrap"/>
+          <SelectableTextBlock Text=" 在任意一个输入框中输入数值其他进制会自动转换" TextWrapping="Wrap"/>
+          <SelectableTextBlock Text=" 二进制只能包含0和1" TextWrapping="Wrap"/>
+          <SelectableTextBlock Text=" 八进制只能包含0-7的数字" TextWrapping="Wrap"/>
+          <SelectableTextBlock Text=" 十进制标准的十进制数字" TextWrapping="Wrap"/>
+          <SelectableTextBlock Text=" 十六进制包含0-9和A-F可以带0x前缀" TextWrapping="Wrap"/>
+          <SelectableTextBlock Text=" 点击复制按钮可以将对应进制的值复制到剪贴板" TextWrapping="Wrap"/>
         </StackPanel>
       </Expander>
 
@@ -103,44 +103,44 @@
               ColumnDefinitions="*,*,*,*" 
               Margin="10">
           <!-- 表头 -->
-          <TextBlock Grid.Row="0" Grid.Column="0" Text="十进制" FontWeight="Bold" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="0" Grid.Column="1" Text="二进制" FontWeight="Bold" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="0" Grid.Column="2" Text="八进制" FontWeight="Bold" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="0" Grid.Column="3" Text="十六进制" FontWeight="Bold" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="0" Grid.Column="0" Text="十进制" FontWeight="Bold" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="0" Grid.Column="1" Text="二进制" FontWeight="Bold" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="0" Grid.Column="2" Text="八进制" FontWeight="Bold" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="0" Grid.Column="3" Text="十六进制" FontWeight="Bold" HorizontalAlignment="Center"/>
           
           <!-- 分隔线 -->
           <Border Grid.Row="1" Grid.ColumnSpan="4" Height="1" Background="Gray" Margin="0,5"/>
           
           <!-- 数值示例 -->
-          <TextBlock Grid.Row="2" Grid.Column="0" Text="0" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="2" Grid.Column="1" Text="0" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="2" Grid.Column="2" Text="0" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="2" Grid.Column="3" Text="0" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="2" Grid.Column="0" Text="0" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="2" Grid.Column="1" Text="0" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="2" Grid.Column="2" Text="0" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="2" Grid.Column="3" Text="0" HorizontalAlignment="Center"/>
           
-          <TextBlock Grid.Row="3" Grid.Column="0" Text="8" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="3" Grid.Column="1" Text="1000" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="3" Grid.Column="2" Text="10" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="3" Grid.Column="3" Text="8" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="3" Grid.Column="0" Text="8" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="3" Grid.Column="1" Text="1000" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="3" Grid.Column="2" Text="10" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="3" Grid.Column="3" Text="8" HorizontalAlignment="Center"/>
           
-          <TextBlock Grid.Row="4" Grid.Column="0" Text="15" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="4" Grid.Column="1" Text="1111" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="4" Grid.Column="2" Text="17" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="4" Grid.Column="3" Text="F" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="4" Grid.Column="0" Text="15" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="4" Grid.Column="1" Text="1111" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="4" Grid.Column="2" Text="17" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="4" Grid.Column="3" Text="F" HorizontalAlignment="Center"/>
           
-          <TextBlock Grid.Row="5" Grid.Column="0" Text="16" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="5" Grid.Column="1" Text="10000" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="5" Grid.Column="2" Text="20" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="5" Grid.Column="3" Text="10" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="5" Grid.Column="0" Text="16" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="5" Grid.Column="1" Text="10000" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="5" Grid.Column="2" Text="20" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="5" Grid.Column="3" Text="10" HorizontalAlignment="Center"/>
           
-          <TextBlock Grid.Row="6" Grid.Column="0" Text="255" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="6" Grid.Column="1" Text="11111111" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="6" Grid.Column="2" Text="377" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="6" Grid.Column="3" Text="FF" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="6" Grid.Column="0" Text="255" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="6" Grid.Column="1" Text="11111111" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="6" Grid.Column="2" Text="377" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="6" Grid.Column="3" Text="FF" HorizontalAlignment="Center"/>
           
-          <TextBlock Grid.Row="7" Grid.Column="0" Text="1024" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="7" Grid.Column="1" Text="10000000000" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="7" Grid.Column="2" Text="2000" HorizontalAlignment="Center"/>
-          <TextBlock Grid.Row="7" Grid.Column="3" Text="400" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="7" Grid.Column="0" Text="1024" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="7" Grid.Column="1" Text="10000000000" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="7" Grid.Column="2" Text="2000" HorizontalAlignment="Center"/>
+          <SelectableTextBlock Grid.Row="7" Grid.Column="3" Text="400" HorizontalAlignment="Center"/>
         </Grid>
       </Expander>
     </StackPanel>

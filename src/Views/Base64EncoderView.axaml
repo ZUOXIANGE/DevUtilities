@@ -25,8 +25,8 @@
           <!-- Title and Mode Selection -->
           <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
-              <TextBlock Text="🔄" FontSize="20" VerticalAlignment="Center"/>
-              <TextBlock Text="Base64 编码工具" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+              <SelectableTextBlock Text="🔄" FontSize="20" VerticalAlignment="Center"/>
+              <SelectableTextBlock Text="Base64 编码工具" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
             </StackPanel>
             
             <!-- Input Type Selection -->
@@ -46,14 +46,14 @@
               <Button Classes="secondary-button" Command="{Binding SwapInputOutputCommand}"
                       IsVisible="{Binding !IsImageMode}" ToolTip.Tip="交换输入输出内容">
                 <StackPanel Orientation="Horizontal" Spacing="6">
-                  <TextBlock Text="⇄" FontSize="14"/>
-                  <TextBlock Text="交换"/>
+                  <SelectableTextBlock Text="⇄" FontSize="14"/>
+                  <SelectableTextBlock Text="交换"/>
                 </StackPanel>
               </Button>
               <Button Classes="secondary-button" Command="{Binding ClearCommand}" ToolTip.Tip="清空所有内容">
                 <StackPanel Orientation="Horizontal" Spacing="6">
-                  <TextBlock Text="🗑️" FontSize="12"/>
-                  <TextBlock Text="清空"/>
+                  <SelectableTextBlock Text="🗑️" FontSize="12"/>
+                  <SelectableTextBlock Text="清空"/>
                 </StackPanel>
               </Button>
             </StackPanel>
@@ -75,7 +75,7 @@
               
               <!-- Encoding Selection -->
               <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="字符编码:" VerticalAlignment="Center" FontWeight="Medium"/>
+                <SelectableTextBlock Text="字符编码:" VerticalAlignment="Center" FontWeight="Medium"/>
                 <ComboBox ItemsSource="{Binding AvailableEncodings}" 
                           SelectedItem="{Binding SelectedEncoding}"
                           Width="100" Padding="8,6"/>
@@ -101,24 +101,24 @@
               <Grid IsVisible="{Binding IsImageToBase64Mode}" ColumnDefinitions="Auto,*,Auto">
                 <Button Grid.Column="0" Classes="primary-button" Command="{Binding SelectImageForBase64Command}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="📁" FontSize="14"/>
-                    <TextBlock Text="选择图片"/>
+                    <SelectableTextBlock Text="📁" FontSize="14"/>
+                    <SelectableTextBlock Text="选择图片"/>
                   </StackPanel>
                 </Button>
-                <TextBlock Grid.Column="1" Text="{Binding SelectedImagePath}" VerticalAlignment="Center" 
+                <SelectableTextBlock Grid.Column="1" Text="{Binding SelectedImagePath}" VerticalAlignment="Center" 
                            Margin="12,0" TextTrimming="CharacterEllipsis" FontStyle="Italic"/>
                 <Button Grid.Column="2" Classes="secondary-button" Command="{Binding ClearImageCommand}"
                         IsVisible="{Binding SelectedImagePath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock Text="✖️" FontSize="10"/>
-                    <TextBlock Text="清除"/>
+                    <SelectableTextBlock Text="✖️" FontSize="10"/>
+                    <SelectableTextBlock Text="清除"/>
                   </StackPanel>
                 </Button>
               </Grid>
               
               <!-- Base64 to Image Controls -->
               <StackPanel IsVisible="{Binding !IsImageToBase64Mode}" Spacing="8">
-                <TextBlock Text="Base64 输入:" FontWeight="SemiBold"/>
+                <SelectableTextBlock Text="Base64 输入:" FontWeight="SemiBold"/>
                 <TextBox Text="{Binding Base64Input}" 
                          AcceptsReturn="True" 
                          TextWrapping="Wrap"
@@ -131,8 +131,8 @@
                         IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}"
                         HorizontalAlignment="Left">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="💾" FontSize="14"/>
-                    <TextBlock Text="保存图片"/>
+                    <SelectableTextBlock Text="💾" FontSize="14"/>
+                    <SelectableTextBlock Text="保存图片"/>
                   </StackPanel>
                 </Button>
               </StackPanel>
@@ -156,11 +156,11 @@
             
             <Grid RowDefinitions="Auto,*,Auto">
               <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
-                <TextBlock Text="📝" FontSize="16"/>
-                <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='原始文本|Base64数据'}" 
+                <SelectableTextBlock Text="📝" FontSize="16"/>
+                <SelectableTextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='原始文本|Base64数据'}" 
                            FontSize="16" FontWeight="SemiBold"/>
                 <Border Background="#E3F2FD" CornerRadius="12" Padding="6,2" Margin="8,0,0,0">
-                  <TextBlock Text="{Binding InputText.Length, StringFormat='{}{0} 字符'}" 
+                  <SelectableTextBlock Text="{Binding InputText.Length, StringFormat='{}{0} 字符'}" 
                              FontSize="11" Foreground="#1976D2"/>
                 </Border>
               </StackPanel>
@@ -183,14 +183,14 @@
                 <Button Classes="primary-button" Command="{Binding ProcessCommand}" 
                         IsEnabled="{Binding InputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='🔒|🔓'}" FontSize="14"/>
-                    <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='编码|解码'}"/>
+                    <SelectableTextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='🔒|🔓'}" FontSize="14"/>
+                    <SelectableTextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='编码|解码'}"/>
                   </StackPanel>
                 </Button>
                 <Button Classes="secondary-button" Command="{Binding ClearInputCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock Text="🗑️" FontSize="12"/>
-                    <TextBlock Text="清空"/>
+                    <SelectableTextBlock Text="🗑️" FontSize="12"/>
+                    <SelectableTextBlock Text="清空"/>
                   </StackPanel>
                 </Button>
               </StackPanel>
@@ -206,12 +206,12 @@
             
             <Grid RowDefinitions="Auto,*,Auto">
               <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
-                <TextBlock Text="📋" FontSize="16"/>
-                <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|解码结果'}" 
+                <SelectableTextBlock Text="📋" FontSize="16"/>
+                <SelectableTextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|解码结果'}" 
                            FontSize="16" FontWeight="SemiBold"/>
                 <Border Background="#E8F5E8" CornerRadius="12" Padding="6,2" Margin="8,0,0,0"
                         IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                  <TextBlock Text="{Binding OutputText.Length, StringFormat='{}{0} 字符'}" 
+                  <SelectableTextBlock Text="{Binding OutputText.Length, StringFormat='{}{0} 字符'}" 
                              FontSize="11" Foreground="#2E7D32"/>
                 </Border>
               </StackPanel>
@@ -236,14 +236,14 @@
                 <Button Classes="primary-button" Command="{Binding CopyToClipboardCommand}" 
                         CommandParameter="{Binding OutputText}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="📋" FontSize="14"/>
-                    <TextBlock Text="复制"/>
+                    <SelectableTextBlock Text="📋" FontSize="14"/>
+                    <SelectableTextBlock Text="复制"/>
                   </StackPanel>
                 </Button>
                 <Button Classes="secondary-button" Command="{Binding ClearOutputCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock Text="🗑️" FontSize="12"/>
-                    <TextBlock Text="清空"/>
+                    <SelectableTextBlock Text="🗑️" FontSize="12"/>
+                    <SelectableTextBlock Text="清空"/>
                   </StackPanel>
                 </Button>
               </StackPanel>
@@ -263,12 +263,12 @@
             
             <Grid RowDefinitions="Auto,*">
               <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
-                <TextBlock Text="🖼️" FontSize="16"/>
-                <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='图片预览|解码预览'}" 
+                <SelectableTextBlock Text="🖼️" FontSize="16"/>
+                <SelectableTextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='图片预览|解码预览'}" 
                            FontSize="16" FontWeight="SemiBold"/>
                 <Border Background="#FFF3E0" CornerRadius="12" Padding="6,2" Margin="8,0,0,0"
                         IsVisible="{Binding ImageInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                  <TextBlock Text="{Binding ImageInfo}" FontSize="11" Foreground="#F57C00"/>
+                  <SelectableTextBlock Text="{Binding ImageInfo}" FontSize="11" Foreground="#F57C00"/>
                 </Border>
               </StackPanel>
               
@@ -297,15 +297,15 @@
                   <Border Background="Transparent" CornerRadius="8" 
                           IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNull}}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
-                      <TextBlock Text="🖼️" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                      <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='拖拽图片到此处或点击选择|输入Base64数据后图片将在此显示'}" 
+                      <SelectableTextBlock Text="🖼️" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
+                      <SelectableTextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='拖拽图片到此处或点击选择|输入Base64数据后图片将在此显示'}" 
                                  FontSize="16" Foreground="#666" HorizontalAlignment="Center" TextAlignment="Center" 
                                  FontWeight="Medium"/>
                       <Button Classes="primary-button" Command="{Binding SelectImageForBase64Command}"
                               IsVisible="{Binding IsImageToBase64Mode}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                          <TextBlock Text="📁" FontSize="16"/>
-                          <TextBlock Text="选择图片文件"/>
+                          <SelectableTextBlock Text="📁" FontSize="16"/>
+                          <SelectableTextBlock Text="选择图片文件"/>
                         </StackPanel>
                       </Button>
                     </StackPanel>
@@ -324,12 +324,12 @@
             
             <Grid RowDefinitions="Auto,*,Auto">
               <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
-                <TextBlock Text="📝" FontSize="16"/>
-                <TextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|操作面板'}" 
+                <SelectableTextBlock Text="📝" FontSize="16"/>
+                <SelectableTextBlock Text="{Binding IsImageToBase64Mode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='Base64编码|操作面板'}" 
                            FontSize="16" FontWeight="SemiBold"/>
                 <Border Background="#E8F5E8" CornerRadius="12" Padding="6,2" Margin="8,0,0,0"
                         IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                  <TextBlock Text="{Binding OutputText.Length, StringFormat='{}{0} 字符'}" 
+                  <SelectableTextBlock Text="{Binding OutputText.Length, StringFormat='{}{0} 字符'}" 
                              FontSize="11" Foreground="#2E7D32"/>
                 </Border>
               </StackPanel>
@@ -356,8 +356,8 @@
                           CommandParameter="{Binding OutputText}"
                           IsVisible="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
-                      <TextBlock Text="📋" FontSize="14"/>
-                      <TextBlock Text="复制Base64"/>
+                      <SelectableTextBlock Text="📋" FontSize="14"/>
+                      <SelectableTextBlock Text="复制Base64"/>
                     </StackPanel>
                   </Button>
                 </StackPanel>
@@ -367,23 +367,23 @@
                   <Button Classes="primary-button" Command="{Binding ConvertBase64ToImageCommand}"
                           IsEnabled="{Binding OutputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
-                      <TextBlock Text="🔄" FontSize="14"/>
-                      <TextBlock Text="转换为图片"/>
+                      <SelectableTextBlock Text="🔄" FontSize="14"/>
+                      <SelectableTextBlock Text="转换为图片"/>
                     </StackPanel>
                   </Button>
                   <Button Classes="secondary-button" Command="{Binding SaveImageFromBase64Command}"
                           IsVisible="{Binding ImagePreview, Converter={x:Static ObjectConverters.IsNotNull}}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
-                      <TextBlock Text="💾" FontSize="14"/>
-                      <TextBlock Text="保存图片"/>
+                      <SelectableTextBlock Text="💾" FontSize="14"/>
+                      <SelectableTextBlock Text="保存图片"/>
                     </StackPanel>
                   </Button>
                 </StackPanel>
                 
                 <Button Classes="secondary-button" Command="{Binding ClearAllCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock Text="🗑️" FontSize="12"/>
-                    <TextBlock Text="清空"/>
+                    <SelectableTextBlock Text="🗑️" FontSize="12"/>
+                    <SelectableTextBlock Text="清空"/>
                   </StackPanel>
                 </Button>
               </StackPanel>
@@ -399,33 +399,33 @@
           <Expander.HeaderTemplate>
             <DataTemplate>
               <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="💡" FontSize="16"/>
-                <TextBlock Text="{Binding}" FontSize="14" FontWeight="SemiBold"/>
+                <SelectableTextBlock Text="💡" FontSize="16"/>
+                <SelectableTextBlock Text="{Binding}" FontSize="14" FontWeight="SemiBold"/>
               </StackPanel>
             </DataTemplate>
           </Expander.HeaderTemplate>
           
           <StackPanel Spacing="12" Margin="0,12,0,0">
-            <TextBlock Text="文本模式：" FontWeight="SemiBold" FontSize="14"/>
+            <SelectableTextBlock Text="文本模式：" FontWeight="SemiBold" FontSize="14"/>
             <StackPanel Spacing="6" Margin="16,0,0,0">
-              <TextBlock Text="• 编码：输入原始文本，点击编码按钮生成Base64字符串" FontSize="13"/>
-              <TextBlock Text="• 解码：输入Base64字符串，点击解码按钮还原原始文本" FontSize="13"/>
-              <TextBlock Text="• 支持多种字符编码：UTF-8、ASCII、Unicode等" FontSize="13"/>
+              <SelectableTextBlock Text="• 编码：输入原始文本，点击编码按钮生成Base64字符串" FontSize="13"/>
+              <SelectableTextBlock Text="• 解码：输入Base64字符串，点击解码按钮还原原始文本" FontSize="13"/>
+              <SelectableTextBlock Text="• 支持多种字符编码：UTF-8、ASCII、Unicode等" FontSize="13"/>
             </StackPanel>
             
-            <TextBlock Text="图片模式：" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,0"/>
+            <SelectableTextBlock Text="图片模式：" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,0"/>
             <StackPanel Spacing="6" Margin="16,0,0,0">
-              <TextBlock Text="• 图片转Base64：拖拽图片文件或点击选择，自动生成Base64编码" FontSize="13"/>
-              <TextBlock Text="• Base64转图片：粘贴Base64数据，点击转换预览图片并可保存" FontSize="13"/>
-              <TextBlock Text="• 支持常见图片格式：PNG、JPG、GIF、BMP等" FontSize="13"/>
+              <SelectableTextBlock Text="• 图片转Base64：拖拽图片文件或点击选择，自动生成Base64编码" FontSize="13"/>
+              <SelectableTextBlock Text="• Base64转图片：粘贴Base64数据，点击转换预览图片并可保存" FontSize="13"/>
+              <SelectableTextBlock Text="• 支持常见图片格式：PNG、JPG、GIF、BMP等" FontSize="13"/>
             </StackPanel>
             
             <Border Background="#E3F2FD" CornerRadius="8" Padding="12" Margin="0,8,0,0">
               <StackPanel Spacing="4">
-                <TextBlock Text="💡 小贴士：" FontWeight="SemiBold" FontSize="13" Foreground="#1976D2"/>
-                <TextBlock Text="• 使用等宽字体显示Base64数据，便于查看和复制" FontSize="12" Foreground="#1976D2"/>
-                <TextBlock Text="• 支持拖拽操作，提升使用体验" FontSize="12" Foreground="#1976D2"/>
-                <TextBlock Text="• 实时显示字符数量，方便数据管理" FontSize="12" Foreground="#1976D2"/>
+                <SelectableTextBlock Text="💡 小贴士：" FontWeight="SemiBold" FontSize="13" Foreground="#1976D2"/>
+                <SelectableTextBlock Text="• 使用等宽字体显示Base64数据，便于查看和复制" FontSize="12" Foreground="#1976D2"/>
+                <SelectableTextBlock Text="• 支持拖拽操作，提升使用体验" FontSize="12" Foreground="#1976D2"/>
+                <SelectableTextBlock Text="• 实时显示字符数量，方便数据管理" FontSize="12" Foreground="#1976D2"/>
               </StackPanel>
             </Border>
           </StackPanel>

@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,16 +11,16 @@
     <StackPanel Margin="24" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="UUID生成器" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      <SelectableTextBlock Text="UUID生成器" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
       
       <!-- UUID生成区域 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="UUID生成" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="UUID生成" FontSize="16" FontWeight="SemiBold"/>
           
           <!-- 格式选择 -->
           <Grid ColumnDefinitions="Auto,10,*">
-            <TextBlock Grid.Column="0" Text="格式:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="0" Text="格式:" VerticalAlignment="Center"/>
             <ComboBox Grid.Column="2" 
                       ItemsSource="{Binding UuidFormats}" 
                       SelectedItem="{Binding SelectedFormat}"
@@ -50,11 +50,11 @@
       <!-- 批量生成区域 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="批量生成" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="批量生成" FontSize="16" FontWeight="SemiBold"/>
           
           <!-- 数量输入 -->
           <Grid ColumnDefinitions="Auto,10,*,10,Auto,10,Auto">
-            <TextBlock Grid.Column="0" Text="数量:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="0" Text="数量:" VerticalAlignment="Center"/>
             <NumericUpDown Grid.Column="2" 
                            Value="{Binding GenerateCount}" 
                            Minimum="1" 
@@ -77,7 +77,7 @@
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
           <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0" Text="历史记录" FontSize="16" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="0" Text="历史记录" FontSize="16" FontWeight="SemiBold"/>
             <Button Grid.Column="1" Content="清空历史" Command="{Binding ClearHistoryCommand}"/>
           </Grid>
           
@@ -87,7 +87,7 @@
             <ListBox.ItemTemplate>
               <DataTemplate>
                 <Grid ColumnDefinitions="*,Auto">
-                  <TextBlock Grid.Column="0" 
+                  <SelectableTextBlock Grid.Column="0" 
                              Text="{Binding}" 
                              VerticalAlignment="Center"
                              TextTrimming="CharacterEllipsis"/>
@@ -105,3 +105,4 @@
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

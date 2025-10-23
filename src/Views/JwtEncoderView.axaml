@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:DevUtilities.ViewModels"
              x:Class="DevUtilities.Views.JwtEncoderView"
@@ -13,11 +13,11 @@
       
       <!-- 标题区域 -->
       <StackPanel Spacing="6">
-        <TextBlock Text="JWT编码器" 
+        <SelectableTextBlock Text="JWT编码器" 
                    FontSize="26" 
                    FontWeight="Bold" 
                    Foreground="{DynamicResource SystemAccentColor}"/>
-        <TextBlock Text="JWT令牌生成、解码和验证工具" 
+        <SelectableTextBlock Text="JWT令牌生成、解码和验证工具" 
                    FontSize="14" 
                    Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
       </StackPanel>
@@ -27,13 +27,13 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="JWT生成" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="JWT生成" FontWeight="SemiBold" FontSize="16"/>
           
           <Grid ColumnDefinitions="*,20,*,20,*" RowDefinitions="Auto,*">
             
             <!-- Header区域 -->
             <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-              <TextBlock Text="Header (头部)" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="Header (头部)" FontWeight="SemiBold"/>
               <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                       CornerRadius="6" 
                       Padding="8"
@@ -56,7 +56,7 @@
 
             <!-- Payload区域 -->
             <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-              <TextBlock Text="Payload (载荷)" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="Payload (载荷)" FontWeight="SemiBold"/>
               <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                       CornerRadius="6" 
                       Padding="8"
@@ -79,7 +79,7 @@
 
             <!-- 密钥区域 -->
             <StackPanel Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-              <TextBlock Text="Secret (密钥)" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="Secret (密钥)" FontWeight="SemiBold"/>
               <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                       CornerRadius="6" 
                       Padding="8"
@@ -122,7 +122,7 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="JWT令牌输出" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="JWT令牌输出" FontWeight="SemiBold" FontSize="16"/>
           
           <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                   CornerRadius="6" 
@@ -155,11 +155,11 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="JWT解码验证" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="JWT解码验证" FontWeight="SemiBold" FontSize="16"/>
           
           <!-- JWT输入 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="输入JWT令牌进行解码"/>
+            <SelectableTextBlock Text="输入JWT令牌进行解码"/>
             <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                     CornerRadius="6" 
                     Padding="8"
@@ -186,7 +186,7 @@
             
             <!-- 解码Header -->
             <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-              <TextBlock Text="解码Header" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="解码Header" FontWeight="SemiBold"/>
               <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                       CornerRadius="6" 
                       Padding="8"
@@ -210,7 +210,7 @@
 
             <!-- 解码Payload -->
             <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Spacing="8">
-              <TextBlock Text="解码Payload" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="解码Payload" FontWeight="SemiBold"/>
               <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
                       CornerRadius="6" 
                       Padding="8"
@@ -235,7 +235,7 @@
               Padding="12"
               IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
         <StackPanel Spacing="8">
-          <TextBlock Text="验证结果" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="验证结果" FontWeight="SemiBold"/>
           <TextBox Text="{Binding ValidationMessage}" 
                   IsReadOnly="True" 
                   Background="Transparent"
@@ -249,7 +249,7 @@
               CornerRadius="8" 
               Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="JWT工具" FontWeight="SemiBold" FontSize="16"/>
+          <SelectableTextBlock Text="JWT工具" FontWeight="SemiBold" FontSize="16"/>
           
           <WrapPanel Orientation="Horizontal" ItemWidth="180" ItemHeight="40">
             <Button Content="生成测试令牌" Command="{Binding UseExampleCommand}" 
@@ -274,20 +274,20 @@
                 CornerRadius="8" 
                 Padding="16">
           <StackPanel Spacing="8">
-            <TextBlock Text="JWT生成：" FontWeight="SemiBold"/>
-            <TextBlock Text="• 在Header中配置算法和令牌类型" TextWrapping="Wrap"/>
-            <TextBlock Text="• 在Payload中添加声明信息（用户ID、过期时间等）" TextWrapping="Wrap"/>
-            <TextBlock Text="• 设置安全的密钥用于签名" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="JWT生成：" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="• 在Header中配置算法和令牌类型" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 在Payload中添加声明信息（用户ID、过期时间等）" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 设置安全的密钥用于签名" TextWrapping="Wrap"/>
             
-            <TextBlock Text="JWT验证：" FontWeight="SemiBold" Margin="0,12,0,0"/>
-            <TextBlock Text="• 粘贴JWT令牌进行解码" TextWrapping="Wrap"/>
-            <TextBlock Text="• 验证令牌签名的有效性" TextWrapping="Wrap"/>
-            <TextBlock Text="• 检查令牌是否过期" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="JWT验证：" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <SelectableTextBlock Text="• 粘贴JWT令牌进行解码" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 验证令牌签名的有效性" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 检查令牌是否过期" TextWrapping="Wrap"/>
             
-            <TextBlock Text="安全提示：" FontWeight="SemiBold" Margin="0,12,0,0"/>
-            <TextBlock Text="• 使用足够长度的随机密钥" TextWrapping="Wrap"/>
-            <TextBlock Text="• 设置合理的过期时间" TextWrapping="Wrap"/>
-            <TextBlock Text="• 不要在JWT中存储敏感信息" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="安全提示：" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <SelectableTextBlock Text="• 使用足够长度的随机密钥" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 设置合理的过期时间" TextWrapping="Wrap"/>
+            <SelectableTextBlock Text="• 不要在JWT中存储敏感信息" TextWrapping="Wrap"/>
           </StackPanel>
         </Border>
       </Expander>
@@ -295,3 +295,4 @@
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

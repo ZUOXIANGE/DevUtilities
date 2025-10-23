@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,12 +11,12 @@
     <StackPanel Margin="24" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="URL工具集" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      <SelectableTextBlock Text="URL工具集" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
       
       <!-- URL输入区域 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="URL输入" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="URL输入" FontSize="16" FontWeight="SemiBold"/>
           <Grid RowDefinitions="Auto,10,Auto" ColumnDefinitions="*,10,Auto">
             
             <TextBox Grid.Row="0" Grid.Column="0" 
@@ -28,7 +28,7 @@
                     Command="{Binding ParseUrlCommand}"/>
             
             <!-- 验证结果 -->
-            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+            <SelectableTextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                        Text="{Binding ValidationMessage}" 
                        Foreground="{Binding IsValidUrl, Converter={StaticResource BoolToColorConverter}}"
                        FontWeight="SemiBold"/>
@@ -39,11 +39,11 @@
       <!-- URL编码/解码 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="URL编码/解码" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="URL编码/解码" FontSize="16" FontWeight="SemiBold"/>
           
           <!-- 编码类型选择 -->
           <Grid ColumnDefinitions="Auto,10,*">
-            <TextBlock Grid.Column="0" Text="编码类型:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="0" Text="编码类型:" VerticalAlignment="Center"/>
             <ComboBox Grid.Column="2" 
                       ItemsSource="{Binding EncodingTypes}" 
                       SelectedItem="{Binding SelectedEncodingType}"
@@ -58,7 +58,7 @@
           
           <!-- 编码结果 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="编码结果:" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="编码结果:" FontWeight="SemiBold"/>
             <TextBox Text="{Binding EncodedUrl}" 
                      IsReadOnly="True" 
                      TextWrapping="Wrap"
@@ -67,7 +67,7 @@
           
           <!-- 解码结果 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="解码结果:" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="解码结果:" FontWeight="SemiBold"/>
             <TextBox Text="{Binding DecodedUrl}" 
                      IsReadOnly="True" 
                      TextWrapping="Wrap"
@@ -79,7 +79,7 @@
       <!-- URL解析结果 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="URL解析结果" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="URL解析结果" FontSize="16" FontWeight="SemiBold"/>
           
           <ListBox ItemsSource="{Binding UrlComponents}" 
                    MaxHeight="200"
@@ -87,11 +87,11 @@
             <ListBox.ItemTemplate>
               <DataTemplate>
                 <Grid ColumnDefinitions="150,*">
-                  <TextBlock Grid.Column="0" 
+                  <SelectableTextBlock Grid.Column="0" 
                              Text="{Binding Name}" 
                              FontWeight="SemiBold"
                              VerticalAlignment="Top"/>
-                  <TextBlock Grid.Column="1" 
+                  <SelectableTextBlock Grid.Column="1" 
                              Text="{Binding Value}" 
                              TextWrapping="Wrap"
                              VerticalAlignment="Top"/>
@@ -105,11 +105,11 @@
       <!-- URL构建器 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="URL构建器" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="URL构建器" FontSize="16" FontWeight="SemiBold"/>
           
           <!-- 基础URL -->
           <Grid ColumnDefinitions="Auto,10,*">
-            <TextBlock Grid.Column="0" Text="基础URL:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="0" Text="基础URL:" VerticalAlignment="Center"/>
             <TextBox Grid.Column="2" 
                      Text="{Binding BaseUrl}" 
                      HorizontalAlignment="Stretch"/>
@@ -117,7 +117,7 @@
           
           <!-- 路径 -->
           <Grid ColumnDefinitions="Auto,10,*">
-            <TextBlock Grid.Column="0" Text="路径:" VerticalAlignment="Center"/>
+            <SelectableTextBlock Grid.Column="0" Text="路径:" VerticalAlignment="Center"/>
             <TextBox Grid.Column="2" 
                      Text="{Binding PathSegments}" 
                      HorizontalAlignment="Stretch"/>
@@ -126,7 +126,7 @@
           <!-- 查询参数 -->
           <StackPanel Spacing="8">
             <Grid ColumnDefinitions="*,Auto,Auto">
-              <TextBlock Grid.Column="0" Text="查询参数:" FontWeight="SemiBold"/>
+              <SelectableTextBlock Grid.Column="0" Text="查询参数:" FontWeight="SemiBold"/>
               <Button Grid.Column="1" Content="添加参数" Command="{Binding AddQueryParameterCommand}" Margin="0,0,10,0"/>
               <Button Grid.Column="2" Content="从URL解析" Command="{Binding ParseQueryToParametersCommand}"/>
             </Grid>
@@ -157,7 +157,7 @@
           <Button Content="构建URL" Command="{Binding BuildUrlCommand}" HorizontalAlignment="Left"/>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="构建结果:" FontWeight="SemiBold"/>
+            <SelectableTextBlock Text="构建结果:" FontWeight="SemiBold"/>
             <TextBox Text="{Binding BuiltUrl}" 
                      IsReadOnly="True" 
                      TextWrapping="Wrap"
@@ -169,3 +169,4 @@
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+

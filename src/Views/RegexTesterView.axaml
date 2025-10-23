@@ -11,16 +11,16 @@
     <StackPanel Margin="20" Spacing="20">
       
       <!-- 标题 -->
-      <TextBlock Text="正则表达式测试器" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
+      <SelectableTextBlock Text="正则表达式测试器" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
       
       <!-- 正则表达式输入区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="正则表达式" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="正则表达式" FontSize="18" FontWeight="SemiBold" />
           
           <!-- 正则表达式输入 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="正则表达式模式:" FontWeight="Medium" />
+            <SelectableTextBlock Text="正则表达式模式:" FontWeight="Medium" />
             <TextBox Text="{Binding Pattern}" 
                      Watermark="请输入正则表达式..."
                      FontFamily="Consolas,Monaco,monospace" />
@@ -28,7 +28,7 @@
           
           <!-- 选项设置 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="匹配选项:" FontWeight="Medium" />
+            <SelectableTextBlock Text="匹配选项:" FontWeight="Medium" />
             <WrapPanel Orientation="Horizontal" Margin="0,4">
               <CheckBox Content="忽略大小写 (i)" IsChecked="{Binding IgnoreCase}" Margin="0,0,16,0" />
               <CheckBox Content="多行模式 (m)" IsChecked="{Binding Multiline}" Margin="0,0,16,0" />
@@ -45,7 +45,7 @@
           </StackPanel>
           
           <!-- 错误消息 -->
-          <TextBlock Text="{Binding ErrorMessage}" 
+          <SelectableTextBlock Text="{Binding ErrorMessage}" 
                      Foreground="Red" 
                      IsVisible="{Binding HasError}" />
         </StackPanel>
@@ -54,10 +54,10 @@
       <!-- 测试文本区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="测试文本" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="测试文本" FontSize="18" FontWeight="SemiBold" />
           
           <StackPanel Spacing="8">
-            <TextBlock Text="测试文本:" FontWeight="Medium" />
+            <SelectableTextBlock Text="测试文本:" FontWeight="Medium" />
             <TextBox Text="{Binding TestText}" 
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -74,20 +74,20 @@
       <!-- 匹配结果区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="匹配结果" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="匹配结果" FontSize="18" FontWeight="SemiBold" />
           
           <!-- 匹配摘要 -->
-          <TextBlock Text="{Binding MatchSummary}" FontWeight="Medium" />
+          <SelectableTextBlock Text="{Binding MatchSummary}" FontWeight="Medium" />
           
           <!-- 匹配列表 -->
           <StackPanel Spacing="8">
-            <TextBlock Text="匹配详情:" FontWeight="Medium" />
+            <SelectableTextBlock Text="匹配详情:" FontWeight="Medium" />
             <ListBox ItemsSource="{Binding Matches}" MinHeight="150" MaxHeight="300">
               <ListBox.ItemTemplate>
                 <DataTemplate>
                   <StackPanel Spacing="4" Margin="8">
-                    <TextBlock Text="{Binding Value}" FontFamily="Consolas,Monaco,monospace" FontWeight="Bold" />
-                    <TextBlock Text="{Binding Index}" FontSize="12" Foreground="Gray" />
+                    <SelectableTextBlock Text="{Binding Value}" FontFamily="Consolas,Monaco,monospace" FontWeight="Bold" />
+                    <SelectableTextBlock Text="{Binding Index}" FontSize="12" Foreground="Gray" />
                   </StackPanel>
                 </DataTemplate>
               </ListBox.ItemTemplate>
@@ -102,10 +102,10 @@
       <!-- 替换功能区域 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="替换功能" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="替换功能" FontSize="18" FontWeight="SemiBold" />
           
           <StackPanel Spacing="8">
-            <TextBlock Text="替换文本:" FontWeight="Medium" />
+            <SelectableTextBlock Text="替换文本:" FontWeight="Medium" />
             <TextBox Text="{Binding ReplaceText}" 
                      Watermark="请输入替换文本..."
                      FontFamily="Consolas,Monaco,monospace" />
@@ -116,7 +116,7 @@
           </StackPanel>
           
           <StackPanel Spacing="8">
-            <TextBlock Text="替换结果:" FontWeight="Medium" />
+            <SelectableTextBlock Text="替换结果:" FontWeight="Medium" />
             <TextBox Text="{Binding ReplaceResult}" 
                      IsReadOnly="True"
                      AcceptsReturn="True"
@@ -134,7 +134,7 @@
       <!-- 常用正则表达式 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="常用正则表达式" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="常用正则表达式" FontSize="18" FontWeight="SemiBold" />
           
           <WrapPanel Orientation="Horizontal">
           </WrapPanel>
@@ -144,7 +144,7 @@
       <!-- 正则表达式工具 -->
       <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
         <StackPanel Spacing="12">
-          <TextBlock Text="正则表达式工具" FontSize="18" FontWeight="SemiBold" />
+          <SelectableTextBlock Text="正则表达式工具" FontSize="18" FontWeight="SemiBold" />
           
           <StackPanel Orientation="Horizontal" Spacing="8">
           </StackPanel>

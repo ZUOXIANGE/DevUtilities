@@ -10,7 +10,7 @@
     <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="2*,*" ColumnSpacing="20" RowSpacing="20">
       
       <!-- 标题 -->
-      <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+      <SelectableTextBlock Grid.Row="0" Grid.ColumnSpan="2" 
                  Text="颜色选择器" 
                  FontSize="24" 
                  FontWeight="Bold" 
@@ -20,7 +20,7 @@
       <Border Grid.Row="1" Grid.ColumnSpan="2" 
               Background="#FFEBEE" CornerRadius="4" Padding="12" 
               IsVisible="{Binding HasError}">
-        <TextBlock Text="{Binding ErrorMessage}" 
+        <SelectableTextBlock Text="{Binding ErrorMessage}" 
                    Foreground="#C62828" 
                    TextWrapping="Wrap"/>
       </Border>
@@ -55,7 +55,7 @@
             </UniformGrid>
             
             <!-- 颜色名称显示 -->
-            <TextBlock Grid.Row="2" 
+            <SelectableTextBlock Grid.Row="2" 
                        Text="{Binding ColorName}" 
                        FontSize="16" 
                        FontWeight="SemiBold"
@@ -68,11 +68,11 @@
         <Border Background="White" CornerRadius="8" Padding="16" 
                 BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
-            <TextBlock Text="RGB 控制" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            <SelectableTextBlock Text="RGB 控制" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
             
             <!-- Red -->
             <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
-              <TextBlock Grid.Column="0" Text="R" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="R" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#E53E3E"/>
               <Slider Grid.Column="1" Minimum="0" Maximum="255" 
                       Value="{Binding Red}" 
@@ -83,7 +83,7 @@
             
             <!-- Green -->
             <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
-              <TextBlock Grid.Column="0" Text="G" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="G" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#38A169"/>
               <Slider Grid.Column="1" Minimum="0" Maximum="255" 
                       Value="{Binding Green}" 
@@ -94,7 +94,7 @@
             
             <!-- Blue -->
             <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
-              <TextBlock Grid.Column="0" Text="B" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="B" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#3182CE"/>
               <Slider Grid.Column="1" Minimum="0" Maximum="255" 
                       Value="{Binding Blue}" 
@@ -109,11 +109,11 @@
         <Border Background="White" CornerRadius="8" Padding="16" 
                 BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
-            <TextBlock Text="HSL 控制" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            <SelectableTextBlock Text="HSL 控制" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
             
             <!-- Hue -->
             <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
-              <TextBlock Grid.Column="0" Text="H" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="H" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#9F7AEA"/>
               <Slider Grid.Column="1" Minimum="0" Maximum="360" 
                       Value="{Binding Hue}" 
@@ -124,7 +124,7 @@
             
             <!-- Saturation -->
             <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
-              <TextBlock Grid.Column="0" Text="S" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="S" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#ED8936"/>
               <Slider Grid.Column="1" Minimum="0" Maximum="100" 
                       Value="{Binding Saturation}" 
@@ -135,7 +135,7 @@
             
             <!-- Lightness -->
             <Grid ColumnDefinitions="40,*,70" ColumnSpacing="10">
-              <TextBlock Grid.Column="0" Text="L" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="L" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#48BB78"/>
               <Slider Grid.Column="1" Minimum="0" Maximum="100" 
                       Value="{Binding Lightness}" 
@@ -154,11 +154,11 @@
         <Border Background="White" CornerRadius="8" Padding="16" 
                 BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
-            <TextBlock Text="颜色代码" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            <SelectableTextBlock Text="颜色代码" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
             
             <!-- HEX -->
             <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
-              <TextBlock Grid.Column="0" Text="HEX" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="HEX" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#666666"/>
               <TextBox Grid.Column="1" Text="{Binding HexColor}" 
                        IsReadOnly="True" 
@@ -173,7 +173,7 @@
             
             <!-- RGB -->
             <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
-              <TextBlock Grid.Column="0" Text="RGB" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="RGB" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#666666"/>
               <TextBox Grid.Column="1" Text="{Binding RgbString}" 
                        IsReadOnly="True" 
@@ -188,7 +188,7 @@
             
             <!-- HSL -->
             <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
-              <TextBlock Grid.Column="0" Text="HSL" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="HSL" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#666666"/>
               <TextBox Grid.Column="1" Text="{Binding HslString}" 
                        IsReadOnly="True" 
@@ -203,7 +203,7 @@
             
             <!-- HSV -->
             <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
-              <TextBlock Grid.Column="0" Text="HSV" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="HSV" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#666666"/>
               <TextBox Grid.Column="1" Text="{Binding HsvString}" 
                        IsReadOnly="True" 
@@ -218,7 +218,7 @@
             
             <!-- CMYK -->
             <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="8">
-              <TextBlock Grid.Column="0" Text="CMYK" VerticalAlignment="Center" 
+              <SelectableTextBlock Grid.Column="0" Text="CMYK" VerticalAlignment="Center" 
                          FontWeight="SemiBold" Foreground="#666666"/>
               <TextBox Grid.Column="1" Text="{Binding CmykString}" 
                        IsReadOnly="True" 
@@ -237,10 +237,10 @@
         <Border Background="White" CornerRadius="8" Padding="16" 
                 BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
-            <TextBlock Text="预设颜色" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+            <SelectableTextBlock Text="预设颜色" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
             
             <!-- 基础颜色 -->
-            <TextBlock Text="基础色彩" FontSize="12" Foreground="#666666" Margin="0,0,0,4"/>
+            <SelectableTextBlock Text="基础色彩" FontSize="12" Foreground="#666666" Margin="0,0,0,4"/>
             <UniformGrid Columns="4" ColumnSpacing="6" RowSpacing="6">
               <Border Width="35" Height="35" Background="Red" CornerRadius="6" Cursor="Hand"
                       ToolTip.Tip="红色" BorderBrush="#CCCCCC" BorderThickness="1"/>
@@ -261,7 +261,7 @@
             </UniformGrid>
             
             <!-- 灰度颜色 -->
-            <TextBlock Text="灰度色彩" FontSize="12" Foreground="#666666" Margin="0,8,0,4"/>
+            <SelectableTextBlock Text="灰度色彩" FontSize="12" Foreground="#666666" Margin="0,8,0,4"/>
             <UniformGrid Columns="4" ColumnSpacing="6" RowSpacing="6">
               <Border Width="35" Height="35" Background="Black" CornerRadius="6" Cursor="Hand"
                       ToolTip.Tip="黑色" BorderBrush="#CCCCCC" BorderThickness="1"/>
@@ -286,7 +286,7 @@
                 BorderBrush="#E0E0E0" BorderThickness="1">
           <StackPanel Spacing="12">
             <Grid ColumnDefinitions="*,Auto">
-              <TextBlock Grid.Column="0" Text="颜色历史" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+              <SelectableTextBlock Grid.Column="0" Text="颜色历史" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
               <Button Grid.Column="1" Content="🗑️" 
                       Command="{Binding ClearHistoryCommand}"
                       ToolTip.Tip="清空历史"
@@ -325,3 +325,4 @@
     </Grid>
   </ScrollViewer>
 </UserControl>
+

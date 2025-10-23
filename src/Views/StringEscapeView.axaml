@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,8 +16,8 @@
     <!-- 标题区域 -->
     <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,16">
       <StackPanel Spacing="8">
-        <TextBlock Text="字符串转义/反转义工具" FontSize="24" FontWeight="Bold" />
-        <TextBlock Text="支持多种编程语言和格式的字符串转义处理" FontSize="14" Foreground="#666666" />
+        <SelectableTextBlock Text="字符串转义/反转义工具" FontSize="24" FontWeight="Bold" />
+        <SelectableTextBlock Text="支持多种编程语言和格式的字符串转义处理" FontSize="14" Foreground="#666666" />
       </StackPanel>
     </Border>
     
@@ -31,7 +31,7 @@
             
             <!-- 转义类型选择 -->
             <StackPanel Grid.Column="0" Spacing="8">
-              <TextBlock Text="转义类型:" FontWeight="Medium" />
+              <SelectableTextBlock Text="转义类型:" FontWeight="Medium" />
               <ComboBox ItemsSource="{Binding EscapeTypes}" 
                        SelectedItem="{Binding SelectedEscapeType}" 
                        MinWidth="150"/>
@@ -39,7 +39,7 @@
             
             <!-- 模式选择 -->
             <StackPanel Grid.Column="1" Spacing="8" Margin="20,0,0,0">
-              <TextBlock Text="操作模式:" FontWeight="Medium" />
+              <SelectableTextBlock Text="操作模式:" FontWeight="Medium" />
               <StackPanel Orientation="Horizontal" Spacing="12">
                 <RadioButton Content="转义" IsChecked="{Binding IsEscapeMode}" />
                 <RadioButton Content="反转义" IsChecked="{Binding !IsEscapeMode}" />
@@ -63,7 +63,7 @@
           <Border Grid.Column="0" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="0,0,8,0">
             <StackPanel Spacing="12">
               <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Grid.Column="0" Text="输入文本" FontSize="16" FontWeight="SemiBold"/>
+                <SelectableTextBlock Grid.Column="0" Text="输入文本" FontSize="16" FontWeight="SemiBold"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                   <Button Content="示例1" Command="{Binding UseExampleCommand}" 
                          CommandParameter="Hello &quot;World&quot;&#10;New Line&#9;Tab"
@@ -87,7 +87,7 @@
           <!-- 输出区域 -->
           <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8" Padding="16" Margin="8,0,0,0">
             <StackPanel Spacing="12">
-              <TextBlock Text="输出结果" FontSize="16" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="输出结果" FontSize="16" FontWeight="SemiBold"/>
               <TextBox Text="{Binding OutputText}" 
                       AcceptsReturn="True" 
                       Height="400" 
@@ -106,3 +106,4 @@
     </ScrollViewer>
   </Grid>
 </UserControl>
+

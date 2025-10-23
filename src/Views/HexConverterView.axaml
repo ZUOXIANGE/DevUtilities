@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,12 +9,12 @@
   <ScrollViewer VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
     <StackPanel Margin="20" Spacing="20">
       <!-- 标题 -->
-      <TextBlock Text="十六进制转换器" 
+      <SelectableTextBlock Text="十六进制转换器" 
                  FontSize="24" 
                  FontWeight="Bold" 
                  HorizontalAlignment="Center"/>
       
-      <TextBlock Text="支持文本与十六进制之间的相互转换，支持多种字符编码" 
+      <SelectableTextBlock Text="支持文本与十六进制之间的相互转换，支持多种字符编码" 
                  FontSize="14" 
                  HorizontalAlignment="Center"
                  Foreground="Gray" 
@@ -23,7 +23,7 @@
       <!-- 转换设置 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="转换设置" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="转换设置" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="字符编码：" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <SelectableTextBlock Grid.Column="0" Text="字符编码：" VerticalAlignment="Center" Margin="0,0,8,0"/>
             
             <ComboBox Grid.Column="1" 
                       SelectedItem="{Binding SelectedEncoding}"
@@ -65,7 +65,7 @@
       <!-- 输入文本 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="输入文本" FontWeight="Bold" FontSize="16"/>
           
           <TextBox Text="{Binding InputText}" 
                    AcceptsReturn="True" 
@@ -81,7 +81,7 @@
             <Button Content="从剪贴板粘贴" Command="{Binding ConvertToHexCommand}"/>
           </StackPanel>
           
-          <TextBlock Text="{Binding ValidationMessage}" 
+          <SelectableTextBlock Text="{Binding ValidationMessage}" 
                      Foreground="Red" 
                      IsVisible="{Binding !IsValidInput}"
                      FontWeight="SemiBold"/>
@@ -91,7 +91,7 @@
       <!-- 十六进制输出 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="十六进制输出" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="十六进制输出" FontWeight="Bold" FontSize="16"/>
           
           <TextBox Text="{Binding HexOutput}" 
                    IsReadOnly="True"
@@ -113,7 +113,7 @@
       <!-- 文本输出 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="12">
-          <TextBlock Text="文本输出" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="文本输出" FontWeight="Bold" FontSize="16"/>
           
           <TextBox Text="{Binding TextOutput}" 
                    IsReadOnly="True"
@@ -134,7 +134,7 @@
       <!-- 快速转换 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="快速转换" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="快速转换" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -144,7 +144,7 @@
             </Grid.ColumnDefinitions>
             
             <StackPanel Grid.Column="0" Spacing="8">
-              <TextBlock Text="常用字符转换" FontWeight="SemiBold"/>
+              <SelectableTextBlock Text="常用字符转换" FontWeight="SemiBold"/>
               <StackPanel Spacing="4">
                 <Button Content="空格 → 20" Command="{Binding ConvertToHexCommand}" HorizontalAlignment="Left"/>
                 <Button Content="换行 → 0A" Command="{Binding ConvertFromHexCommand}" HorizontalAlignment="Left"/>
@@ -155,7 +155,7 @@
             <Border Grid.Column="1" Width="1" Background="#E0E0E0" Margin="16,0"/>
             
             <StackPanel Grid.Column="2" Spacing="4">
-                <TextBlock Text="工具" FontWeight="SemiBold"/>
+                <SelectableTextBlock Text="工具" FontWeight="SemiBold"/>
                 <Button Content="ASCII码表" Command="{Binding ConvertToHexCommand}" HorizontalAlignment="Left"/>
                 <Button Content="Unicode查询" Command="{Binding ConvertFromHexCommand}" HorizontalAlignment="Left"/>
                 <Button Content="字节计算器" Command="{Binding ClearAllCommand}" HorizontalAlignment="Left"/>
@@ -167,7 +167,7 @@
       <!-- 文件操作 -->
       <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
         <StackPanel Spacing="16">
-          <TextBlock Text="文件操作" FontWeight="Bold" FontSize="16"/>
+          <SelectableTextBlock Text="文件操作" FontWeight="Bold" FontSize="16"/>
           
           <Grid>
             <Grid.ColumnDefinitions>
@@ -190,7 +190,7 @@
             <Button Content="十六进制转文件" Command="{Binding ConvertFromHexCommand}"/>
           </StackPanel>
           
-          <TextBlock Text="处理中..." 
+          <SelectableTextBlock Text="处理中..." 
                      IsVisible="False"
                      HorizontalAlignment="Center"
                      Foreground="Blue"/>
@@ -200,37 +200,38 @@
       <!-- 使用说明 -->
       <Expander Header="使用说明" IsExpanded="False">
         <StackPanel Spacing="12" Margin="10">
-          <TextBlock Text="转换模式" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="转换模式" FontWeight="SemiBold"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 文本转十六进制：将普通文本转换为十六进制表示"/>
-            <TextBlock Text="• 十六进制转文本：将十六进制数据转换回原始文本"/>
-            <TextBlock Text="• 支持多种字符编码：UTF-8、ASCII、Unicode、UTF-32、GB2312"/>
+            <SelectableTextBlock Text="• 文本转十六进制：将普通文本转换为十六进制表示"/>
+            <SelectableTextBlock Text="• 十六进制转文本：将十六进制数据转换回原始文本"/>
+            <SelectableTextBlock Text="• 支持多种字符编码：UTF-8、ASCII、Unicode、UTF-32、GB2312"/>
           </StackPanel>
           
-          <TextBlock Text="格式选项" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="格式选项" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 大写输出：控制十六进制字母的大小写"/>
-            <TextBlock Text="• 添加空格：在十六进制数字间添加空格分隔"/>
-            <TextBlock Text="• 添加0x前缀：为每个十六进制数添加0x前缀"/>
+            <SelectableTextBlock Text="• 大写输出：控制十六进制字母的大小写"/>
+            <SelectableTextBlock Text="• 添加空格：在十六进制数字间添加空格分隔"/>
+            <SelectableTextBlock Text="• 添加0x前缀：为每个十六进制数添加0x前缀"/>
           </StackPanel>
           
-          <TextBlock Text="使用场景" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="使用场景" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 数据分析：查看文本的二进制表示"/>
-            <TextBlock Text="• 编程调试：检查字符串的字节内容"/>
-            <TextBlock Text="• 协议分析：解析网络数据包"/>
-            <TextBlock Text="• 文件分析：查看文件的十六进制内容"/>
+            <SelectableTextBlock Text="• 数据分析：查看文本的二进制表示"/>
+            <SelectableTextBlock Text="• 编程调试：检查字符串的字节内容"/>
+            <SelectableTextBlock Text="• 协议分析：解析网络数据包"/>
+            <SelectableTextBlock Text="• 文件分析：查看文件的十六进制内容"/>
           </StackPanel>
           
-          <TextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
+          <SelectableTextBlock Text="使用提示" FontWeight="SemiBold" Margin="0,10,0,0"/>
           <StackPanel Spacing="4" Margin="10,0">
-            <TextBlock Text="• 输入十六进制时可以包含空格和0x前缀"/>
-            <TextBlock Text="• 支持大文件的十六进制转换"/>
-            <TextBlock Text="• 转换结果可以保存到文件"/>
-            <TextBlock Text="• 提供常用字符的快速转换"/>
+            <SelectableTextBlock Text="• 输入十六进制时可以包含空格和0x前缀"/>
+            <SelectableTextBlock Text="• 支持大文件的十六进制转换"/>
+            <SelectableTextBlock Text="• 转换结果可以保存到文件"/>
+            <SelectableTextBlock Text="• 提供常用字符的快速转换"/>
           </StackPanel>
         </StackPanel>
       </Expander>
     </StackPanel>
   </ScrollViewer>
 </UserControl>
+
