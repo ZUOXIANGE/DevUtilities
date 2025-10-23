@@ -111,6 +111,7 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("哈希生成", "哈希生成", "🔐", "字符串哈希值生成工具", ToolType.HashGenerator));
         AllTools.Add(new ToolInfo("文本加解密", "文本加解密", "🔒", "AES/DES/3DES文本加解密工具", ToolType.TextEncryption));
         AllTools.Add(new ToolInfo("Docker Compose转换", "Docker Compose转换", "🐳", "Docker run命令转换为docker-compose文件", ToolType.DockerComposeConverter));
+        AllTools.Add(new ToolInfo("chmod计算器", "chmod计算器", "🛡️", "Linux文件权限计算与转换", ToolType.ChmodCalculator));
     }
 
     [RelayCommand]
@@ -191,6 +192,7 @@ public partial class MainWindowViewModel : ObservableObject
             ToolType.HashGenerator => new HashGeneratorViewModel(),
             ToolType.TextEncryption => new TextEncryptionViewModel(),
             ToolType.DockerComposeConverter => new DockerComposeConverterViewModel(),
+            ToolType.ChmodCalculator => new ChmodCalculatorViewModel(),
             _ => new object()
         };
     }

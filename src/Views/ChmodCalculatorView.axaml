@@ -1,0 +1,132 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.ChmodCalculatorView"
+             x:DataType="vm:ChmodCalculatorViewModel">
+
+  <Design.DataContext>
+    <vm:ChmodCalculatorViewModel/>
+  </Design.DataContext>
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+
+      <!-- 标题区域 -->
+      <StackPanel Spacing="6">
+        <SelectableTextBlock Text="chmod计算器"
+                             FontSize="26"
+                             FontWeight="Bold"
+                             Foreground="{DynamicResource SystemAccentColor}"/>
+        <SelectableTextBlock Text="计算并转换Linux文件权限，支持八进制、符号及特殊位"
+                             FontSize="14"
+                             Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+      </StackPanel>
+
+      <!-- 权限选项区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+              CornerRadius="8"
+              Padding="16">
+        <StackPanel Spacing="12">
+          <SelectableTextBlock Text="权限设置" FontWeight="SemiBold" FontSize="16"/>
+
+          <!-- 三列：所有者、所属组、其他用户 -->
+          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="8">
+            <!-- 列标题 -->
+            <SelectableTextBlock Grid.Column="0" Grid.Row="0" Text="所有者" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="1" Grid.Row="0" Text="所属组" FontWeight="SemiBold"/>
+            <SelectableTextBlock Grid.Column="2" Grid.Row="0" Text="其他用户" FontWeight="SemiBold"/>
+
+            <!-- 勾选项 -->
+            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Spacing="12">
+              <CheckBox Content="读(r)" IsChecked="{Binding OwnerRead}"/>
+              <CheckBox Content="写(w)" IsChecked="{Binding OwnerWrite}"/>
+              <CheckBox Content="执行(x)" IsChecked="{Binding OwnerExecute}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="12">
+              <CheckBox Content="读(r)" IsChecked="{Binding GroupRead}"/>
+              <CheckBox Content="写(w)" IsChecked="{Binding GroupWrite}"/>
+              <CheckBox Content="执行(x)" IsChecked="{Binding GroupExecute}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Spacing="12">
+              <CheckBox Content="读(r)" IsChecked="{Binding OthersRead}"/>
+              <CheckBox Content="写(w)" IsChecked="{Binding OthersWrite}"/>
+              <CheckBox Content="执行(x)" IsChecked="{Binding OthersExecute}"/>
+            </StackPanel>
+          </Grid>
+
+          <!-- 特殊位 -->
+          <StackPanel Spacing="8" Margin="0,8,0,0">
+            <SelectableTextBlock Text="特殊位" FontWeight="SemiBold"/>
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <CheckBox Content="SetUID (u+s)" IsChecked="{Binding SetUserId}"/>
+              <CheckBox Content="SetGID (g+s)" IsChecked="{Binding SetGroupId}"/>
+              <CheckBox Content="Sticky (o+t)" IsChecked="{Binding StickyBit}"/>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 操作按钮区域 -->
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Content="重置" Command="{Binding ResetToolCommand}"/>
+        <Button Content="加载示例" Command="{Binding UseExampleCommand}"/>
+        <Button Content="解析输入" Command="{Binding ApplyInputCommand}"/>
+        <Button Content="复制八进制" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding OctalPermission}"/>
+        <Button Content="复制符号命令" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding SymbolicChmodCommand}"/>
+        <Button Content="复制八进制命令" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding NumericChmodCommand}"/>
+      </StackPanel>
+
+      <!-- 输入与结果区域 -->
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+        <!-- 输入 -->
+        <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" CornerRadius="8" Padding="16">
+          <StackPanel Spacing="8">
+            <SelectableTextBlock Text="输入权限（支持 0755、rwxr-xr-x 或 u=rwx,g=rx,o=rx）" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding InputPermission}" Watermark="示例：0755 或 rwxr-xr-x 或 u=rwx,g=rx,o=rx"/>
+          </StackPanel>
+        </Border>
+
+        <!-- 输出 -->
+        <Border Grid.Column="1" Background="{DynamicResource SystemControlBackgroundAltHighBrush}" CornerRadius="8" Padding="16">
+          <StackPanel Spacing="10">
+            <SelectableTextBlock Text="计算结果" FontWeight="SemiBold"/>
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*" RowSpacing="6" ColumnSpacing="10">
+              <SelectableTextBlock Grid.Row="0" Grid.Column="0" Text="八进制"/>
+              <Border Grid.Row="0" Grid.Column="1" Background="#E8F5E8" CornerRadius="6" Padding="8">
+                <SelectableTextBlock Text="{Binding OctalPermission}" FontWeight="Bold"/>
+              </Border>
+
+              <SelectableTextBlock Grid.Row="1" Grid.Column="0" Text="符号模式"/>
+              <Border Grid.Row="1" Grid.Column="1" Background="#E8F0FE" CornerRadius="6" Padding="8">
+                <SelectableTextBlock Text="{Binding SymbolicPermission}" FontFamily="Consolas"/>
+              </Border>
+
+              <SelectableTextBlock Grid.Row="2" Grid.Column="0" Text="chmod(八进制)"/>
+              <Border Grid.Row="2" Grid.Column="1" Background="#FFF3E0" CornerRadius="6" Padding="8">
+                <SelectableTextBlock Text="{Binding NumericChmodCommand}" FontFamily="Consolas"/>
+              </Border>
+
+              <SelectableTextBlock Grid.Row="3" Grid.Column="0" Text="chmod(符号)"/>
+              <Border Grid.Row="3" Grid.Column="1" Background="#FFF3E0" CornerRadius="6" Padding="8">
+                <SelectableTextBlock Text="{Binding SymbolicChmodCommand}" FontFamily="Consolas"/>
+              </Border>
+            </Grid>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 使用提示 -->
+      <Expander Header="使用提示" IsExpanded="False">
+        <StackPanel Spacing="4" Margin="10,6">
+          <SelectableTextBlock Text="• 勾选权限或输入权限文本，支持特殊位"/>
+          <SelectableTextBlock Text="• 八进制前导位表示特殊位：4=setuid,2=setgid,1=sticky"/>
+          <SelectableTextBlock Text="• 符号模式中 s/S 表示 setuid/setgid，t/T 表示 sticky"/>
+          <SelectableTextBlock Text="• 可直接复制命令在Linux终端中使用"/>
+        </StackPanel>
+      </Expander>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

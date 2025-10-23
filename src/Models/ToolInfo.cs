@@ -47,5 +47,6 @@ public enum ToolType
     JsonExampleGenerator,
     HashGenerator,
     TextEncryption,
-    DockerComposeConverter
+    DockerComposeConverter,
+    ChmodCalculator
 }
