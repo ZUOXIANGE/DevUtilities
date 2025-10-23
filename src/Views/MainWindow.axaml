@@ -160,8 +160,8 @@
           
           <Button Grid.Column="0" Command="{Binding BackToHomeCommand}" Background="Transparent" BorderThickness="0" Padding="8">
             <StackPanel Orientation="Horizontal">
-              <SelectableTextBlock Text="🏠" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-              <SelectableTextBlock Text="返回" FontSize="14" VerticalAlignment="Center"/>
+              <TextBlock Text="🏠" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+              <TextBlock Text="返回" FontSize="14" VerticalAlignment="Center"/>
             </StackPanel>
           </Button>
           

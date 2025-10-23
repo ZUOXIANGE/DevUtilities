@@ -1,10 +1,11 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DevUtilities.Core.ViewModels;
 
 namespace DevUtilities.ViewModels;
 
-public partial class TimestampConverterViewModel : ObservableObject
+public partial class TimestampConverterViewModel : BaseViewModel
 {
     [ObservableProperty]
     private string timestampInput = "";

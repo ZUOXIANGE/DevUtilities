@@ -5,10 +5,11 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DevUtilities.Core.ViewModels;
 
 namespace DevUtilities.ViewModels;
 
-public partial class BaseConverterViewModel : ObservableObject
+public partial class BaseConverterViewModel : BaseViewModel
 {
     [ObservableProperty]
     private string binaryValue = "";

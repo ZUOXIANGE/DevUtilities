@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -9,6 +10,7 @@ using DevUtilities.Views;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Serilog;
 
 namespace DevUtilities.ViewModels;
 
@@ -38,62 +40,100 @@ public partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
     {
-        InitializeTools();
-        UpdateFilteredTools();
+        Log.Debug("[MainWindowViewModel] 开始初始化MainWindowViewModel");
+        
+        try
+        {
+            Log.Debug("[MainWindowViewModel] 开始初始化工具列表");
+            InitializeTools();
+            Log.Debug("[MainWindowViewModel] 工具列表初始化完成，总数: {ToolCount}", AllTools.Count);
+            
+            Log.Debug("[MainWindowViewModel] 开始更新过滤后的工具列表");
+            UpdateFilteredTools();
+            Log.Debug("[MainWindowViewModel] 过滤后的工具列表更新完成，显示数量: {FilteredCount}", FilteredTools.Count);
+            
+            Log.Information("[MainWindowViewModel] MainWindowViewModel初始化完成");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "[MainWindowViewModel] MainWindowViewModel初始化时发生错误");
+            throw;
+        }
     }
 
     partial void OnSearchTextChanged(string value)
     {
+        Log.Debug("[MainWindowViewModel] 搜索文本变化: '{SearchText}'", value);
         UpdateFilteredTools();
     }
 
     partial void OnSelectedSortOptionChanged(string value)
     {
+        Log.Debug("[MainWindowViewModel] 排序选项变化: '{SortOption}'", value);
         UpdateFilteredTools();
     }
 
     private void UpdateFilteredTools()
     {
-        var filtered = AllTools.AsEnumerable();
-
-        // 应用搜索过滤
-        if (!string.IsNullOrWhiteSpace(SearchText))
+        Log.Debug("[MainWindowViewModel] 开始更新过滤工具列表");
+        
+        try
         {
-            var searchLower = SearchText.ToLower();
-            filtered = filtered.Where(tool => 
-                tool.DisplayName.ToLower().Contains(searchLower) ||
-                tool.Name.ToLower().Contains(searchLower) ||
-                tool.Description.ToLower().Contains(searchLower));
+            var filtered = AllTools.AsEnumerable();
+            var originalCount = AllTools.Count;
+
+            // 应用搜索过滤
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var searchLower = SearchText.ToLower();
+                filtered = filtered.Where(tool => 
+                    tool.DisplayName.ToLower().Contains(searchLower) ||
+                    tool.Name.ToLower().Contains(searchLower) ||
+                    tool.Description.ToLower().Contains(searchLower));
+                    
+                Log.Debug("[MainWindowViewModel] 应用搜索过滤，关键词: '{SearchText}'", SearchText);
+            }
+
+            // 应用排序
+            filtered = SelectedSortOption switch
+            {
+                "按名称排序" => filtered.OrderBy(t => t.DisplayName),
+                "按类型排序" => filtered.OrderBy(t => t.Type.ToString()),
+                "自定义排序" => filtered.OrderBy(t => t.SortOrder).ThenBy(t => t.DisplayName),
+                _ => filtered // 默认排序保持原有顺序
+            };
+            
+            Log.Debug("[MainWindowViewModel] 应用排序: {SortOption}", SelectedSortOption);
+
+            FilteredTools.Clear();
+            foreach (var tool in filtered)
+            {
+                FilteredTools.Add(tool);
+            }
+            
+            Log.Debug("[MainWindowViewModel] 工具列表过滤完成，原始数量: {OriginalCount}，过滤后数量: {FilteredCount}", 
+                originalCount, FilteredTools.Count);
         }
-
-        // 应用排序
-        filtered = SelectedSortOption switch
+        catch (Exception ex)
         {
-            "按名称排序" => filtered.OrderBy(t => t.DisplayName),
-            "按类型排序" => filtered.OrderBy(t => t.Type.ToString()),
-            "自定义排序" => filtered.OrderBy(t => t.SortOrder).ThenBy(t => t.DisplayName),
-            _ => filtered // 默认排序保持原有顺序
-        };
-
-        FilteredTools.Clear();
-        foreach (var tool in filtered)
-        {
-            FilteredTools.Add(tool);
+            Log.Error(ex, "[MainWindowViewModel] 更新过滤工具列表时发生错误");
         }
     }
 
     private void InitializeTools()
     {
-        AllTools.Add(new ToolInfo("时间戳转换", "时间戳转换", "⏰", "时间戳与日期时间相互转换", ToolType.TimestampConverter));
-        AllTools.Add(new ToolInfo("Base64编码", "Base64编码", "📝", "Base64编码解码工具", ToolType.Base64Encoder));
-        AllTools.Add(new ToolInfo("URL工具", "URL工具", "🔗", "URL编码解码和组件解析", ToolType.UrlTools));
+        Log.Debug("[MainWindowViewModel] 开始添加工具到列表");
+        
+        AllTools.Add(new ToolInfo("时间戳转换", "时间戳转换", "⏰", "Unix时间戳与日期时间互转", ToolType.TimestampConverter));
+        AllTools.Add(new ToolInfo("Base64编码", "Base64编码", "🔤", "Base64编码解码工具", ToolType.Base64Encoder));
+        AllTools.Add(new ToolInfo("URL工具", "URL工具", "🔗", "URL编码解码和解析工具", ToolType.UrlTools));
         AllTools.Add(new ToolInfo("JSON格式化", "JSON格式化", "📋", "JSON格式化和验证工具", ToolType.JsonFormatter));
-        AllTools.Add(new ToolInfo("密码生成", "密码生成", "🔑", "安全密码生成工具", ToolType.PasswordGenerator));
+        AllTools.Add(new ToolInfo("密码生成", "密码生成", "🔑", "安全密码生成器", ToolType.PasswordGenerator));
         AllTools.Add(new ToolInfo("进制转换", "进制转换", "🔢", "数字进制转换工具", ToolType.BaseConverter));
         AllTools.Add(new ToolInfo("HTTP请求", "HTTP请求", "🌐", "HTTP请求测试工具", ToolType.HttpRequest));
-        AllTools.Add(new ToolInfo("加密工具", "加密工具", "🔒", "各种加密解密算法", ToolType.CryptoTools));
-        AllTools.Add(new ToolInfo("字符串转义", "字符串转义", "🔤", "字符串转义和反转义工具", ToolType.StringEscape));
-        AllTools.Add(new ToolInfo("SQL格式化", "SQL格式化", "🗃️", "SQL语句格式化和美化", ToolType.SqlFormatter));
+        AllTools.Add(new ToolInfo("加密工具", "加密工具", "🔐", "文本加密解密工具", ToolType.CryptoTools));
+        AllTools.Add(new ToolInfo("字符串转义", "字符串转义", "📝", "字符串转义和反转义", ToolType.StringEscape));
+        AllTools.Add(new ToolInfo("SQL格式化", "SQL格式化", "🗃️", "SQL语句格式化工具", ToolType.SqlFormatter));
         AllTools.Add(new ToolInfo("HTML格式化", "HTML格式化", "🌐", "HTML代码格式化和美化", ToolType.HtmlFormatter));
         AllTools.Add(new ToolInfo("XML格式化", "XML格式化", "📄", "XML代码格式化和验证", ToolType.XmlFormatter));
         AllTools.Add(new ToolInfo("正则测试", "正则测试", "🔍", "正则表达式测试和验证", ToolType.RegexTester));
@@ -112,22 +152,49 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("文本加解密", "文本加解密", "🔒", "AES/DES/3DES文本加解密工具", ToolType.TextEncryption));
         AllTools.Add(new ToolInfo("Docker Compose转换", "Docker Compose转换", "🐳", "Docker run命令转换为docker-compose文件", ToolType.DockerComposeConverter));
         AllTools.Add(new ToolInfo("chmod计算器", "chmod计算器", "🛡️", "Linux文件权限计算与转换", ToolType.ChmodCalculator));
+        
+        Log.Information("[MainWindowViewModel] 工具列表初始化完成，共添加 {ToolCount} 个工具", AllTools.Count);
     }
 
     [RelayCommand]
     private void SelectTool(ToolInfo tool)
     {
-        SelectedTool = tool;
-        CurrentToolViewModel = CreateToolViewModel(tool.Type);
-        IsToolViewVisible = true;
+        Log.Information("[MainWindowViewModel] 选择工具: {ToolName} ({ToolType})", tool.DisplayName, tool.Type);
+        
+        try
+        {
+            SelectedTool = tool;
+            
+            Log.Debug("[MainWindowViewModel] 开始创建工具ViewModel");
+            CurrentToolViewModel = CreateToolViewModel(tool.Type);
+            Log.Debug("[MainWindowViewModel] 工具ViewModel创建完成: {ViewModelType}", CurrentToolViewModel?.GetType().Name ?? "null");
+            
+            IsToolViewVisible = true;
+            Log.Debug("[MainWindowViewModel] 工具视图已显示");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "[MainWindowViewModel] 选择工具时发生错误: {ToolName}", tool.DisplayName);
+        }
     }
 
     [RelayCommand]
     private void BackToHome()
     {
-        IsToolViewVisible = false;
-        CurrentToolViewModel = null;
-        SelectedTool = null;
+        Log.Information("[MainWindowViewModel] 返回主页");
+        
+        try
+        {
+            IsToolViewVisible = false;
+            CurrentToolViewModel = null;
+            SelectedTool = null;
+            
+            Log.Debug("[MainWindowViewModel] 已清理工具视图状态");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "[MainWindowViewModel] 返回主页时发生错误");
+        }
     }
 
     [RelayCommand]
@@ -163,37 +230,50 @@ public partial class MainWindowViewModel : ObservableObject
 
     private object CreateToolViewModel(ToolType toolType)
     {
-        return toolType switch
+        Log.Debug("[MainWindowViewModel] 创建工具ViewModel，类型: {ToolType}", toolType);
+        
+        try
         {
-            ToolType.TimestampConverter => new TimestampConverterViewModel(),
-            ToolType.Base64Encoder => new Base64EncoderViewModel(),
-            ToolType.UrlTools => new UrlToolsViewModel(),
-            ToolType.JsonFormatter => new JsonFormatterViewModel(),
-            ToolType.PasswordGenerator => new PasswordGeneratorViewModel(),
-            ToolType.BaseConverter => new BaseConverterViewModel(),
-            ToolType.HttpRequest => new HttpRequestViewModel(),
-            ToolType.CryptoTools => new CryptoToolsViewModel(),
-            ToolType.StringEscape => new StringEscapeViewModel(),
-            ToolType.SqlFormatter => new SqlFormatterViewModel(),
-            ToolType.HtmlFormatter => new HtmlFormatterViewModel(),
-            ToolType.XmlFormatter => new XmlFormatterViewModel(),
-            ToolType.RegexTester => new RegexTesterViewModel(),
-            ToolType.TextDiff => new TextDiffViewModel(),
-            ToolType.QrCode => new QrCodeViewModel(),
-            ToolType.UuidGenerator => new UuidGeneratorViewModel(),
-            ToolType.ColorPicker => new ColorPickerViewModel(),
-            ToolType.HexConverter => new HexConverterViewModel(),
-            ToolType.JwtEncoder => new JwtEncoderViewModel(),
-            ToolType.UnitConverter => new UnitConverterViewModel(),
-            ToolType.CronExpression => new CronExpressionViewModel(),
-            ToolType.ParquetViewer => new ParquetViewerViewModel(),
-            ToolType.IpQuery => new IpQueryViewModel(),
-            ToolType.JsonExampleGenerator => new JsonExampleGeneratorViewModel(),
-            ToolType.HashGenerator => new HashGeneratorViewModel(),
-            ToolType.TextEncryption => new TextEncryptionViewModel(),
-            ToolType.DockerComposeConverter => new DockerComposeConverterViewModel(),
-            ToolType.ChmodCalculator => new ChmodCalculatorViewModel(),
-            _ => new object()
-        };
+            var viewModel = toolType switch
+            {
+                ToolType.TimestampConverter => new TimestampConverterViewModel(),
+                ToolType.Base64Encoder => new Base64EncoderViewModel(),
+                ToolType.UrlTools => new UrlToolsViewModel(),
+                ToolType.JsonFormatter => new JsonFormatterViewModel(),
+                ToolType.PasswordGenerator => new PasswordGeneratorViewModel(),
+                ToolType.BaseConverter => new BaseConverterViewModel(),
+                ToolType.HttpRequest => new HttpRequestViewModel(),
+                ToolType.CryptoTools => new CryptoToolsViewModel(),
+                ToolType.StringEscape => new StringEscapeViewModel(),
+                ToolType.SqlFormatter => new SqlFormatterViewModel(),
+                ToolType.HtmlFormatter => new HtmlFormatterViewModel(),
+                ToolType.XmlFormatter => new XmlFormatterViewModel(),
+                ToolType.RegexTester => new RegexTesterViewModel(),
+                ToolType.TextDiff => new TextDiffViewModel(),
+                ToolType.QrCode => new QrCodeViewModel(),
+                ToolType.UuidGenerator => new UuidGeneratorViewModel(),
+                ToolType.ColorPicker => new ColorPickerViewModel(),
+                ToolType.HexConverter => new HexConverterViewModel(),
+                ToolType.JwtEncoder => new JwtEncoderViewModel(),
+                ToolType.UnitConverter => new UnitConverterViewModel(),
+                ToolType.CronExpression => new CronExpressionViewModel(),
+                ToolType.ParquetViewer => new ParquetViewerViewModel(),
+                ToolType.IpQuery => new IpQueryViewModel(),
+                ToolType.JsonExampleGenerator => new JsonExampleGeneratorViewModel(),
+                ToolType.HashGenerator => new HashGeneratorViewModel(),
+                ToolType.TextEncryption => new TextEncryptionViewModel(),
+                ToolType.DockerComposeConverter => new DockerComposeConverterViewModel(),
+                ToolType.ChmodCalculator => new ChmodCalculatorViewModel(),
+                _ => new object()
+            };
+            
+            Log.Debug("[MainWindowViewModel] ViewModel创建成功: {ViewModelType}", viewModel.GetType().Name);
+            return viewModel;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "[MainWindowViewModel] 创建工具ViewModel时发生错误: {ToolType}", toolType);
+            return new object();
+        }
     }
 }

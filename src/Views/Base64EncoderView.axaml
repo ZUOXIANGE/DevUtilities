@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -46,14 +46,14 @@
               <Button Classes="secondary-button" Command="{Binding SwapInputOutputCommand}"
                       IsVisible="{Binding !IsImageMode}" ToolTip.Tip="交换输入输出内容">
                 <StackPanel Orientation="Horizontal" Spacing="6">
-                  <SelectableTextBlock Text="⇄" FontSize="14"/>
-                  <SelectableTextBlock Text="交换"/>
+                  <TextBlock Text="⇄" FontSize="14"/>
+                  <TextBlock Text="交换"/>
                 </StackPanel>
               </Button>
               <Button Classes="secondary-button" Command="{Binding ClearCommand}" ToolTip.Tip="清空所有内容">
                 <StackPanel Orientation="Horizontal" Spacing="6">
-                  <SelectableTextBlock Text="🗑️" FontSize="12"/>
-                  <SelectableTextBlock Text="清空"/>
+                  <TextBlock Text="🗑️" FontSize="12"/>
+                  <TextBlock Text="清空"/>
                 </StackPanel>
               </Button>
             </StackPanel>
@@ -101,8 +101,8 @@
               <Grid IsVisible="{Binding IsImageToBase64Mode}" ColumnDefinitions="Auto,*,Auto">
                 <Button Grid.Column="0" Classes="primary-button" Command="{Binding SelectImageForBase64Command}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <SelectableTextBlock Text="📁" FontSize="14"/>
-                    <SelectableTextBlock Text="选择图片"/>
+                    <TextBlock Text="📁" FontSize="14"/>
+                    <TextBlock Text="选择图片"/>
                   </StackPanel>
                 </Button>
                 <SelectableTextBlock Grid.Column="1" Text="{Binding SelectedImagePath}" VerticalAlignment="Center" 
@@ -110,8 +110,8 @@
                 <Button Grid.Column="2" Classes="secondary-button" Command="{Binding ClearImageCommand}"
                         IsVisible="{Binding SelectedImagePath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <SelectableTextBlock Text="✖️" FontSize="10"/>
-                    <SelectableTextBlock Text="清除"/>
+                    <TextBlock Text="✖️" FontSize="10"/>
+                    <TextBlock Text="清除"/>
                   </StackPanel>
                 </Button>
               </Grid>
@@ -183,14 +183,14 @@
                 <Button Classes="primary-button" Command="{Binding ProcessCommand}" 
                         IsEnabled="{Binding InputText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <SelectableTextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='🔒|🔓'}" FontSize="14"/>
-                    <SelectableTextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='编码|解码'}"/>
+                    <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='🔒|🔓'}" FontSize="14"/>
+                    <TextBlock Text="{Binding IsEncodeMode, Converter={x:Static converters:BooleanToStringConverter.Instance}, ConverterParameter='编码|解码'}"/>
                   </StackPanel>
                 </Button>
                 <Button Classes="secondary-button" Command="{Binding ClearInputCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <SelectableTextBlock Text="🗑️" FontSize="12"/>
-                    <SelectableTextBlock Text="清空"/>
+                    <TextBlock Text="🗑️" FontSize="12"/>
+                    <TextBlock Text="清空"/>
                   </StackPanel>
                 </Button>
               </StackPanel>
