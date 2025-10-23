@@ -27,6 +27,11 @@ public abstract class BaseViewModel : ObservableObject
     protected IConfigurationService ConfigurationService => ServiceLocator.ConfigurationService;
 
     /// <summary>
+    /// 日志服务
+    /// </summary>
+    protected ILoggingService LoggingService => ServiceLocator.LoggingService;
+
+    /// <summary>
     /// 获取服务实例
     /// </summary>
     /// <typeparam name="T">服务类型</typeparam>

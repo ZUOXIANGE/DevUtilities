@@ -23,6 +23,14 @@ public static class ServiceExtensions
             container.RegisterSingleton<IClipboardService, Implementations.ClipboardService>();
             container.RegisterSingleton<IFileService, Implementations.FileService>();
             container.RegisterSingleton<IConfigurationService, Implementations.ConfigurationService>();
+            container.RegisterSingleton<UserSettingsService>();
+            
+            // 使用工厂方法注册LoggingService，确保依赖正确解析
+            container.RegisterSingleton<ILoggingService>(() => 
+            {
+                var settingsService = container.GetService<UserSettingsService>();
+                return new LoggingService(settingsService);
+            });
             
             Log.Information("[ServiceExtensions] 核心服务注册完成");
             return container;

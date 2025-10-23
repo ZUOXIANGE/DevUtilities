@@ -39,6 +39,7 @@ public class ServiceContainer
 
     private readonly ConcurrentDictionary<Type, object> _singletonServices = new();
     private readonly ConcurrentDictionary<Type, Func<object>> _transientFactories = new();
+    private readonly ConcurrentDictionary<Type, Func<object>> _singletonFactories = new();
     private readonly ConcurrentDictionary<Type, Type> _serviceTypes = new();
 
     /// <summary>
@@ -108,6 +109,32 @@ public class ServiceContainer
     }
 
     /// <summary>
+    /// 注册单例服务（仅实现类）
+    /// </summary>
+    /// <typeparam name="TImplementation">服务实现类型</typeparam>
+    /// <returns>服务容器实例</returns>
+    public ServiceContainer RegisterSingleton<TImplementation>()
+        where TImplementation : class, new()
+    {
+        var implementationType = typeof(TImplementation);
+
+        Log.Debug("[ServiceContainer] 注册单例服务: {ImplementationType}", implementationType.Name);
+
+        try
+        {
+            _serviceTypes[implementationType] = implementationType;
+            Log.Debug("[ServiceContainer] 单例服务注册成功: {ImplementationType}", implementationType.Name);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "[ServiceContainer] 注册单例服务失败: {ImplementationType}", implementationType.Name);
+            throw;
+        }
+        
+        return this;
+    }
+
+    /// <summary>
     /// 注册瞬态服务
     /// </summary>
     /// <typeparam name="TInterface">服务接口类型</typeparam>
@@ -132,6 +159,35 @@ public class ServiceContainer
         {
             Log.Error(ex, "[ServiceContainer] 注册瞬态服务失败: {InterfaceType} -> {ImplementationType}", 
                 interfaceType.Name, implementationType.Name);
+            throw;
+        }
+        
+        return this;
+    }
+
+    /// <summary>
+    /// 注册单例服务工厂
+    /// </summary>
+    /// <typeparam name="TInterface">服务接口类型</typeparam>
+    /// <param name="factory">服务工厂方法</param>
+    /// <returns>服务容器实例</returns>
+    public ServiceContainer RegisterSingleton<TInterface>(Func<TInterface> factory)
+        where TInterface : class
+    {
+        var interfaceType = typeof(TInterface);
+        
+        Log.Debug("[ServiceContainer] 注册单例服务工厂: {InterfaceType}", interfaceType.Name);
+        
+        try
+        {
+            // 延迟创建单例实例
+            _serviceTypes[interfaceType] = null; // 标记为工厂创建
+            _singletonFactories[interfaceType] = () => factory();
+            Log.Debug("[ServiceContainer] 单例服务工厂注册成功: {InterfaceType}", interfaceType.Name);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "[ServiceContainer] 注册单例服务工厂失败: {InterfaceType}", interfaceType.Name);
             throw;
         }
         
@@ -185,6 +241,15 @@ public class ServiceContainer
                 return (T)singletonInstance;
             }
 
+            // 检查是否有单例工厂
+            if (_singletonFactories.TryGetValue(serviceType, out var singletonFactory))
+            {
+                Log.Debug("[ServiceContainer] 使用单例工厂创建实例: {ServiceType}", serviceType.Name);
+                var instance = _singletonServices.GetOrAdd(serviceType, _ => singletonFactory());
+                Log.Debug("[ServiceContainer] 单例工厂实例创建成功: {ServiceType}", serviceType.Name);
+                return (T)instance;
+            }
+
             // 检查是否有瞬态工厂
             if (_transientFactories.TryGetValue(serviceType, out var factory))
             {
@@ -195,7 +260,7 @@ public class ServiceContainer
             }
 
             // 检查是否有注册的单例类型
-            if (_serviceTypes.TryGetValue(serviceType, out var implementationType))
+            if (_serviceTypes.TryGetValue(serviceType, out var implementationType) && implementationType != null)
             {
                 Log.Debug("[ServiceContainer] 创建单例类型实例: {ServiceType} -> {ImplementationType}", 
                     serviceType.Name, implementationType.Name);

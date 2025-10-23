@@ -1,6 +1,8 @@
 using System;
 using Avalonia;
 using Serilog;
+using DevUtilities.Core.Services;
+using DevUtilities.Core.Services.Interfaces;
 
 namespace DevUtilities;
 
@@ -12,12 +14,14 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        // 配置Serilog
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .WriteTo.File("logs/devutilities-.log", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
+        // 初始化服务容器
+        var container = ServiceContainer.Instance;
+        container.ConfigureDefaultServices();
+        ServiceLocator.Initialize(container);
+
+        // 获取日志服务并配置日志系统
+        var loggingService = ServiceLocator.GetService<ILoggingService>();
+        loggingService.ConfigureLogging();
 
         Log.Debug("[Program] 开始配置Serilog日志系统");
         Log.Information("[Program] DevUtilities应用程序启动，参数: {Args}", args);

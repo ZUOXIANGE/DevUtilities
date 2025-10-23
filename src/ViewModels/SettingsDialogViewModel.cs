@@ -69,6 +69,33 @@ public partial class SettingsDialogViewModel : ObservableObject
 
     #endregion
 
+    #region 日志设置
+
+    /// <summary>
+    /// 日志级别
+    /// </summary>
+    [ObservableProperty]
+    private string logLevel = "Information";
+
+    /// <summary>
+    /// 启用文件日志
+    /// </summary>
+    [ObservableProperty]
+    private bool enableFileLogging = true;
+
+    /// <summary>
+    /// 启用控制台日志
+    /// </summary>
+    [ObservableProperty]
+    private bool enableConsoleLogging = true;
+
+    /// <summary>
+    /// 可用的日志级别
+    /// </summary>
+    public string[] AvailableLogLevels { get; } = { "Verbose", "Debug", "Information", "Warning", "Error", "Fatal" };
+
+    #endregion
+
     #region 对话框结果
 
     /// <summary>
@@ -202,6 +229,11 @@ public partial class SettingsDialogViewModel : ObservableObject
             MaxProcessingTime = _settingsService.GetSetting(SettingsKeys.Performance.MaxProcessingTime, 30);
             EnableMemoryMonitoring = _settingsService.GetSetting(SettingsKeys.Performance.EnableMemoryMonitoring, true);
             MemoryThreshold = _settingsService.GetSetting(SettingsKeys.Performance.MemoryThreshold, 100);
+
+            // 加载日志设置
+            LogLevel = _settingsService.GetSetting(SettingsKeys.Logging.LogLevel, "Information");
+            EnableFileLogging = _settingsService.GetSetting(SettingsKeys.Logging.EnableFileLogging, true);
+            EnableConsoleLogging = _settingsService.GetSetting(SettingsKeys.Logging.EnableConsoleLogging, true);
         }
         catch (Exception ex)
         {
@@ -228,6 +260,11 @@ public partial class SettingsDialogViewModel : ObservableObject
             _settingsService.SetSetting(SettingsKeys.Performance.EnableMemoryMonitoring, EnableMemoryMonitoring);
             _settingsService.SetSetting(SettingsKeys.Performance.MemoryThreshold, MemoryThreshold);
 
+            // 保存日志设置
+            _settingsService.SetSetting(SettingsKeys.Logging.LogLevel, LogLevel);
+            _settingsService.SetSetting(SettingsKeys.Logging.EnableFileLogging, EnableFileLogging);
+            _settingsService.SetSetting(SettingsKeys.Logging.EnableConsoleLogging, EnableConsoleLogging);
+
             // 异步保存到文件
             _ = Task.Run(async () =>
             {
@@ -240,6 +277,10 @@ public partial class SettingsDialogViewModel : ObservableObject
                     System.Diagnostics.Debug.WriteLine($"保存设置到文件失败: {ex.Message}");
                 }
             });
+
+            // 更新日志服务配置
+            var loggingService = ServiceLocator.LoggingService;
+            loggingService?.UpdateLogLevel(LogLevel);
         }
         catch (Exception ex)
         {

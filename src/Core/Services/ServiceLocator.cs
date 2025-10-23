@@ -87,6 +87,12 @@ public static class ServiceLocator
     public static IConfigurationService ConfigurationService => GetService<IConfigurationService>();
 
     /// <summary>
+    /// 获取日志服务
+    /// </summary>
+    /// <returns>日志服务实例</returns>
+    public static ILoggingService LoggingService => GetService<ILoggingService>();
+
+    /// <summary>
     /// 重置服务定位器
     /// </summary>
     internal static void Reset()

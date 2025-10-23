@@ -204,6 +204,11 @@ namespace DevUtilities.Core.Services
             SetSetting(SettingsKeys.Application.Theme, "Light");
             SetSetting(SettingsKeys.Application.Language, "zh-CN");
             SetSetting(SettingsKeys.Application.AutoSave, true);
+            
+            // 设置默认日志级别
+            SetSetting(SettingsKeys.Logging.LogLevel, "Information");
+            SetSetting(SettingsKeys.Logging.EnableFileLogging, true);
+            SetSetting(SettingsKeys.Logging.EnableConsoleLogging, true);
         }
     }
 
@@ -268,6 +273,16 @@ namespace DevUtilities.Core.Services
         {
             public const string OmitXmlDeclaration = "XmlFormatter.OmitXmlDeclaration";
             public const string NewLineOnAttributes = "XmlFormatter.NewLineOnAttributes";
+        }
+
+        /// <summary>
+        /// 日志设置
+        /// </summary>
+        public static class Logging
+        {
+            public const string LogLevel = "Logging.LogLevel";
+            public const string EnableFileLogging = "Logging.EnableFileLogging";
+            public const string EnableConsoleLogging = "Logging.EnableConsoleLogging";
         }
     }
 }
