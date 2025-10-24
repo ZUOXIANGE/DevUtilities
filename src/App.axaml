@@ -97,6 +97,9 @@
     <DataTemplate DataType="{x:Type vm:ChmodCalculatorViewModel}">
       <views:ChmodCalculatorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UlidGeneratorViewModel}">
+      <views:UlidGeneratorView/>
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Styles>

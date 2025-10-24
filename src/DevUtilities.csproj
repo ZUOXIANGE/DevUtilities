@@ -91,6 +91,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Apache.Arrow" Version="22.1.0" />
     <PackageReference Include="Parquet.Net" Version="5.2.0" />
+    <PackageReference Include="Ulid" Version="1.3.4" />
   </ItemGroup>
 
   <ItemGroup>

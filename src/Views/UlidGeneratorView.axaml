@@ -1,0 +1,165 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="DevUtilities.Views.UlidGeneratorView"
+             x:DataType="vm:UlidGeneratorViewModel">
+  
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <StackPanel Margin="24" Spacing="20">
+      
+      <!-- 标题 -->
+      <SelectableTextBlock Text="ULID生成器" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      
+      <!-- ULID生成区域 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <SelectableTextBlock Text="ULID生成" FontSize="16" FontWeight="SemiBold"/>
+          
+          <!-- 格式选择 -->
+          <Grid ColumnDefinitions="Auto,10,*">
+            <SelectableTextBlock Grid.Column="0" Text="格式:" VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="2" 
+                      ItemsSource="{Binding UlidFormats}" 
+                      SelectedItem="{Binding SelectedFormat}"
+                      HorizontalAlignment="Stretch"/>
+          </Grid>
+          
+          <!-- 自定义时间戳选项 -->
+          <StackPanel Spacing="8">
+            <CheckBox Content="使用自定义时间戳" IsChecked="{Binding UseCustomTimestamp}"/>
+            <TextBox Text="{Binding CustomTimestamp}" 
+                     IsEnabled="{Binding UseCustomTimestamp}"
+                     Watermark="yyyy-MM-dd HH:mm:ss"
+                     HorizontalAlignment="Stretch"/>
+          </StackPanel>
+          
+          <!-- 选项 -->
+          <StackPanel Orientation="Horizontal" Spacing="20">
+            <CheckBox Content="大写字母" IsChecked="{Binding UpperCase}"/>
+          </StackPanel>
+          
+          <!-- 操作按钮 -->
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="生成" Command="{Binding GenerateNewUlidCommand}"/>
+            <Button Content="复制" Command="{Binding CopyUlidCommand}"/>
+          </StackPanel>
+          
+          <!-- 生成结果 -->
+          <TextBox Text="{Binding GeneratedUlid}" 
+                   IsReadOnly="True" 
+                   TextWrapping="Wrap"
+                   MinHeight="40"/>
+        </StackPanel>
+      </Border>
+      
+      <!-- 批量生成区域 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <SelectableTextBlock Text="批量生成" FontSize="16" FontWeight="SemiBold"/>
+          
+          <!-- 数量设置 -->
+          <Grid ColumnDefinitions="Auto,10,*,10,Auto">
+            <SelectableTextBlock Grid.Column="0" Text="数量:" VerticalAlignment="Center"/>
+            <NumericUpDown Grid.Column="2" 
+                           Value="{Binding GenerateCount}" 
+                           Minimum="1" 
+                           Maximum="1000"
+                           HorizontalAlignment="Stretch"/>
+            <Button Grid.Column="4" Content="批量生成" Command="{Binding GenerateBatchCommand}"/>
+          </Grid>
+          
+          <!-- 批量结果 -->
+          <TextBox Text="{Binding BatchResults}" 
+                   IsReadOnly="True" 
+                   TextWrapping="Wrap"
+                   MinHeight="120"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+          
+          <!-- 批量操作按钮 -->
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="复制全部" Command="{Binding CopyBatchCommand}"/>
+            <Button Content="清空" Command="{Binding ClearHistoryCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      
+      <!-- ULID解析区域 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <SelectableTextBlock Text="ULID解析" FontSize="16" FontWeight="SemiBold"/>
+          
+          <!-- 输入区域 -->
+          <TextBox x:Name="ParseInput" 
+                   Watermark="输入要解析的ULID..."
+                   MinHeight="40"/>
+          
+          <!-- 解析按钮 -->
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="解析ULID" Command="{Binding ParseUlidCommand}" CommandParameter="{Binding #ParseInput.Text}"/>
+            <Button Content="验证格式" Command="{Binding ValidateUlidCommand}" CommandParameter="{Binding #ParseInput.Text}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      
+      <!-- 历史记录区域 -->
+      <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <Grid ColumnDefinitions="*,Auto">
+            <SelectableTextBlock Grid.Column="0" Text="生成历史" FontSize="16" FontWeight="SemiBold"/>
+            <Button Grid.Column="1" Content="清空历史" Command="{Binding ClearHistoryCommand}"/>
+          </Grid>
+          
+          <!-- 历史记录列表 -->
+          <ListBox ItemsSource="{Binding GeneratedHistory}" 
+                   MaxHeight="200"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="*,Auto">
+                  <SelectableTextBlock Grid.Column="0" 
+                                       Text="{Binding}" 
+                                       VerticalAlignment="Center"
+                                       Margin="5"/>
+                  <Button Grid.Column="1" 
+                          Content="复制" 
+                          Command="{Binding $parent[UserControl].((vm:UlidGeneratorViewModel)DataContext).CopyHistoryCommand}"
+                          CommandParameter="{Binding}"
+                          Margin="5"/>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </Border>
+      
+      <!-- 说明信息 -->
+      <Border Background="#F5F5F5" CornerRadius="8" Padding="16" BorderBrush="#E0E0E0" BorderThickness="1">
+        <StackPanel Spacing="8">
+          <SelectableTextBlock Text="关于ULID" FontSize="16" FontWeight="SemiBold"/>
+          <SelectableTextBlock TextWrapping="Wrap">
+            <Run Text="ULID (Universally Unique Lexicographically Sortable Identifier) 是一种可排序的唯一标识符，具有以下特点："/>
+          </SelectableTextBlock>
+          <SelectableTextBlock TextWrapping="Wrap" Margin="10,0,0,0">
+            <Run Text="• 128位标识符，与UUID兼容"/>
+          </SelectableTextBlock>
+          <SelectableTextBlock TextWrapping="Wrap" Margin="10,0,0,0">
+            <Run Text="• 按时间戳排序，支持字典序排序"/>
+          </SelectableTextBlock>
+          <SelectableTextBlock TextWrapping="Wrap" Margin="10,0,0,0">
+            <Run Text="• Base32编码，URL安全"/>
+          </SelectableTextBlock>
+          <SelectableTextBlock TextWrapping="Wrap" Margin="10,0,0,0">
+            <Run Text="• 26个字符长度"/>
+          </SelectableTextBlock>
+          <SelectableTextBlock TextWrapping="Wrap" Margin="10,0,0,0">
+            <Run Text="• 前10个字符为时间戳，后16个字符为随机数"/>
+          </SelectableTextBlock>
+        </StackPanel>
+      </Border>
+      
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
