@@ -100,6 +100,9 @@
     <DataTemplate DataType="{x:Type vm:UlidGeneratorViewModel}">
       <views:UlidGeneratorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SqlidsGeneratorViewModel}">
+      <views:SqlidsGeneratorView/>
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Styles>

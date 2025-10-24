@@ -1,0 +1,304 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             x:Class="DevUtilities.Views.SqlidsGeneratorView"
+             x:DataType="vm:SqlidsGeneratorViewModel">
+
+  <Design.DataContext>
+    <vm:SqlidsGeneratorViewModel />
+  </Design.DataContext>
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      
+      <!-- 标题 -->
+      <TextBlock Text="Sqids ID 生成器" 
+                 FontSize="24" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center" 
+                 Margin="0,0,0,10"/>
+      
+      <TextBlock Text="Sqids 是一个小型库，可以从数字生成 YouTube 风格的短字符串 ID。这些 ID 是 URL 安全的，不包含常见的亵渎词汇，并且不会顺序生成。" 
+                 TextWrapping="Wrap" 
+                 Foreground="Gray" 
+                 HorizontalAlignment="Center" 
+                 Margin="0,0,0,20"/>
+
+      <!-- 主要功能区域 -->
+      <Grid ColumnDefinitions="*,20,*">
+        
+        <!-- 编码区域 -->
+        <Border Grid.Column="0" 
+                BorderBrush="LightGray" 
+                BorderThickness="1" 
+                CornerRadius="8" 
+                Padding="15">
+          <StackPanel Spacing="15">
+            <TextBlock Text="数字编码为 ID" FontWeight="Bold" FontSize="16"/>
+            
+            <StackPanel Spacing="8">
+              <TextBlock Text="输入数字 (用逗号分隔):"/>
+              <TextBox Text="{Binding NumberInput}" 
+                       Watermark="例如: 1, 2, 3"
+                       Height="35"/>
+            </StackPanel>
+            
+            <Button Content="编码" 
+                    Command="{Binding EncodeNumbersCommand}"
+                    HorizontalAlignment="Stretch"
+                    Height="35"/>
+            
+            <StackPanel Spacing="8">
+              <TextBlock Text="编码结果:"/>
+              <Border BorderBrush="LightGray" 
+                      BorderThickness="1" 
+                      CornerRadius="4" 
+                      Padding="10"
+                      Background="LightGray">
+                <SelectableTextBlock Text="{Binding EncodedId}" 
+                                     TextWrapping="Wrap"
+                                     MinHeight="30"/>
+              </Border>
+            </StackPanel>
+            
+            <Button Content="复制编码结果" 
+                    Command="{Binding CopyEncodedCommand}"
+                    HorizontalAlignment="Stretch"/>
+          </StackPanel>
+        </Border>
+
+        <!-- 解码区域 -->
+        <Border Grid.Column="2" 
+                BorderBrush="LightGray" 
+                BorderThickness="1" 
+                CornerRadius="8" 
+                Padding="15">
+          <StackPanel Spacing="15">
+            <TextBlock Text="ID 解码为数字" FontWeight="Bold" FontSize="16"/>
+            
+            <StackPanel Spacing="8">
+              <TextBlock Text="输入 Sqids ID:"/>
+              <TextBox Text="{Binding IdInput}" 
+                       Watermark="例如: 86Rf07"
+                       Height="35"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <Button Content="解码" 
+                      Command="{Binding DecodeIdCommand}"
+                      HorizontalAlignment="Stretch"
+                      Height="35"
+                      Width="100"/>
+              <Button Content="验证" 
+                      Command="{Binding ValidateIdCommand}"
+                      HorizontalAlignment="Stretch"
+                      Height="35"
+                      Width="100"/>
+            </StackPanel>
+            
+            <StackPanel Spacing="8">
+              <TextBlock Text="解码结果:"/>
+              <Border BorderBrush="LightGray" 
+                      BorderThickness="1" 
+                      CornerRadius="4" 
+                      Padding="10"
+                      Background="LightGray">
+                <SelectableTextBlock Text="{Binding DecodedNumbers}" 
+                                     TextWrapping="Wrap"
+                                     MinHeight="30"/>
+              </Border>
+            </StackPanel>
+            
+            <Button Content="复制解码结果" 
+                    Command="{Binding CopyDecodedCommand}"
+                    HorizontalAlignment="Stretch"/>
+            
+            <!-- 验证结果 -->
+            <StackPanel Spacing="8" IsVisible="{Binding ValidationResult, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <TextBlock Text="验证结果:"/>
+              <Border BorderBrush="LightBlue" 
+                      BorderThickness="1" 
+                      CornerRadius="4" 
+                      Padding="10"
+                      Background="AliceBlue">
+                <SelectableTextBlock Text="{Binding ValidationResult}" 
+                                     TextWrapping="Wrap"/>
+              </Border>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 自定义设置 -->
+      <Expander Header="自定义设置" IsExpanded="False">
+        <Border BorderBrush="LightGray" 
+                BorderThickness="1" 
+                CornerRadius="8" 
+                Padding="15"
+                Margin="0,10,0,0">
+          <StackPanel Spacing="15">
+            
+            <CheckBox Content="使用自定义设置" 
+                      IsChecked="{Binding UseCustomSettings}"/>
+            
+            <Grid ColumnDefinitions="*,*" 
+                  RowDefinitions="Auto,Auto,Auto,Auto" 
+                  IsEnabled="{Binding UseCustomSettings}"
+                  ColumnSpacing="15" 
+                  RowSpacing="10">
+              
+              <StackPanel Grid.Row="0" Grid.Column="0" Spacing="5">
+                <TextBlock Text="自定义字母表:"/>
+                <TextBox Text="{Binding Alphabet}" 
+                         Watermark="默认: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Row="0" Grid.Column="1" Spacing="5">
+                <TextBlock Text="最小长度:"/>
+                <NumericUpDown Value="{Binding MinLength}" 
+                               Minimum="0" 
+                               Maximum="255"
+                               Increment="1"/>
+              </StackPanel>
+              
+              <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                <TextBlock Text="自定义屏蔽词列表 (用逗号分隔):"/>
+                <TextBox Text="{Binding Blacklist}" 
+                         Watermark="例如: word1, word2, word3"
+                         Height="60"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"/>
+              </StackPanel>
+              
+              <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                      Content="重置为默认设置" 
+                      Command="{Binding ResetSettingsCommand}"
+                      HorizontalAlignment="Center"
+                      Margin="0,10,0,0"/>
+            </Grid>
+          </StackPanel>
+        </Border>
+      </Expander>
+
+      <!-- 批量处理 -->
+      <Expander Header="批量编码" IsExpanded="False">
+        <Border BorderBrush="LightGray" 
+                BorderThickness="1" 
+                CornerRadius="8" 
+                Padding="15"
+                Margin="0,10,0,0">
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+            
+            <StackPanel Grid.Column="0" Spacing="10">
+              <TextBlock Text="批量数字 (每行一组):"/>
+              <TextBox Text="{Binding BatchInput}" 
+                       Height="150"
+                       TextWrapping="Wrap"
+                       AcceptsReturn="True"
+                       Watermark="例如:&#x0a;1, 2, 3&#x0a;4, 5, 6&#x0a;7, 8, 9"/>
+              <Button Content="批量编码" 
+                      Command="{Binding ProcessBatchCommand}"
+                      HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Spacing="10">
+              <TextBlock Text="批量结果:"/>
+              <Border BorderBrush="LightGray" 
+                      BorderThickness="1" 
+                      CornerRadius="4" 
+                      Padding="10"
+                      Background="LightGray"
+                      Height="150">
+                <ScrollViewer>
+                  <ItemsControl ItemsSource="{Binding BatchResults}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <SelectableTextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+              </Border>
+              <Button Content="复制批量结果" 
+                      Command="{Binding CopyBatchResultsCommand}"
+                      HorizontalAlignment="Stretch"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+      </Expander>
+
+      <!-- 历史记录 -->
+      <Expander Header="历史记录" IsExpanded="False">
+        <Border BorderBrush="LightGray" 
+                BorderThickness="1" 
+                CornerRadius="8" 
+                Padding="15"
+                Margin="0,10,0,0">
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+            
+            <!-- 编码历史 -->
+            <StackPanel Grid.Column="0" Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="编码历史" FontWeight="Bold"/>
+                <Button Content="清空" 
+                        Command="{Binding ClearHistoryCommand}"
+                        FontSize="12"
+                        Padding="8,2"/>
+                <Button Content="复制" 
+                        Command="{Binding CopyEncodingHistoryCommand}"
+                        FontSize="12"
+                        Padding="8,2"/>
+              </StackPanel>
+              
+              <Border BorderBrush="LightGray" 
+                      BorderThickness="1" 
+                      CornerRadius="4" 
+                      Height="200">
+                <ListBox ItemsSource="{Binding EncodingHistory}"
+                         Background="Transparent">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate>
+                      <SelectableTextBlock Text="{Binding}" 
+                                           TextWrapping="Wrap"
+                                           FontFamily="Consolas"
+                                           FontSize="12"/>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </Border>
+            </StackPanel>
+            
+            <!-- 解码历史 -->
+            <StackPanel Grid.Column="1" Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="解码历史" FontWeight="Bold"/>
+                <Button Content="复制" 
+                        Command="{Binding CopyDecodingHistoryCommand}"
+                        FontSize="12"
+                        Padding="8,2"/>
+              </StackPanel>
+              
+              <Border BorderBrush="LightGray" 
+                      BorderThickness="1" 
+                      CornerRadius="4" 
+                      Height="200">
+                <ListBox ItemsSource="{Binding DecodingHistory}"
+                         Background="Transparent">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate>
+                      <SelectableTextBlock Text="{Binding}" 
+                                           TextWrapping="Wrap"
+                                           FontFamily="Consolas"
+                                           FontSize="12"/>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </Border>
+            </StackPanel>
+          </Grid>
+        </Border>
+      </Expander>
+      
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

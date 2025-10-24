@@ -153,6 +153,7 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("Docker Compose转换", "Docker Compose转换", "🐳", "Docker run命令转换为docker-compose文件", ToolType.DockerComposeConverter));
         AllTools.Add(new ToolInfo("chmod计算器", "chmod计算器", "🛡️", "Linux文件权限计算与转换", ToolType.ChmodCalculator));
         AllTools.Add(new ToolInfo("ULID生成", "ULID生成", "🆔", "ULID生成器", ToolType.UlidGenerator));
+        AllTools.Add(new ToolInfo("Sqids生成", "Sqids生成", "🔤", "Sqids ID生成器", ToolType.SqlidsGenerator));
         
         Log.Information("[MainWindowViewModel] 工具列表初始化完成，共添加 {ToolCount} 个工具", AllTools.Count);
     }
@@ -266,6 +267,7 @@ public partial class MainWindowViewModel : ObservableObject
                 ToolType.DockerComposeConverter => new DockerComposeConverterViewModel(),
                 ToolType.ChmodCalculator => new ChmodCalculatorViewModel(),
                 ToolType.UlidGenerator => new UlidGeneratorViewModel(),
+                ToolType.SqlidsGenerator => new SqlidsGeneratorViewModel(),
                 _ => new object()
             };
             

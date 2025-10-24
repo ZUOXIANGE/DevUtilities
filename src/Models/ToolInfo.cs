@@ -49,5 +49,6 @@ public enum ToolType
     TextEncryption,
     DockerComposeConverter,
     ChmodCalculator,
-    UlidGenerator
+    UlidGenerator,
+    SqlidsGenerator
 }
