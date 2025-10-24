@@ -12,6 +12,8 @@ namespace DevUtilities.Converters;
 /// </summary>
 public class DiffTypeToBackgroundConverter : IValueConverter
 {
+    public static readonly DiffTypeToBackgroundConverter Instance = new();
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is DiffType diffType)
