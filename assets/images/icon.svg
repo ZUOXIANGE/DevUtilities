@@ -1,27 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#357ABD;stop-opacity:1" />
+    <!-- 背景渐变 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8F4FD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8E0FF;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 熊猫身体渐变 -->
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0F0F0;stop-opacity:1" />
     </linearGradient>
   </defs>
   
-  <!-- Background circle -->
-  <circle cx="16" cy="16" r="15" fill="url(#grad1)" stroke="#2C5F8A" stroke-width="1"/>
+  <!-- 背景圆形 -->
+  <circle cx="16" cy="16" r="15" fill="url(#bgGrad)" stroke="#87CEEB" stroke-width="1"/>
   
-  <!-- Tool icon -->
-  <g transform="translate(8, 8)">
-    <!-- Wrench -->
-    <path d="M2 2 L14 14 L12 16 L0 4 Z" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="3" cy="3" r="2" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="13" cy="13" r="2" fill="#FFFFFF" opacity="0.7"/>
+  <!-- 熊猫设计 -->
+  <g transform="translate(16, 16)">
+    <!-- 左耳 -->
+    <circle cx="-6" cy="-8" r="3" fill="#2C2C2C"/>
+    <circle cx="-6" cy="-8" r="2" fill="#1A1A1A"/>
     
-    <!-- Screwdriver -->
-    <path d="M6 0 L8 0 L8 6 L10 8 L6 8 L4 6 L4 0 Z" fill="#FFFFFF" opacity="0.8"/>
-    <rect x="5" y="8" width="4" height="8" fill="#FFFFFF" opacity="0.6"/>
+    <!-- 右耳 -->
+    <circle cx="6" cy="-8" r="3" fill="#2C2C2C"/>
+    <circle cx="6" cy="-8" r="2" fill="#1A1A1A"/>
+    
+    <!-- 头部 -->
+    <circle cx="0" cy="-3" r="7" fill="url(#bodyGrad)" stroke="#E0E0E0" stroke-width="0.5"/>
+    
+    <!-- 左眼圈 -->
+    <ellipse cx="-3" cy="-5" rx="2.5" ry="3" fill="#1A1A1A"/>
+    <ellipse cx="-3" cy="-5" rx="1.8" ry="2.2" fill="#2C2C2C"/>
+    
+    <!-- 右眼圈 -->
+    <ellipse cx="3" cy="-5" rx="2.5" ry="3" fill="#1A1A1A"/>
+    <ellipse cx="3" cy="-5" rx="1.8" ry="2.2" fill="#2C2C2C"/>
+    
+    <!-- 左眼 -->
+    <circle cx="-3" cy="-5" r="1.2" fill="#FFFFFF"/>
+    <circle cx="-2.5" cy="-5.2" r="0.8" fill="#1A1A1A"/>
+    <circle cx="-2.2" cy="-5.5" r="0.3" fill="#FFFFFF"/>
+    
+    <!-- 右眼 -->
+    <circle cx="3" cy="-5" r="1.2" fill="#FFFFFF"/>
+    <circle cx="2.5" cy="-5.2" r="0.8" fill="#1A1A1A"/>
+    <circle cx="2.2" cy="-5.5" r="0.3" fill="#FFFFFF"/>
+    
+    <!-- 鼻子 -->
+    <ellipse cx="0" cy="-2" rx="0.8" ry="0.6" fill="#1A1A1A"/>
+    <ellipse cx="0" cy="-2.2" rx="0.4" ry="0.3" fill="#333333"/>
+    
+    <!-- 嘴巴 -->
+    <path d="M 0 -1 Q -1.5 0.5 -2.5 0 Q -1 1 0 0.5 Q 1 1 2.5 0 Q 1.5 0.5 0 -1 Z" fill="#1A1A1A"/>
+    <path d="M 0 -0.5 Q -1 0.2 -1.5 0 Q -0.5 0.5 0 0.2 Q 0.5 0.5 1.5 0 Q 1 0.2 0 -0.5 Z" fill="#FF69B4"/>
+    
+    <!-- 身体 -->
+    <ellipse cx="0" cy="5" rx="5" ry="4" fill="url(#bodyGrad)" stroke="#E0E0E0" stroke-width="0.5"/>
+    
+    <!-- 肚子 -->
+    <ellipse cx="0" cy="6" rx="3" ry="2.5" fill="#FFFFFF" opacity="0.8"/>
+    
+    <!-- 左手 -->
+    <circle cx="-4" cy="3" r="1.8" fill="url(#bodyGrad)" stroke="#E0E0E0" stroke-width="0.3"/>
+    <circle cx="-4" cy="3" r="1.2" fill="#FFFFFF" opacity="0.6"/>
+    
+    <!-- 右手 -->
+    <circle cx="4" cy="3" r="1.8" fill="url(#bodyGrad)" stroke="#E0E0E0" stroke-width="0.3"/>
+    <circle cx="4" cy="3" r="1.2" fill="#FFFFFF" opacity="0.6"/>
+    
+    <!-- 左脚 -->
+    <ellipse cx="-2.5" cy="8" rx="1.5" ry="1" fill="#1A1A1A"/>
+    <ellipse cx="-2.5" cy="7.8" rx="1" ry="0.7" fill="#2C2C2C"/>
+    
+    <!-- 右脚 -->
+    <ellipse cx="2.5" cy="8" rx="1.5" ry="1" fill="#1A1A1A"/>
+    <ellipse cx="2.5" cy="7.8" rx="1" ry="0.7" fill="#2C2C2C"/>
   </g>
   
-  <!-- Highlight -->
-  <ellipse cx="12" cy="8" rx="3" ry="2" fill="#FFFFFF" opacity="0.3"/>
+  <!-- 像素风格装饰点 -->
+  <rect x="6" y="6" width="1" height="1" fill="#87CEEB" opacity="0.6"/>
+  <rect x="25" y="8" width="1" height="1" fill="#87CEEB" opacity="0.6"/>
+  <rect x="8" y="24" width="1" height="1" fill="#87CEEB" opacity="0.6"/>
+  <rect x="23" y="23" width="1" height="1" fill="#87CEEB" opacity="0.6"/>
+  
+  <!-- 高光效果 -->
+  <ellipse cx="12" cy="8" rx="4" ry="2" fill="#FFFFFF" opacity="0.2"/>
 </svg>

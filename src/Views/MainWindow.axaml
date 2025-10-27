@@ -7,11 +7,13 @@
         x:Class="DevUtilities.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
+        Icon="avares://DevUtilities/assets/images/panda-icon-v2.png"
         Width="1200" Height="900"
         MinWidth="600" MinHeight="500"
         CanResize="True"
         WindowStartupLocation="CenterScreen"
-        SizeToContent="Manual">
+        SizeToContent="Manual"
+>
 
   <Grid>
     <!-- Home View -->
