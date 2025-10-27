@@ -19,6 +19,9 @@
     <DataTemplate DataType="{x:Type vm:JsonFormatterViewModel}">
       <views:JsonFormatterView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:JsonYamlConverterViewModel}">
+      <views:JsonYamlConverterView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:Base64EncoderViewModel}">
       <views:Base64EncoderView/>
     </DataTemplate>

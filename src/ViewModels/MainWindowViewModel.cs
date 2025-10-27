@@ -154,6 +154,7 @@ public partial class MainWindowViewModel : ObservableObject
         AllTools.Add(new ToolInfo("chmod计算器", "chmod计算器", "🛡️", "Linux文件权限计算与转换", ToolType.ChmodCalculator));
         AllTools.Add(new ToolInfo("ULID生成", "ULID生成", "🆔", "ULID生成器", ToolType.UlidGenerator));
         AllTools.Add(new ToolInfo("Sqids生成", "Sqids生成", "🔤", "Sqids ID生成器", ToolType.SqlidsGenerator));
+        AllTools.Add(new ToolInfo("JSON/YAML转换", "JSON/YAML转换", "🔄", "JSON和YAML格式互相转换工具", ToolType.JsonYamlConverter));
         
         Log.Information("[MainWindowViewModel] 工具列表初始化完成，共添加 {ToolCount} 个工具", AllTools.Count);
     }
@@ -268,6 +269,7 @@ public partial class MainWindowViewModel : ObservableObject
                 ToolType.ChmodCalculator => new ChmodCalculatorViewModel(),
                 ToolType.UlidGenerator => new UlidGeneratorViewModel(),
                 ToolType.SqlidsGenerator => new SqlidsGeneratorViewModel(),
+                ToolType.JsonYamlConverter => new JsonYamlConverterViewModel(),
                 _ => new object()
             };
             

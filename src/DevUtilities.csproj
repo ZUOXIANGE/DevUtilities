@@ -84,6 +84,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     <PackageReference Include="QRCoder" Version="1.7.0" />
     <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.6.5" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
     <PackageReference Include="ZXing.Net" Version="0.16.10" />
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />

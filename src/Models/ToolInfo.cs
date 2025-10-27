@@ -50,5 +50,6 @@ public enum ToolType
     DockerComposeConverter,
     ChmodCalculator,
     UlidGenerator,
-    SqlidsGenerator
+    SqlidsGenerator,
+    JsonYamlConverter
 }

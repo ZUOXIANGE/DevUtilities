@@ -1,0 +1,197 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DevUtilities.ViewModels"
+             xmlns:converters="using:DevUtilities.Converters"
+             x:Class="DevUtilities.Views.JsonYamlConverterView"
+             x:DataType="vm:JsonYamlConverterViewModel">
+
+  <UserControl.Resources>
+    <!-- 转换器 -->
+    <converters:BooleanToColorConverter x:Key="BoolToColorConverter"/>
+  </UserControl.Resources>
+
+  <Design.DataContext>
+    <vm:JsonYamlConverterViewModel/>
+  </Design.DataContext>
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+      
+      <!-- 标题区域 -->
+      <StackPanel Spacing="6">
+        <SelectableTextBlock Text="JSON/YAML转换器" 
+                   FontSize="26" 
+                   FontWeight="Bold" 
+                   Foreground="{DynamicResource SystemAccentColor}"/>
+        <SelectableTextBlock Text="JSON和YAML格式互相转换工具" 
+                   FontSize="14" 
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+      </StackPanel>
+
+      <!-- 转换选项区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+              CornerRadius="8" 
+              Padding="16">
+        <StackPanel Spacing="12">
+          <SelectableTextBlock Text="转换选项" FontWeight="SemiBold" FontSize="16"/>
+          
+          <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+            <!-- 转换方向 -->
+            <StackPanel Grid.Column="0" Grid.Row="0" Spacing="6" Margin="0,0,10,0">
+              <SelectableTextBlock Text="转换方向"/>
+              <Button Content="{Binding ConversionDirection}" 
+                      Command="{Binding SwitchDirectionCommand}"
+                      HorizontalAlignment="Stretch"
+                      Background="{DynamicResource SystemAccentColor}"
+                      Foreground="White"
+                      CornerRadius="4"/>
+            </StackPanel>
+            
+            <!-- 格式化选项 -->
+            <StackPanel Grid.Column="1" Grid.Row="0" Spacing="8" Margin="10,0,10,0">
+              <CheckBox Content="美化输出" IsChecked="{Binding PrettyPrint}"/>
+              <CheckBox Content="使用引号包围字符串" IsChecked="{Binding UseQuotedStrings}"/>
+            </StackPanel>
+            
+            <!-- 操作按钮 -->
+            <StackPanel Grid.Column="2" Grid.Row="0" Spacing="8" Margin="10,0,0,0">
+              <Button Content="使用示例" 
+                      Command="{Binding UseExampleCommand}"
+                      HorizontalAlignment="Stretch"/>
+              <Button Content="清除所有" 
+                      Command="{Binding ClearCommand}"
+                      HorizontalAlignment="Stretch"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 转换按钮区域 -->
+      <Grid ColumnDefinitions="*,Auto,*" Margin="0,10">
+        <Button Grid.Column="1" 
+                Content="转换" 
+                Command="{Binding FormatCommand}"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Padding="20,10"
+                Background="{DynamicResource SystemAccentColor}"
+                Foreground="White"
+                CornerRadius="6"
+                HorizontalAlignment="Center"/>
+      </Grid>
+
+      <!-- 输入输出区域 -->
+      <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,*,Auto">
+        
+        <!-- 输入区域标题 -->
+        <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4" Margin="0,0,0,8">
+          <SelectableTextBlock Text="{Binding IsJsonToYaml, Converter={x:Static converters:StringConverters.BoolToString}, ConverterParameter='JSON输入|YAML输入'}" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <SelectableTextBlock Text="{Binding InputCharCount, StringFormat='字符数: {0}'}" 
+                       FontSize="12" 
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+            <SelectableTextBlock Text="{Binding InputLineCount, StringFormat='行数: {0}'}" 
+                       FontSize="12" 
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+          </StackPanel>
+        </StackPanel>
+
+        <!-- 输出区域标题 -->
+        <StackPanel Grid.Column="2" Grid.Row="0" Spacing="4" Margin="0,0,0,8">
+          <SelectableTextBlock Text="{Binding IsJsonToYaml, Converter={x:Static converters:StringConverters.BoolToString}, ConverterParameter='YAML输出|JSON输出'}" 
+                     FontWeight="SemiBold" 
+                     FontSize="16"/>
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <SelectableTextBlock Text="{Binding OutputCharCount, StringFormat='字符数: {0}'}" 
+                       FontSize="12" 
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+            <SelectableTextBlock Text="{Binding OutputLineCount, StringFormat='行数: {0}'}" 
+                       FontSize="12" 
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+          </StackPanel>
+        </StackPanel>
+
+        <!-- 输入文本框 -->
+        <Border Grid.Column="0" Grid.Row="1" 
+                Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="1"
+                CornerRadius="6">
+          <TextBox Text="{Binding InputText}" 
+                   Watermark="{Binding InputPlaceholder}"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas,Monaco,Courier New,monospace"
+                   FontSize="13"
+                   MinHeight="300"
+                   Background="Transparent"
+                   BorderThickness="0"
+                   Padding="12"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        </Border>
+
+        <!-- 输出文本框 -->
+        <Border Grid.Column="2" Grid.Row="1" 
+                Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="1"
+                CornerRadius="6">
+          <TextBox Text="{Binding OutputText}" 
+                   Watermark="{Binding OutputPlaceholder}"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas,Monaco,Courier New,monospace"
+                   FontSize="13"
+                   MinHeight="300"
+                   Background="Transparent"
+                   BorderThickness="0"
+                   Padding="12"
+                   IsReadOnly="True"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        </Border>
+
+        <!-- 操作按钮区域 -->
+        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+          <Button Content="验证格式" 
+                  Command="{Binding ValidateCommand}"
+                  Padding="12,6"/>
+          <Button Content="交换内容" 
+                  Command="{Binding SwapInputOutputCommand}"
+                  Padding="12,6"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0" HorizontalAlignment="Right">
+          <Button Content="复制结果" 
+                  Command="{Binding CopyCommand}"
+                  Padding="12,6"/>
+          <Button Content="压缩输出" 
+                  Command="{Binding CompressCommand}"
+                  Padding="12,6"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- 状态信息区域 -->
+      <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+              CornerRadius="6" 
+              Padding="12"
+              IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <StackPanel Spacing="4">
+          <SelectableTextBlock Text="状态信息" FontWeight="SemiBold"/>
+          <SelectableTextBlock Text="{Binding ValidationMessage}" 
+                     Foreground="{Binding IsValid, Converter={StaticResource BoolToColorConverter}}"
+                     TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 进度指示器 -->
+      <ProgressBar IsIndeterminate="True" 
+                   IsVisible="False" 
+                   Height="4" Margin="0,10"/>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
