@@ -167,7 +167,7 @@ public partial class UlidGeneratorViewModel : ObservableObject
                 // 无效的ULID格式
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // 验证失败
         }

@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 
-namespace DevUtilities.Views
+namespace DevUtilities.Views;
+
+public partial class ColorPickerView : UserControl
 {
-    public partial class ColorPickerView : UserControl
+    public ColorPickerView()
     {
-        public ColorPickerView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

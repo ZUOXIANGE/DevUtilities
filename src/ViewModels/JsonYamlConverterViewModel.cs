@@ -9,7 +9,6 @@ using Newtonsoft.Json.Linq;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using DevUtilities.Core.ViewModels.Base;
-using System.Text;
 using Serilog;
 
 namespace DevUtilities.ViewModels;
@@ -153,7 +152,7 @@ public partial class JsonYamlConverterViewModel : BaseFormatterViewModel
             Logger.Debug($"JsonYamlConverterViewModel: 生成的YAML: {yaml}");
             Logger.Debug($"JsonYamlConverterViewModel: 生成的YAML长度: {yaml?.Length}");
             
-            return await Task.FromResult(yaml);
+            return await Task.FromResult(yaml ?? string.Empty);
         }
         catch (JsonException ex)
         {

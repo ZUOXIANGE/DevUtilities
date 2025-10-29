@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DevUtilities.Core.ViewModels.Base;
 using DevUtilities.Models;
 
 namespace DevUtilities.ViewModels;

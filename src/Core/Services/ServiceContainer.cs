@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using DevUtilities.Core.Services.Interfaces;
 using Serilog;
 
 namespace DevUtilities.Core.Services;
@@ -181,7 +180,7 @@ public class ServiceContainer
         try
         {
             // 延迟创建单例实例
-            _serviceTypes[interfaceType] = null; // 标记为工厂创建
+            _serviceTypes[interfaceType] = typeof(TInterface); // 标记为工厂创建
             _singletonFactories[interfaceType] = () => factory();
             Log.Debug("[ServiceContainer] 单例服务工厂注册成功: {InterfaceType}", interfaceType.Name);
         }

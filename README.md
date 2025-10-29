@@ -140,7 +140,7 @@ dotnet run --project src/DevUtilities.csproj
 - **框架**: .NET 9.0 + Avalonia UI 11.1.3
 - **架构**: MVVM (Model-View-ViewModel)
 - **依赖注入**: CommunityToolkit.Mvvm
-- **主要库**: QRCoder, ZXing.Net, Newtonsoft.Json
+- **主要库**: QRCoder (生成), ZXing.Net (解码), Newtonsoft.Json
 
 ## 📚 文档
 

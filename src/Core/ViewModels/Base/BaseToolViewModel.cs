@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DevUtilities.Models;
-using DevUtilities.Core.ViewModels;
 
 namespace DevUtilities.Core.ViewModels.Base;
 

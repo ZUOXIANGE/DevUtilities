@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
-using System.Collections.Generic;
 using System.Linq;
 using DevUtilities.Core.ViewModels.Base;
 using System.IO;
@@ -45,18 +44,18 @@ public partial class JsonFormatterViewModel : BaseFormatterViewModel
         try
         {
             // 对于大文件，使用流式处理
-            var inputSize = Encoding.UTF8.GetByteCount(input);
+            var inputSize = Encoding.UTF8.GetByteCount(input ?? string.Empty);
             Logger.Debug("JsonFormatterViewModel: 输入大小: {InputSize} bytes", inputSize);
             
             if (inputSize > 512 * 1024) // 512KB以上使用流式处理
             {
                 Logger.Information("JsonFormatterViewModel: 使用流式处理格式化大文件 - 大小: {InputSize} bytes", inputSize);
-                return await FormatLargeJsonAsync(input);
+                return await FormatLargeJsonAsync(input ?? string.Empty);
             }
 
             // 小文件使用标准处理
             Logger.Debug("JsonFormatterViewModel: 使用标准处理格式化小文件");
-            return await FormatStandardJsonAsync(input);
+            return await FormatStandardJsonAsync(input ?? string.Empty);
         }
         catch (Newtonsoft.Json.JsonException ex)
         {

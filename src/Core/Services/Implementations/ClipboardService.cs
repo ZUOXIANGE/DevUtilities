@@ -29,7 +29,9 @@ public class ClipboardService : IClipboardService
                 return string.Empty;
             }
 
+            #pragma warning disable CS0618 // Type or member is obsolete
             var text = await topLevel.Clipboard.GetTextAsync();
+            #pragma warning restore CS0618 // Type or member is obsolete
             Log.Debug("[ClipboardService] 剪贴板文本获取成功，长度: {TextLength}", text?.Length ?? 0);
             return text ?? string.Empty;
         }

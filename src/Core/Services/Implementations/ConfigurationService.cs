@@ -259,7 +259,7 @@ public class ConfigurationService : IConfigurationService
                 _configuration = new AppConfiguration();
             }
 
-            _configuration.Settings[key] = value;
+            _configuration.Settings[key] = value?.ToString() ?? string.Empty;
             var result = await SaveConfigurationAsync(_configuration);
             
             if (result)

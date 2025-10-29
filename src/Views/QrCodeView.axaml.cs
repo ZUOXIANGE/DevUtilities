@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 
-namespace DevUtilities.Views
+namespace DevUtilities.Views;
+
+public partial class QrCodeView : UserControl
 {
-    public partial class QrCodeView : UserControl
+    public QrCodeView()
     {
-        public QrCodeView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

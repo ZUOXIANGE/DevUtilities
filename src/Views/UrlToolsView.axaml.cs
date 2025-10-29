@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 
-namespace DevUtilities.Views
+namespace DevUtilities.Views;
+
+public partial class UrlToolsView : UserControl
 {
-    public partial class UrlToolsView : UserControl
+    public UrlToolsView()
     {
-        public UrlToolsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

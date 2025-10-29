@@ -44,7 +44,7 @@ public partial class SqlidsGeneratorViewModel : BaseToolViewModel
     public ObservableCollection<string> DecodingHistory { get; } = new();
     public ObservableCollection<string> BatchResults { get; } = new();
 
-    private SqidsEncoder<int> _encoder;
+    private SqidsEncoder<int> _encoder = null!;
     
     [ObservableProperty]
     private bool _useCustomSettings;
