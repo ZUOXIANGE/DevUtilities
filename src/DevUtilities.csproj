@@ -58,7 +58,6 @@
 
   <ItemGroup>
     <AvaloniaResource Include="../assets/images/**" />
-    <AvaloniaResource Include="assets/images/**" />
   </ItemGroup>
 
   <ItemGroup>
