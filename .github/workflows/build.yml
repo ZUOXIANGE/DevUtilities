@@ -38,7 +38,7 @@ jobs:
     
     strategy:
       matrix:
-        runtime: [win-x64, linux-x64, osx-x64]
+        runtime: [win-x64, linux-x64, osx-arm64]
         
     steps:
     - uses: actions/checkout@v4
