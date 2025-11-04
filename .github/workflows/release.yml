@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
@@ -35,8 +38,8 @@ jobs:
           runtime: win-x64
           artifact_name: DevUtilities-win-x64
         - os: macos-latest
-          runtime: osx-x64
-          artifact_name: DevUtilities-osx-x64
+          runtime: osx-arm64
+          artifact_name: DevUtilities-osx-arm64
           
     runs-on: ${{ matrix.os }}
     

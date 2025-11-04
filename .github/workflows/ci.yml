@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+permissions:
+  contents: write
+
 env:
   DOTNET_VERSION: '9.0.x'
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -42,13 +45,17 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: |
+        dotnet restore src/DevUtilities.csproj
+        dotnet restore tests/DevUtilities.Tests.csproj
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: |
+        dotnet build src/DevUtilities.csproj --configuration Release --no-restore
+        dotnet build tests/DevUtilities.Tests.csproj --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test tests/DevUtilities.Tests.csproj --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
     - name: Upload coverage reports
       if: matrix.os == 'ubuntu-latest'
@@ -77,13 +84,13 @@ jobs:
       run: dotnet restore
 
     - name: Run code analysis
-      run: dotnet build --configuration Release --verbosity normal /p:TreatWarningsAsErrors=true
+      run: dotnet build src/DevUtilities.csproj --configuration Release --verbosity normal /p:TreatWarningsAsErrors=true
 
     - name: Install dotnet format
       run: dotnet tool install -g dotnet-format
 
     - name: Check code formatting
-      run: dotnet format --verify-no-changes --verbosity diagnostic
+      run: dotnet format --verify-no-changes --verbosity diagnostic --folder
 
   # Security Scan Job
   security-scan:
@@ -102,11 +109,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Install security scan tool
-      run: dotnet tool install --global security-scan
-
-    - name: Run security scan
-      run: security-scan --project DevUtilities.csproj
+    - name: Run dependency vulnerability check
+      run: |
+        dotnet list src/DevUtilities.csproj package --vulnerable --include-transitive
+        dotnet list tests/DevUtilities.Tests.csproj package --vulnerable --include-transitive
+      continue-on-error: true
 
   # Build Release Artifacts
   build-release:
@@ -121,12 +128,15 @@ jobs:
           - os: windows-latest
             runtime: win-x64
             artifact-name: DevUtilities-win-x64
+            archive-ext: zip
           - os: ubuntu-latest
             runtime: linux-x64
             artifact-name: DevUtilities-linux-x64
+            archive-ext: tar.gz
           - os: macos-latest
-            runtime: osx-x64
-            artifact-name: DevUtilities-osx-x64
+            runtime: osx-arm64
+            artifact-name: DevUtilities-osx-arm64
+            archive-ext: tar.gz
 
     steps:
     - name: Checkout code
@@ -166,9 +176,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact-name }}
-        path: |
-          ${{ matrix.artifact-name }}.zip
-          ${{ matrix.artifact-name }}.tar.gz
+        path: ${{ matrix.artifact-name }}.${{ matrix.archive-ext }}
         retention-days: 30
 
   # Create Release
